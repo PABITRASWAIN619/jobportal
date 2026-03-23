@@ -1,0 +1,48 @@
+{% extends 'base.html' %} {% block content %}
+
+<style>
+  .form-container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+  }
+
+  input,
+  textarea {
+    width: 95%;
+    margin: 10px 0;
+    padding: 10px;
+  }
+
+  button {
+    background: #0a66c2;
+    color: white;
+    padding: 10px;
+    border: none;
+    width: 100%;
+  }
+</style>
+
+<div class="form-container">
+  <h2>Post a Job</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <input type="text" name="title" placeholder="Job Title" required />
+    <input type="text" name="company" placeholder="Company" required />
+    <input type="text" name="location" placeholder="Location" required />
+
+    <textarea
+      name="description"
+      placeholder="Job Description"
+      required
+    ></textarea>
+
+    <button type="submit">Post Job</button>
+  </form>
+</div>
+
+{% endblock %}

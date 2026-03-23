@@ -1,0 +1,106 @@
+{% extends 'base.html' %} {% block content %}
+
+<style>
+  body {
+    background:
+      linear-gradient(rgba(10, 102, 194, 0.7), rgba(10, 102, 194, 0.7)),
+      url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .apply-container {
+    max-width: 500px;
+    margin: 60px auto;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .job-info {
+    text-align: left;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f3f2ef;
+    border-radius: 10px;
+  }
+
+  .job-info h3 {
+    margin: 0;
+    color: #0a66c2;
+  }
+
+  .job-info p {
+    margin: 5px 0;
+    color: #555;
+  }
+
+  .apply-container input {
+    width: 95%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .apply-container button {
+    width: 100%;
+    padding: 12px;
+    background: #0a66c2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+</style>
+
+<div class="apply-container">
+  <!-- ✅ Job Details -->
+  <div class="job-info">
+    <h3>{{ job.title }}</h3>
+    <p><strong>Company:</strong> {{ job.company }}</p>
+    <p><strong>Location:</strong> {{ job.location }}</p>
+    <p>{{ job.description }}</p>
+  </div>
+
+  <!-- Success Message -->
+  {% if messages %} {% for message in messages %}
+  <div
+    style="
+      background: #d4edda;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    "
+  >
+    {{ message }}
+  </div>
+  {% endfor %} {% endif %}
+
+  <!-- Form -->
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Your Email" required />
+    <input type="text" name="linkedin" placeholder="LinkedIn Profile" />
+    <input type="file" name="resume" required />
+
+    <button type="submit">Apply Now 🚀</button>
+  </form>
+</div>
+
+{% endblock %}

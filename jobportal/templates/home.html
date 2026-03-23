@@ -1,0 +1,283 @@
+{% extends 'base.html' %} {% block content %}
+
+<style>
+  /* ===== HERO SECTION ===== */
+  .hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px 60px;
+    background: linear-gradient(120deg, #f3f2ef, #ffffff);
+  }
+
+  .hero-text {
+    max-width: 520px;
+  }
+
+  .hero-text h1 {
+    font-size: 52px;
+    color: #0a66c2;
+    margin-bottom: 20px;
+  }
+
+  .hero-text p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 30px;
+  }
+
+  /* ===== SEARCH BAR ===== */
+  .search-box {
+    background: white;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .search-box input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+
+  .search-box button {
+    padding: 12px 20px;
+    background: linear-gradient(45deg, #0a66c2, #0073b1);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .search-box button:hover {
+    background: linear-gradient(45deg, #004182, #0a66c2);
+    transform: scale(1.05);
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn-primary {
+    padding: 12px 25px;
+    background: #0a66c2;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-right: 10px;
+    display: inline-block;
+    transition: 0.3s;
+  }
+
+  .btn-primary:hover {
+    background: #004182;
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    padding: 12px 25px;
+    border: 2px solid #0a66c2;
+    color: #0a66c2;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.3s;
+  }
+
+  .btn-secondary:hover {
+    background: #0a66c2;
+    color: white;
+  }
+
+  /* ===== IMAGE ===== */
+  .hero img {
+    width: 420px;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+  /* ===== FEATURES ===== */
+  .features {
+    display: flex;
+    justify-content: space-around;
+    padding: 40px;
+    flex-wrap: wrap;
+  }
+
+  .feature-card {
+    background: white;
+    padding: 25px;
+    width: 260px;
+    border-radius: 12px;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-10px);
+  }
+
+  .feature-card h3 {
+    color: #0a66c2;
+  }
+
+  /* ===== STATS ===== */
+  .stats {
+    display: flex;
+    justify-content: space-around;
+    background: linear-gradient(45deg, #0a66c2, #0073b1);
+    color: white;
+    padding: 40px 20px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+    margin: 10px;
+  }
+
+  .stat h2 {
+    font-size: 32px;
+  }
+
+  /* ===== COMPANIES ===== */
+  .companies {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 30px;
+    gap: 15px;
+  }
+
+  .company-card {
+    background: white;
+    padding: 12px 20px;
+    border-radius: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    background: #222;
+    color: white;
+    margin-top: 40px;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .hero {
+      flex-direction: column;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .hero img {
+      width: 280px;
+      margin-top: 20px;
+    }
+
+    .search-box {
+      flex-direction: column;
+    }
+
+    .features {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
+
+<!-- ===== HERO SECTION ===== -->
+<div class="hero">
+  <div class="hero-text">
+    <h1>Find Your Dream Job 💼</h1>
+
+    <p>
+      Discover opportunities, connect with recruiters, and grow your career with
+      our professional platform.
+    </p>
+
+    <!-- ✅ ONLY ONE SEARCH BAR -->
+    <form action="/jobs/" method="GET" class="search-box">
+      <input type="text" name="q" placeholder="Search jobs..." />
+      <input type="text" name="location" placeholder="Location" />
+      <button type="submit">Search</button>
+    </form>
+
+    <br />
+
+    <a href="/jobs/" class="btn-primary">Explore Jobs</a>
+    <a href="/signup/" class="btn-secondary">Join Now</a>
+  </div>
+
+  <img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png" />
+</div>
+
+<!-- ===== FEATURES ===== -->
+<div class="features">
+  <div class="feature-card">
+    <h3>🔍 Smart Search</h3>
+    <p>Find jobs based on your skills instantly</p>
+  </div>
+
+  <div class="feature-card">
+    <h3>⚡ Easy Apply</h3>
+    <p>Apply for jobs with one click</p>
+  </div>
+
+  <div class="feature-card">
+    <h3>🏢 Top Companies</h3>
+    <p>Work with leading organizations</p>
+  </div>
+</div>
+
+<!-- ===== STATS ===== -->
+<div class="stats">
+  <div class="stat">
+    <h2>10K+</h2>
+    <p>Jobs Posted</p>
+  </div>
+
+  <div class="stat">
+    <h2>5K+</h2>
+    <p>Companies</p>
+  </div>
+
+  <div class="stat">
+    <h2>20K+</h2>
+    <p>Users</p>
+  </div>
+</div>
+
+<!-- ===== COMPANIES ===== -->
+<div class="companies">
+  {% for company in companies %}
+  <div class="company-card">{{ company }}</div>
+  {% endfor %}
+</div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <p>© 2026 Job Portal | Built with ❤️</p>
+</div>
+
+{% endblock %}

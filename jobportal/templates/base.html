@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Portal</title>
+
+    <style>
+      /* ===== GLOBAL ===== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Arial, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(120deg, #eef2f7, #ffffff);
+        overflow-x: hidden;
+      }
+
+      /* ===== NAVBAR ===== */
+      .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 12px 30px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        background: linear-gradient(90deg, #0a66c2, #4facfe);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+        z-index: 1000;
+      }
+
+      /* LOGO */
+      .logo {
+        font-size: 22px;
+        font-weight: bold;
+        color: white;
+      }
+
+      /* NAV LINKS */
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      /* BUTTON STYLE */
+      .nav-btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        color: white;
+        transition: 0.3s;
+        white-space: nowrap;
+      }
+
+      /* BUTTON COLORS */
+      .home-btn {
+        background: #6c63ff;
+      }
+
+      .jobs-btn {
+        background: #00b894;
+      }
+
+      .login-btn {
+        background: #fdcb6e;
+        color: black;
+      }
+
+      .signup-btn {
+        background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
+      }
+
+      /* HOVER EFFECT */
+      .nav-btn:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+      }
+
+      .signup-btn:hover {
+        transform: scale(1.05);
+      }
+
+      /* ===== CONTAINER ===== */
+      .container {
+        margin-top: 80px;
+        padding: 20px;
+        animation: fadeIn 0.6s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ===== MOBILE MENU ===== */
+      .menu-toggle {
+        display: none;
+        font-size: 24px;
+        color: white;
+        cursor: pointer;
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 768px) {
+        .menu-toggle {
+          display: block;
+        }
+
+        .nav-links {
+          position: absolute;
+          top: 60px;
+          right: 0;
+          background: #0a66c2;
+          flex-direction: column;
+          width: 200px;
+          display: none;
+          padding: 10px;
+          border-radius: 0 0 10px 10px;
+        }
+
+        .nav-links a {
+          width: 100%;
+          text-align: center;
+          padding: 10px;
+        }
+
+        .nav-links.show {
+          display: flex;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ===== NAVBAR ===== -->
+    <div class="navbar">
+      <div class="logo">💼 JobPortal</div>
+
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+
+      <div class="nav-links">
+        <a href="/" class="nav-btn home-btn">Home</a>
+        <a href="/jobs/" class="nav-btn jobs-btn">Jobs</a>
+        <a href="/login/" class="nav-btn login-btn">Login</a>
+        <a href="/signup/" class="nav-btn signup-btn">Signup</a>
+      </div>
+    </div>
+
+    <!-- ===== CONTENT ===== -->
+    <div class="container">{% block content %}{% endblock %}</div>
+
+    <!-- ===== JS ===== -->
+    <script>
+      function toggleMenu() {
+        document.querySelector(".nav-links").classList.toggle("show");
+      }
+    </script>
+  </body>
+</html>

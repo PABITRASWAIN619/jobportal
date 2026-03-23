@@ -1,0 +1,76 @@
+{% extends 'base.html' %} {% block content %}
+
+<style>
+  .jobs-container {
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .job-card {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border-left: 5px solid #0a66c2;
+  }
+
+  .job-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .job-title {
+    margin: 0;
+    font-size: 20px;
+    color: #222;
+  }
+
+  .job-info {
+    color: #666;
+    margin: 8px 0 15px;
+    font-size: 14px;
+  }
+
+  .apply-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background: linear-gradient(45deg, #0a66c2, #0073b1);
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 14px;
+  }
+
+  .apply-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #004182, #0a66c2);
+  }
+
+  .no-job {
+    text-align: center;
+    color: gray;
+    margin-top: 50px;
+  }
+</style>
+
+<div class="jobs-container">
+  <h2 style="margin-bottom: 20px">Available Jobs 💼</h2>
+
+  {% if jobs %} {% for job in jobs %}
+
+  <div class="job-card">
+    <h3 class="job-title">{{ job.title }}</h3>
+    <p class="job-info">{{ job.company }} • {{ job.location }}</p>
+
+    <a href="/apply/{{ job.id }}/" class="apply-btn">Easy Apply</a>
+  </div>
+
+  {% endfor %} {% else %}
+  <h3 class="no-job">No Jobs Available</h3>
+  {% endif %}
+</div>
+
+{% endblock %}
