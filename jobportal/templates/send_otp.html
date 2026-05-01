@@ -1,0 +1,19 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="glass">
+  <h2 style="text-align: center">Login with OTP</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <input type="email" name="email" placeholder="Enter Email" required />
+
+    <button class="btn">Send OTP</button>
+  </form>
+
+  <p style="text-align: center; margin-top: 10px">
+    <a href="/login/" style="color: white">⬅ Back to Login</a>
+  </p>
+</div>
+
+{% endblock %}

@@ -26,7 +26,7 @@
     margin-bottom: 30px;
   }
 
-  /* ===== SEARCH BAR ===== */
+  /* SEARCH */
   .search-box {
     background: white;
     padding: 15px;
@@ -46,34 +46,19 @@
 
   .search-box button {
     padding: 12px 20px;
-    background: linear-gradient(45deg, #0a66c2, #0073b1);
+    background: #0a66c2;
     color: white;
     border: none;
     border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
   }
 
-  .search-box button:hover {
-    background: linear-gradient(45deg, #004182, #0a66c2);
-    transform: scale(1.05);
-  }
-
-  /* ===== BUTTONS ===== */
+  /* BUTTONS */
   .btn-primary {
     padding: 12px 25px;
     background: #0a66c2;
     color: white;
     border-radius: 6px;
     text-decoration: none;
-    margin-right: 10px;
-    display: inline-block;
-    transition: 0.3s;
-  }
-
-  .btn-primary:hover {
-    background: #004182;
-    transform: translateY(-2px);
   }
 
   .btn-secondary {
@@ -82,34 +67,9 @@
     color: #0a66c2;
     border-radius: 6px;
     text-decoration: none;
-    display: inline-block;
-    transition: 0.3s;
   }
 
-  .btn-secondary:hover {
-    background: #0a66c2;
-    color: white;
-  }
-
-  /* ===== IMAGE ===== */
-  .hero img {
-    width: 420px;
-    animation: float 4s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-20px);
-    }
-    100% {
-      transform: translateY(0px);
-    }
-  }
-
-  /* ===== FEATURES ===== */
+  /* FEATURES */
   .features {
     display: flex;
     justify-content: space-around;
@@ -123,100 +83,33 @@
     width: 260px;
     border-radius: 12px;
     text-align: center;
-    transition: 0.3s;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    margin: 10px;
   }
 
-  .feature-card:hover {
-    transform: translateY(-10px);
-  }
-
-  .feature-card h3 {
-    color: #0a66c2;
-  }
-
-  /* ===== STATS ===== */
+  /* STATS */
   .stats {
     display: flex;
     justify-content: space-around;
-    background: linear-gradient(45deg, #0a66c2, #0073b1);
+    background: #0a66c2;
     color: white;
-    padding: 40px 20px;
-    margin-top: 40px;
-    flex-wrap: wrap;
+    padding: 40px;
   }
 
-  .stat {
-    text-align: center;
-    margin: 10px;
-  }
-
-  .stat h2 {
-    font-size: 32px;
-  }
-
-  /* ===== COMPANIES ===== */
-  .companies {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 30px;
-    gap: 15px;
-  }
-
-  .company-card {
-    background: white;
-    padding: 12px 20px;
-    border-radius: 20px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    font-weight: bold;
-  }
-
-  /* ===== FOOTER ===== */
+  /* FOOTER */
   .footer {
     text-align: center;
     padding: 20px;
     background: #222;
     color: white;
-    margin-top: 40px;
-  }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 900px) {
-    .hero {
-      flex-direction: column;
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    .hero img {
-      width: 280px;
-      margin-top: 20px;
-    }
-
-    .search-box {
-      flex-direction: column;
-    }
-
-    .features {
-      flex-direction: column;
-      align-items: center;
-    }
   }
 </style>
 
-<!-- ===== HERO SECTION ===== -->
+<!-- HERO -->
 <div class="hero">
   <div class="hero-text">
     <h1>Find Your Dream Job 💼</h1>
+    <p>Discover opportunities and grow your career.</p>
 
-    <p>
-      Discover opportunities, connect with recruiters, and grow your career with
-      our professional platform.
-    </p>
-
-    <!-- ✅ ONLY ONE SEARCH BAR -->
     <form action="/jobs/" method="GET" class="search-box">
       <input type="text" name="q" placeholder="Search jobs..." />
       <input type="text" name="location" placeholder="Location" />
@@ -229,55 +122,67 @@
     <a href="/signup/" class="btn-secondary">Join Now</a>
   </div>
 
-  <img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png" />
+  <img
+    src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png"
+    width="350"
+  />
 </div>
 
-<!-- ===== FEATURES ===== -->
+<!-- FEATURES -->
 <div class="features">
   <div class="feature-card">
     <h3>🔍 Smart Search</h3>
-    <p>Find jobs based on your skills instantly</p>
+    <p>Find jobs easily</p>
   </div>
 
   <div class="feature-card">
     <h3>⚡ Easy Apply</h3>
-    <p>Apply for jobs with one click</p>
+    <p>Apply quickly</p>
   </div>
 
   <div class="feature-card">
     <h3>🏢 Top Companies</h3>
-    <p>Work with leading organizations</p>
+    <p>Work with best companies</p>
   </div>
 </div>
 
-<!-- ===== STATS ===== -->
+<!-- STATS -->
 <div class="stats">
-  <div class="stat">
+  <div>
     <h2>10K+</h2>
-    <p>Jobs Posted</p>
+    <p>Jobs</p>
   </div>
 
-  <div class="stat">
+  <div>
     <h2>5K+</h2>
     <p>Companies</p>
   </div>
 
-  <div class="stat">
+  <div>
     <h2>20K+</h2>
     <p>Users</p>
   </div>
 </div>
 
-<!-- ===== COMPANIES ===== -->
-<div class="companies">
-  {% for company in companies %}
-  <div class="company-card">{{ company }}</div>
-  {% endfor %}
+<!-- FEATURED JOBS -->
+<div style="padding: 40px; text-align: center">
+  <h2>Featured Jobs</h2>
+
+  <div style="display: flex; flex-wrap: wrap; justify-content: center">
+    {% for job in jobs|slice:":6" %}
+    <div style="background: white; padding: 20px; margin: 10px; width: 250px">
+      <h3>{{ job.title }}</h3>
+      <p>{{ job.company }}</p>
+      <p>{{ job.location }}</p>
+      <a href="/apply/{{ job.id }}/" class="btn-primary">Apply</a>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 
-<!-- ===== FOOTER ===== -->
+<!-- FOOTER -->
 <div class="footer">
-  <p>© 2026 Job Portal | Built with ❤️</p>
+  <p>© 2026 Job Portal</p>
 </div>
 
 {% endblock %}

@@ -94,9 +94,7 @@
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <input type="text" name="name" placeholder="Your Name" required />
-    <input type="email" name="email" placeholder="Your Email" required />
-    <input type="text" name="linkedin" placeholder="LinkedIn Profile" />
+    <input type="url" name="linkedin" placeholder="LinkedIn Profile" />
     <input type="file" name="resume" required />
 
     <button type="submit">Apply Now 🚀</button>

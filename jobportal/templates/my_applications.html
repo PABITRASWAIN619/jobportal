@@ -1,0 +1,25 @@
+id="htmlapps1"
+<h2>📄 My Applications</h2>
+
+{% for app in applications %}
+<div style="border: 1px solid #ccc; padding: 15px; margin: 10px">
+  <h3>{{ app.job.title }}</h3>
+  <p>{{ app.job.company }}</p>
+
+  <p>
+    Status:
+    <strong
+      style="
+        color:
+        {% if app.status == 'accepted' %}green
+        {% elif app.status == 'rejected' %}red
+        {% else %}orange{% endif %}
+      "
+    >
+      {{ app.status }}
+    </strong>
+  </p>
+
+  <a href="{{ app.resume.url }}">Download Resume</a>
+</div>
+{% endfor %}

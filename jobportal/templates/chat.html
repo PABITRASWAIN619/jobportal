@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block content %}
+
+<h2>Chat</h2>
+
+<div style="display: flex; gap: 20px">
+  <!-- USERS -->
+  <div style="width: 30%">
+    {% for u in users %}
+    <a href="?user={{u.id}}">{{u.username}}</a><br />
+    {% endfor %}
+  </div>
+
+  <!-- CHAT BOX -->
+  <div style="width: 70%">
+    <form method="POST" action="/send-message/">
+      {% csrf_token %}
+      <input type="hidden" name="receiver" value="{{request.GET.user}}" />
+      <input type="text" name="text" placeholder="Message" />
+      <button>Send</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

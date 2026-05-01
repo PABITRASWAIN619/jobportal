@@ -13,7 +13,7 @@ db.sqlite3
 media/
 
 # OS files
-.DS_Store
+.DS_jobs
 Thumbs.db
 
 

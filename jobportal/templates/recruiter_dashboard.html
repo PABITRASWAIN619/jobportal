@@ -1,0 +1,17 @@
+id="recruiterhtml1"
+<h2>👨‍💼 Applicants</h2>
+
+{% for app in applications %}
+<div style="border: 1px solid #ccc; padding: 15px; margin: 10px">
+  <h3>{{ app.job.title }}</h3>
+  <p>Applicant: {{ app.user.username }}</p>
+  <p>LinkedIn: {{ app.linkedin }}</p>
+
+  <a href="{{ app.resume.url }}">Download Resume</a>
+
+  <p>Status: {{ app.status }}</p>
+
+  <a href="/update-status/{{ app.id }}/accepted/">✅ Accept</a> |
+  <a href="/update-status/{{ app.id }}/rejected/">❌ Reject</a>
+</div>
+{% endfor %}
