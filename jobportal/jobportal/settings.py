@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['easypalei.onrender.com']
 
 EMAIL_HOST_USER = 'swainpabitra9861@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('bzku opivwzntnhde')
