@@ -11,7 +11,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key')
 
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['easypalei.onrender.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    'barsapalei.onrender.com',
+    'easypalei.onrender.com',
+    'localhost',
+    '127.0.0.1'
+]
 
 
 # =========================
