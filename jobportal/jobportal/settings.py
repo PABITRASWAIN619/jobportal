@@ -7,9 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 # =========================
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-key')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key')
 
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'barsapalei.onrender.com',
@@ -26,9 +26,8 @@ CSRF_TRUSTED_ORIGINS = [
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
-
 # =========================
-# APPLICATIONS
+# INSTALLED APPS
 # =========================
 
 INSTALLED_APPS = [
@@ -50,6 +49,7 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
+
 # =========================
 # MIDDLEWARE
 # =========================
@@ -65,7 +65,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'jobportal.urls'
+
 
 # =========================
 # TEMPLATES
@@ -85,6 +87,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'jobportal.wsgi.application'
 
@@ -136,7 +139,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # =========================
-# LOGIN SETTINGS
+# LOGIN
 # =========================
 
 LOGIN_REDIRECT_URL = "/home/"
@@ -145,7 +148,7 @@ LOGOUT_REDIRECT_URL = "/login/"
 
 
 # =========================
-# EMAIL (FIXED - IMPORTANT)
+# EMAIL (FIXED)
 # =========================
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -156,7 +159,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-
 # =========================
 # AUTH BACKENDS
 # =========================
@@ -165,4 +167,13 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-  
+
+
+# =========================
+# ALLAUTH SETTINGS
+# =========================
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
