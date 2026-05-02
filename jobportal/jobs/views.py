@@ -7,92 +7,44 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.utils import timezone
 
-from datetime import timedelta
 import random
 
-from .models import Job, Application, Profile
-# (Optional if you created these)
-# from .models import Post, Notification, Message
+from .models import Job, Application, Profile, SupportMessage
 
 
 # ===========================
-# 🔐 AUTH
+# 🔐 AUTH - LOGIN
 # ===========================
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.contrib import messages
-
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
-
 def login_view(request):
-    
-    # 🚨 IMPORTANT: only redirect if already logged in
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return redirect('/admin-dashboard/')
-        return redirect('/home/')
-
-    # ONLY POST should authenticate
     if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        email = request.POST.get("email")
+        password = request.POST.get("password")
 
-        user = None
+        user_obj = User.objects.filter(email=email).first()
 
-        try:
-            user_obj = User.objects.get(email=email)
-            user = authenticate(request, username=user_obj.username, password=password)
-        except User.DoesNotExist:
-            pass
+        if not user_obj:
+            messages.error(request, "Invalid credentials")
+            return render(request, "login.html", {"hide_navbar": True})
+
+        user = authenticate(request, username=user_obj.username, password=password)
 
         if user is not None:
             login(request, user)
 
             if user.is_superuser:
-                return redirect('/admin-dashboard/')
-            return redirect('/home/')
+                return redirect("/admin-dashboard/")
 
-        messages.error(request, "Invalid email or password ❌")
+            return redirect("/home/")
 
-    return render(request, 'login.html')
+        messages.error(request, "Invalid credentials")
+        return render(request, "login.html", {"hide_navbar": True})
+
+    return render(request, "login.html", {"hide_navbar": True})
+
+
 # ===========================
-# 🔢 OTP LOGIN
+# 🆕 SIGNUP
 # ===========================
-
-import random
-from django.contrib.auth.models import User
-from django.core.mail import send_mail
-
-def send_otp(request):
-    if request.method == "POST":
-        email = request.POST.get('email')
-
-        # ✅ generate OTP
-        otp = str(random.randint(100000, 999999))
-
-        # ✅ jobs in session
-        request.session['otp'] = otp
-        request.session['email'] = email
-
-        # ✅ send email
-        send_mail(
-            'Your OTP Code',
-            f'Your OTP is {otp}',
-            'yourgmail@gmail.com',
-            [email],
-            fail_silently=False,
-        )
-
-        return redirect('/verify-otp/')
-
-    return render(request, 'send_otp.html')
-
-from django.contrib.auth import login
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.models import User
-
 def signup_view(request):
     if request.method == "POST":
         name = request.POST.get("name")
@@ -100,12 +52,10 @@ def signup_view(request):
         password = request.POST.get("password")
         role = request.POST.get("role")
 
-        # ❌ check duplicate user
-        if User.objects.filter(username=email).exists():
+        if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists")
             return redirect("/signup/")
 
-        # ✅ create user
         user = User.objects.create_user(
             username=email,
             email=email,
@@ -113,80 +63,82 @@ def signup_view(request):
             first_name=name
         )
 
-        # ⚠️ If you DON'T have Profile model, remove this block
-        try:
-            user.profile.role = role
-            user.profile.save()
-        except:
-            pass
+        Profile.objects.create(user=user, role=role)
 
-        messages.success(request, "Account created successfully!")
+        messages.success(request, "Account created successfully")
         return redirect("/login/")
 
-    return render(request, "signup.html")
+    return render(request, "signup.html", {"hide_navbar": True})
 
+
+# ===========================
+# 🔢 OTP VERIFY
+# ===========================
 def verify_otp(request):
     if request.method == "POST":
         user_otp = request.POST.get('otp')
         real_otp = request.session.get('otp')
         email = request.session.get('email')
 
-        if user_otp == real_otp:
+        if not real_otp or not email:
+            messages.error(request, "Session expired")
+            return redirect('/login/')
+
+        if str(user_otp) == str(real_otp):
 
             user, created = User.objects.get_or_create(
-                username=email,
-                defaults={'email': email}
+                email=email,
+                defaults={"username": email.split("@")[0]}
             )
 
-            # ✅ SAFE profile creation
-            Profile.objects.get_or_create(
-                user=user,
-                defaults={'role': 'jobseeker'}
-            )
+            if created:
+                user.set_unusable_password()
+                user.save()
 
             login(request, user)
 
-            return redirect('/home/')
+            return redirect("/home/")
 
         else:
             messages.error(request, "Invalid OTP")
 
-    return render(request, 'verify_otp.html')
-# ===========================
-# 🏠 HOME
-# ===========================
-
-@login_required(login_url='/login/')
-def home(request):
-    jobs = Job.objects.all()[:6]
-    companies = Job.objects.values_list('company', flat=True).distinct()
-
-    return render(request, 'home.html', {
-        'jobs': jobs,
-        'companies': companies
-    })
+    return render(request, "verify_otp.html", {"hide_navbar": True})
 
 
 # ===========================
-# 💼 JOBS
+# 📩 SEND OTP
 # ===========================
+def send_otp(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
 
-@login_required
-def job_list(request):
-    query = request.GET.get('q')
-    location = request.GET.get('location')
+        if not email:
+            messages.error(request, "Email is required")
+            return render(request, "send_otp.html", {"hide_navbar": True})
 
-    jobs = Job.objects.all()
+        otp = random.randint(100000, 999999)
 
-    if query:
-        jobs = jobs.filter(title__icontains=query)
+        request.session["otp"] = str(otp)
+        request.session["email"] = email
+        request.session["otp_time"] = str(timezone.now())
 
-    if location:
-        jobs = jobs.filter(location__icontains=location)
+        send_mail(
+            subject="Your OTP for Login",
+            message=f"Your OTP is: {otp}",
+            from_email=None,
+            recipient_list=[email],
+            fail_silently=False,
+        )
 
-    return render(request, 'jobs.html', {'jobs': jobs})
+        messages.success(request, "OTP sent successfully!")
+        return redirect("/verify-otp/")
+
+    return render(request, "send_otp.html", {"hide_navbar": True})
 
 
+# ===========================
+# 🏢 APPLY JOB
+# ===========================
 @login_required
 def apply_job(request, job_id):
     if request.user.profile.role != 'jobseeker':
@@ -199,14 +151,11 @@ def apply_job(request, job_id):
         return redirect('/jobs/')
 
     if request.method == "POST":
-        resume = request.FILES.get('resume')
-        linkedin = request.POST.get('linkedin')
-
         Application.objects.create(
             user=request.user,
             job=job,
-            resume=resume,
-            linkedin=linkedin
+            resume=request.FILES.get('resume'),
+            linkedin=request.POST.get('linkedin')
         )
 
         messages.success(request, "Application submitted")
@@ -218,7 +167,6 @@ def apply_job(request, job_id):
 # ===========================
 # 🏢 RECRUITER
 # ===========================
-
 @login_required
 def post_job(request):
     if request.user.profile.role != 'recruiter':
@@ -241,17 +189,18 @@ def post_job(request):
 
 @login_required
 def recruiter_dashboard(request):
-    if request.user.profile.role != 'recruiter':
-        return redirect('/')
-
     jobs = Job.objects.filter(posted_by=request.user)
     applications = Application.objects.filter(job__in=jobs)
 
     return render(request, 'recruiter_dashboard.html', {
+        'jobs': jobs,
         'applications': applications
     })
 
 
+# ===========================
+# 📌 UPDATE STATUS
+# ===========================
 @login_required
 def update_status(request, app_id, status):
     app = get_object_or_404(Application, id=app_id)
@@ -276,34 +225,32 @@ def update_status(request, app_id, status):
 # ===========================
 # 👤 USER FEATURES
 # ===========================
-
 @login_required
 def my_applications(request):
     apps = Application.objects.filter(user=request.user)
     return render(request, 'my_applications.html', {'applications': apps})
 
 
-from django.shortcuts import render, redirect
 @login_required
 def profile(request):
     profile = request.user.profile
 
     if request.method == "POST":
-        # ✅ update name + email
         request.user.first_name = request.POST.get("name")
         request.user.email = request.POST.get("email")
         request.user.save()
 
-        # ✅ profile image fix
         if request.FILES.get("profile_pic"):
             profile.profile_pic = request.FILES["profile_pic"]
 
         profile.save()
 
-        messages.success(request, "Profile updated successfully ✅")
+        messages.success(request, "Profile updated successfully")
         return redirect("/profile/")
 
     return render(request, "profile.html", {"profile": profile})
+
+
 @login_required
 def settings(request):
     if request.method == "POST":
@@ -313,8 +260,7 @@ def settings(request):
             request.user.set_password(password)
             request.user.save()
             messages.success(request, "Password updated")
-
-            return redirect('/login/')  # IMPORTANT
+            return redirect('/login/')
 
     return render(request, 'settings.html')
 
@@ -337,27 +283,8 @@ def support(request):
 
 
 # ===========================
-# 👑 ADMIN
+# 💬 CHAT
 # ===========================
-@staff_member_required(login_url='/login/')
-def admin_dashboard(request):
-    users = User.objects.all()
-    jobs = Job.objects.all()
-    applications = Application.objects.all()
-    support_msgs = SupportMessage.objects.all()
-
-    return render(request, 'admin_dashboard.html', {
-        'users': users,
-        'jobs': jobs,
-        'applications': applications,
-        'support_msgs': support_msgs,
-    })
-
-
-# ===========================
-# 💬 CHAT (BASIC)
-# ===========================
-
 @login_required
 def chat(request):
     users = User.objects.exclude(id=request.user.id)
@@ -370,56 +297,55 @@ def send_message(request):
         receiver_id = request.POST.get('receiver')
         text = request.POST.get('text')
 
-        # Example if Message model exists:
-        # Message.objects.create(
-        #     sender=request.user,
-        #     receiver_id=receiver_id,
-        #     text=text
-        # )
-
     return redirect('/chat/')
+
+
+# ===========================
+# 📊 DASHBOARD
+# ===========================
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html')
+
+
 @login_required
 def create_post(request):
     if request.method == "POST":
-        content = request.POST.get('content')
-
-        # ⚠️ Only if Post model exists
-        # Post.objects.create(user=request.user, content=content)
-
         return redirect('/dashboard/')
 
     return render(request, 'create_post.html')
-from django.shortcuts import redirect
-from django.contrib.auth import logout
 
+
+# ===========================
+# 🚪 LOGOUT
+# ===========================
 def logout_view(request):
     logout(request)
     return redirect('/login/')
-from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Count
-from .models import Job, Application, Profile
 
-from django.contrib.admin.views.decorators import staff_member_required
-from .models import SupportMessage
 
+# ===========================
+# 🏠 HOME
+# ===========================
+def home(request):
+    return render(request, "home.html")
+
+
+# ===========================
+# 📄 JOB LIST
+# ===========================
+def job_list(request):
+    return render(request, "job_list.html")
+
+
+# ===========================
+# ===========================
+# 🛠 ADMIN PAGES (FIXED)
+# ===========================
 @staff_member_required(login_url='/login/')
 def admin_dashboard(request):
-    users = User.objects.all()
-    jobs = Job.objects.all()
-    applications = Application.objects.all()
-    support_msgs = SupportMessage.objects.all()
+    return render(request, "admin_dashboard.html")
 
-    return render(request, 'admin_dashboard.html', {
-        'users': users,
-        'jobs': jobs,
-        'applications': applications,
-        'support_msgs': support_msgs
-    })
-    
-from django.contrib.admin.views.decorators import staff_member_required
 
 @staff_member_required(login_url='/login/')
 def admin_post_job(request):
@@ -429,17 +355,23 @@ def admin_post_job(request):
             company=request.POST.get("company"),
             location=request.POST.get("location"),
             description=request.POST.get("description"),
-            status='active',
             posted_by=request.user
         )
         return redirect('/admin-dashboard/')
-@login_required
-@staff_member_required
-def admin_reply(request, id):
-    msg = SupportMessage.objects.get(id=id)
 
-    if request.method == "POST":
-        msg.reply = request.POST.get("reply")
-        msg.save()
+    return render(request, "admin_post_job.html")
 
-    return redirect('/admin-dashboard/')
+
+@staff_member_required(login_url='/login/')
+def admin_users(request):
+    return render(request, "admin_users.html")
+
+
+@staff_member_required(login_url='/login/')
+def admin_jobs(request):
+    return render(request, "admin_jobs.html")
+
+
+@staff_member_required(login_url='/login/')
+def admin_applications(request):
+    return render(request, "admin_applications.html")

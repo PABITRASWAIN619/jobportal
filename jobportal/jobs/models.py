@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 
 # =========================
-# 👤 PROFILE MODEL
+# 👤 PROFILE
 # =========================
 class Profile(models.Model):
     ROLE_CHOICES = (
@@ -26,7 +26,6 @@ class Profile(models.Model):
         return self.user.username
 
 
-# AUTO CREATE PROFILE
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
@@ -35,16 +34,15 @@ def create_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
-    if hasattr(instance, 'profile'):
+    try:
         instance.profile.save()
+    except:
+        pass
 
 
 # =========================
-# 💼 JOB MODEL
+# 💼 JOB
 # =========================
-from django.db import models
-from django.contrib.auth.models import User
-
 class Job(models.Model):
     STATUS_CHOICES = (
         ('active', 'Active'),
@@ -58,7 +56,6 @@ class Job(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
 
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -66,7 +63,7 @@ class Job(models.Model):
 
 
 # =========================
-# 📄 APPLICATION MODEL
+# 📄 APPLICATION
 # =========================
 class Application(models.Model):
     STATUS_CHOICES = (
@@ -89,19 +86,16 @@ class Application(models.Model):
 
 
 # =========================
-# 🧠 POSTS (LIKE FEED)
+# 🧠 POST
 # =========================
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.user.username
-
 
 # =========================
-# 🔔 NOTIFICATIONS
+# 🔔 NOTIFICATION
 # =========================
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -109,12 +103,9 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.user.username
-
 
 # =========================
-# 💬 CHAT MESSAGES
+# 💬 MESSAGE
 # =========================
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
@@ -122,18 +113,12 @@ class Message(models.Model):
     text = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.sender} → {self.receiver}"
-
 
 # =========================
-# 🆘 SUPPORT MESSAGES (ADMIN HELP)
+# 🆘 SUPPORT
 # =========================
 class SupportMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
-    reply = models.TextField(blank=True, null=True)  # ⭐ ADD THIS
+    reply = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.user.username

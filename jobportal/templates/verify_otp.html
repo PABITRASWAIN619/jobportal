@@ -1,19 +1,159 @@
 {% extends 'base.html' %} {% block content %}
 
-<div class="container">
-  <div class="glass">
-    <h2>Verify OTP</h2>
+<style>
+  /* ===== FULL BACKGROUND SLIDESHOW ===== */
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial;
+    overflow: hidden;
+  }
 
-    <form method="POST">
-      {% csrf_token %}
-      <input type="text" name="otp" placeholder="Enter OTP" required />
-      <button class="btn">Verify OTP</button>
-    </form>
+  /* SLIDESHOW BACKGROUND */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
 
-    <p style="text-align: center; margin-top: 10px">
-      <a href="/login/" style="color: #fff">⬅ Back to Login</a>
-    </p>
-  </div>
+    background-size: cover;
+    background-position: center;
+    animation: bgSlide 20s infinite;
+  }
+
+  /* DARK OVERLAY */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  /* BACKGROUND IMAGES ANIMATION */
+  @keyframes bgSlide {
+    0% {
+      background-image: url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f");
+    }
+    25% {
+      background-image: url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d");
+    }
+    50% {
+      background-image: url("https://images.unsplash.com/photo-1504639725590-34d0984388bd");
+    }
+    75% {
+      background-image: url("https://images.unsplash.com/photo-1498050108023-c5249f4df085");
+    }
+    100% {
+      background-image: url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f");
+    }
+  }
+
+  /* ===== GLASS BOX ===== */
+  .glass {
+    width: 380px;
+    padding: 30px;
+    border-radius: 18px;
+
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(18px);
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    color: white;
+
+    text-align: center;
+
+    animation: floatIn 0.8s ease;
+    transition: 0.3s;
+  }
+
+  /* FLOAT ANIMATION */
+  @keyframes floatIn {
+    from {
+      opacity: 0;
+      transform: translateY(40px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .glass:hover {
+    transform: translateY(-6px);
+  }
+
+  /* TITLE */
+  .glass h2 {
+    margin-bottom: 20px;
+    font-size: 26px;
+    background: linear-gradient(90deg, #00c6ff, #ff6a00, #ee0979);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* INPUT */
+  input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    margin: 10px 0;
+    outline: none;
+  }
+
+  /* BUTTON */
+  .btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+
+    background: linear-gradient(135deg, #ff512f, #dd2476, #24c6dc);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+
+    transition: 0.3s;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  /* BACK LINK */
+  a {
+    color: #00c6ff;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* MOBILE */
+  @media (max-width: 500px) {
+    .glass {
+      width: 90%;
+    }
+  }
+</style>
+
+<div class="glass">
+  <h2>🔐 OTP Verification</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    <input type="text" name="otp" placeholder="Enter OTP" required />
+    <button class="btn">Verify OTP</button>
+  </form>
+
+  <p style="margin-top: 15px">
+    <a href="/login/">⬅ Back to Login</a>
+  </p>
 </div>
 
 {% endblock %}

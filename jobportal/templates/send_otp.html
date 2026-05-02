@@ -1,7 +1,133 @@
 {% extends 'base.html' %} {% block content %}
 
+<style>
+  /* ===== BACKGROUND IMAGE ===== */
+  body {
+    margin: 0;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d")
+      no-repeat center center/cover;
+
+    font-family: Arial, sans-serif;
+  }
+
+  /* DARK OVERLAY */
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  /* ===== GLASS CARD ===== */
+  .glass {
+    position: relative;
+    width: 380px;
+    padding: 30px;
+
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+
+    color: white;
+    text-align: center;
+
+    animation: fadeUp 0.6s ease;
+    z-index: 2;
+
+    transition: 0.3s;
+  }
+
+  /* ANIMATION */
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* HOVER FLOAT */
+  .glass:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  /* TITLE */
+  .glass h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    background: linear-gradient(90deg, #00c6ff, #ff6a00, #ee0979);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* INPUT */
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+
+    border: none;
+    border-radius: 10px;
+
+    outline: none;
+    font-size: 14px;
+  }
+
+  /* BUTTON */
+  .btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+    font-weight: bold;
+
+    color: white;
+
+    background: linear-gradient(135deg, #ff512f, #dd2476, #24c6dc);
+
+    box-shadow: 0 8px 20px rgba(255, 0, 150, 0.4);
+
+    transition: 0.3s;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  /* BACK LINK */
+  a {
+    color: #00c6ff;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* MOBILE */
+  @media (max-width: 500px) {
+    .glass {
+      width: 90%;
+    }
+  }
+</style>
+
 <div class="glass">
-  <h2 style="text-align: center">Login with OTP</h2>
+  <h2>📩 Login with OTP</h2>
 
   <form method="POST">
     {% csrf_token %}
@@ -11,8 +137,8 @@
     <button class="btn">Send OTP</button>
   </form>
 
-  <p style="text-align: center; margin-top: 10px">
-    <a href="/login/" style="color: white">⬅ Back to Login</a>
+  <p style="margin-top: 15px">
+    <a href="/login/">⬅ Back to Login</a>
   </p>
 </div>
 

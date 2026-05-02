@@ -1,21 +1,94 @@
 {% extends 'base.html' %} {% block content %}
 
 <style>
-  .glass {
-    animation: fadeIn 0.6s ease-in-out;
+  /* ===== FULL BACKGROUND ===== */
+  body {
+    margin: 0;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d")
+      no-repeat center center/cover;
+
+    font-family: Arial, sans-serif;
+    overflow: hidden;
   }
 
-  @keyframes fadeIn {
+  /* DARK OVERLAY */
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  /* ===== FLOATING GLASS FORM ===== */
+  .glass {
+    position: relative;
+    width: 380px;
+    padding: 30px;
+
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+
+    color: white;
+    text-align: center;
+
+    animation: pop 0.7s ease;
+    z-index: 2;
+
+    transition: 0.3s;
+  }
+
+  /* FLOAT ANIMATION */
+  @keyframes pop {
     from {
       opacity: 0;
-      transform: translateY(25px);
+      transform: translateY(40px) scale(0.9);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 
+  /* HOVER EFFECT (CENTER FLOAT) */
+  .glass:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  /* TITLE */
+  .glass h2 {
+    margin-bottom: 20px;
+    font-size: 26px;
+    background: linear-gradient(90deg, #ff6a00, #ee0979, #00c6ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* INPUT */
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+
+    border: none;
+    border-radius: 10px;
+
+    outline: none;
+    font-size: 14px;
+
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  /* PASSWORD */
   .input-group {
     position: relative;
   }
@@ -26,34 +99,69 @@
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: black;
+    color: #333;
   }
 
+  /* BUTTON */
+  .btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+
+    font-weight: bold;
+    cursor: pointer;
+
+    color: white;
+
+    background: linear-gradient(135deg, #ff512f, #dd2476, #24c6dc);
+
+    box-shadow: 0 8px 20px rgba(255, 0, 150, 0.4);
+
+    transition: 0.3s;
+  }
+
+  /* BUTTON HOVER */
+  .btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #24c6dc, #514a9d, #ff512f);
+  }
+
+  /* REMEMBER */
   .remember {
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 14px;
     margin: 10px 0;
-    color: black;
+  }
+
+  /* LINKS */
+  a {
+    color: #00c6ff;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* MOBILE */
+  @media (max-width: 500px) {
+    .glass {
+      width: 90%;
+    }
   }
 </style>
 
 <div class="glass">
-  <h2 style="text-align: center">🔐 Login</h2>
+  <h2>🔐 Welcome Back</h2>
 
   <form method="POST" onsubmit="showLoader()">
     {% csrf_token %}
 
-    <!-- EMAIL -->
-    <input
-      type="email"
-      id="email"
-      name="email"
-      placeholder="Enter email"
-      required
-    />
+    <input type="email" name="email" placeholder="Enter email" required />
 
-    <!-- PASSWORD -->
     <div class="input-group">
       <input
         type="password"
@@ -65,29 +173,23 @@
       <span class="toggle-eye" onclick="togglePassword()">👁️</span>
     </div>
 
-    <!-- REMEMBER -->
     <div class="remember">
       <input type="checkbox" name="remember_me" />
       <label>Remember me</label>
     </div>
 
-    <!-- BUTTON -->
-    <button class="btn" id="loginBtn">
+    <button class="btn">
       <span id="btnText">Login</span>
-      <span id="spinner" style="display: none">LOGIN⏳</span>
+      <span id="spinner" style="display: none">Loading...</span>
     </button>
   </form>
 
-  <!-- GOOGLE LOGIN -->
-
-  <!-- LINKS -->
-  <p style="text-align: center; margin-top: 15px">
-    Don't have an account?
-    <a href="/signup/" style="color: #fff">Signup</a>
+  <p style="margin-top: 15px">
+    Don't have account? <a href="/signup/">Signup</a>
   </p>
 
-  <p style="text-align: center">
-    <a href="/send-otp/" style="color: #ffd700">Login with OTP</a>
+  <p>
+    <a href="/send-otp/">Login with OTP</a>
   </p>
 </div>
 

@@ -252,23 +252,54 @@
   .dark-mode .navbar a:hover {
     background: rgba(255, 255, 255, 0.08);
   }
+  /* CLICKABLE CARD EFFECT */
+  .cards a {
+    text-decoration: none;
+    color: white;
+    display: block;
+  }
+
+  .cards a:hover {
+    transform: scale(1.05);
+    transition: 0.3s;
+  }
+  .card {
+    cursor: pointer;
+    transition: 0.3s;
+  }
 </style>
+
+<!-- DARK MODE BUTTON -->
 <button
   class="toggle-btn"
   onclick="document.body.classList.toggle('dark-mode')"
 >
   🌙
 </button>
+
 <h2 class="title">🛠 Admin Dashboard</h2>
 
-<!-- CARDS -->
+--- # 📊 CARDS (WITH STATS FIXED)
+
 <div class="cards">
-  <div class="card card1">👥 Users<br />{{ users.count }}</div>
-  <div class="card card2">💼 Jobs<br />{{ jobs.count }}</div>
-  <div class="card card3">📄 Applications<br />{{ applications.count }}</div>
+  <a href="/admin-users/" class="card card1">
+    👥 Users <br />
+    {{ stats.total_users }}
+  </a>
+
+  <a href="/admin-jobs/" class="card card2">
+    💼 Jobs <br />
+    {{ stats.total_jobs }}
+  </a>
+
+  <a href="/admin-applications/" class="card card3">
+    📄 Applications <br />
+    {{ stats.total_apps }}
+  </a>
 </div>
 
-<!-- CHART -->
+--- # 📈 ANALYTICS CHART
+
 <div class="section">
   <h3>📊 Analytics</h3>
   <div class="chart-box">
@@ -276,60 +307,104 @@
   </div>
 </div>
 
-<div class="grid">
-  <!-- USERS -->
-  <div class="section">
-    <h3>👤 Users</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Profile</th>
-          <th>Name</th>
-          <th>Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for u in users %}
-        <tr>
-          <td>
-            {% if u.profile.profile_pic %}
-            <img src="{{ u.profile.profile_pic.url }}" class="profile-img" />
-            {% else %}
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-              class="profile-img"
-            />
-            {% endif %}
-          </td>
+<script>
+  new Chart(document.getElementById("chart"), {
+    type: "doughnut",
+    data: {
+      labels: ["Pending", "Accepted", "Rejected"],
+      datasets: [{
+        data: [
+          {{ analytics.pending }},
+          {{ analytics.accepted }},
+          {{ analytics.rejected }}
+        ],
+        backgroundColor: ["#f97316", "#22c55e", "#ef4444"]
+      }]
+    }
+  });
+</script>
 
-          <td class="name-cell">{{ u.first_name|default:u.username }}</td>
+--- # 👤 USERS TABLE
 
-          <td class="email-cell">{{ u.email }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+<div class="section">
+  <h3>👤 Users</h3>
+  <table>
+    <tr>
+      <th>Profile</th>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
 
-  <!-- JOBS -->
-  <div class="section">
-    <h3>💼 Jobs</h3>
-    <table>
-      <tr>
-        <th>Title</th>
-        <th>Company</th>
-      </tr>
-      {% for j in jobs %}
-      <tr>
-        <td>{{ j.title }}</td>
-        <td>{{ j.company }}</td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
+    {% for u in users %}
+    <tr>
+      <td>
+        {% if u.profile.profile_pic %}
+        <img src="{{ u.profile.profile_pic.url }}" class="profile-img" />
+        {% else %}
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+          class="profile-img"
+        />
+        {% endif %}
+      </td>
+
+      <td>{{ u.first_name|default:u.username }}</td>
+      <td>{{ u.email }}</td>
+    </tr>
+    {% endfor %}
+  </table>
 </div>
 
-<!-- SUPPORT -->
+--- # 💼 JOBS TABLE
+
+<div class="section">
+  <h3>💼 Jobs</h3>
+  <table>
+    <tr>
+      <th>Title</th>
+      <th>Company</th>
+    </tr>
+
+    {% for j in jobs %}
+    <tr>
+      <td>{{ j.title }}</td>
+      <td>{{ j.company }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+--- # 📄 APPLICATIONS TABLE (IMPORTANT FIX)
+
+<div class="section">
+  <h3>📄 Applications</h3>
+  <table>
+    <tr>
+      <th>User</th>
+      <th>Job</th>
+      <th>Resume</th>
+      <th>Status</th>
+    </tr>
+
+    {% for a in applications %}
+    <tr>
+      <td>{{ a.user.email }}</td>
+      <td>{{ a.job.title }}</td>
+
+      <td>
+        {% if a.resume %}
+        <a href="{{ a.resume.url }}" target="_blank">⬇ Download</a>
+        {% else %} No Resume {% endif %}
+      </td>
+
+      <td>{{ a.status }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+--- # 🆘 SUPPORT TABLE
+
 <div class="section">
   <h3>🆘 Support Messages</h3>
   <table>
@@ -337,6 +412,7 @@
       <th>User</th>
       <th>Message</th>
     </tr>
+
     {% for s in support_msgs %}
     <tr>
       <td>{{ s.user.username }}</td>
@@ -345,28 +421,5 @@
     {% endfor %}
   </table>
 </div>
-
-<script>
-  const ctx = document.getElementById("chart");
-
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: ["Users", "Jobs", "Applications"],
-      datasets: [{
-        data: [
-          {{ users.count }},
-          {{ jobs.count }},
-          {{ applications.count }}
-        ],
-        backgroundColor: ["#2563eb","#22c55e","#f97316"]
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false
-    }
-  });
-</script>
 
 {% endblock %}
