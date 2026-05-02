@@ -1,7 +1,11 @@
 {% extends 'base.html' %} {% block content %}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.body.classList.add("dark-mode");
+  });
+</script>
 <style>
   /* ================= GLOBAL ================= */
   body {
@@ -270,34 +274,28 @@
 </style>
 
 <!-- DARK MODE BUTTON -->
-<button
-  class="toggle-btn"
-  onclick="document.body.classList.toggle('dark-mode')"
->
-  🌙
-</button>
 
 <h2 class="title">🛠 Admin Dashboard</h2>
 
 --- # 📊 CARDS (WITH STATS FIXED)
+<h2 class="title">🛠 Admin Dashboard</h2>
 
 <div class="cards">
-  <a href="/admin-users/" class="card card1">
+  <a href="/dashboard/users/" class="card card1">
     👥 Users <br />
     {{ stats.total_users }}
   </a>
 
-  <a href="/admin-jobs/" class="card card2">
+  <a href="/dashboard/jobs/" class="card card2">
     💼 Jobs <br />
     {{ stats.total_jobs }}
   </a>
 
-  <a href="/admin-applications/" class="card card3">
+  <a href="/dashboard/applications/" class="card card3">
     📄 Applications <br />
     {{ stats.total_apps }}
   </a>
 </div>
-
 --- # 📈 ANALYTICS CHART
 
 <div class="section">

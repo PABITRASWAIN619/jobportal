@@ -1,25 +1,66 @@
-id="htmlapps1"
-<h2>📄 My Applications</h2>
+<h2>📊 My Applications Tracker</h2>
 
 {% for app in applications %}
-<div style="border: 1px solid #ccc; padding: 15px; margin: 10px">
+<div
+  style="
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+  "
+>
   <h3>{{ app.job.title }}</h3>
   <p>{{ app.job.company }}</p>
 
+  <!-- TIMELINE -->
+  <div style="display: flex; gap: 10px; margin: 10px 0">
+    <span style="color: blue">✔ Applied</span>
+
+    <span
+      style="color:{% if app.status != 'applied' %}blue{% else %}gray{% endif %}"
+    >
+      → Viewed
+    </span>
+
+    <span
+      style="color:{% if app.status == 'shortlisted' or app.status == 'accepted' %}green{% else %}gray{% endif %}"
+    >
+      → Shortlisted
+    </span>
+
+    <span
+      style="color:{% if app.status == 'accepted' %}green{% elif app.status == 'rejected' %}red{% else %}gray{% endif %}"
+    >
+      → Final
+    </span>
+  </div>
+
+  <!-- STATUS -->
   <p>
     Status:
-    <strong
-      style="
-        color:
-        {% if app.status == 'accepted' %}green
-        {% elif app.status == 'rejected' %}red
-        {% else %}orange{% endif %}
-      "
-    >
-      {{ app.status }}
-    </strong>
+    <strong>{{ app.status }}</strong>
   </p>
 
-  <a href="{{ app.resume.url }}">Download Resume</a>
+  <!-- RECRUITER FEEDBACK -->
+  <div>
+    <h4>📩 Recruiter Feedback</h4>
+    <p>
+      {% if app.recruiter_feedback %} {{ app.recruiter_feedback }} {% else %} No
+      feedback yet {% endif %}
+    </p>
+  </div>
+
+  <!-- RESUME PREVIEW -->
+  <div>
+    <h4>📄 Resume</h4>
+
+    {% if app.resume %}
+    <iframe src="{{ app.resume.url }}" width="100%" height="300px"></iframe>
+    {% else %}
+    <p>No resume uploaded</p>
+    {% endif %}
+  </div>
 </div>
+{% empty %}
+<p>No applications found</p>
 {% endfor %}

@@ -66,23 +66,26 @@ class Job(models.Model):
 # 📄 APPLICATION
 # =========================
 class Application(models.Model):
-    STATUS_CHOICES = (
-        ('pending', 'Pending'),
-        ('accepted', 'Accepted'),
+    STATUS_CHOICES = [
+        ('applied', 'Applied'),
+        ('viewed', 'Viewed'),
+        ('shortlisted', 'Shortlisted'),
         ('rejected', 'Rejected'),
-    )
+        ('accepted', 'Accepted'),
+    ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
 
-    resume = models.FileField(upload_to='resumes/')
-    linkedin = models.URLField(blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='applied')
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    recruiter_feedback = models.TextField(blank=True, null=True)
+
+    resume = models.FileField(upload_to='resumes/', blank=True, null=True)
+
+    viewed_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
     applied_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user.username} - {self.job.title}"
 
 
 # =========================

@@ -14,4 +14,7 @@ class JobAdmin(admin.ModelAdmin):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ('user', 'job', 'applied_at')
+    list_display = ('user', 'job', 'status', 'get_applied_at')
+
+    def get_applied_at(self, obj):
+        return obj.created_at

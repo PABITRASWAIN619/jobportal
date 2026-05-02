@@ -39,8 +39,8 @@ urlpatterns = [
 
     # ADMIN
     path('admin-dashboard/', views.admin_dashboard),
-    path('admin/users/', views.admin_users),
-    path('admin/jobs/', views.admin_jobs),
-    path('admin/applications/', views.admin_applications),
+    path('dashboard/users/', views.admin_users, name='admin_users'),
+path('dashboard/jobs/', views.admin_jobs, name='admin_jobs'),
+path('dashboard/applications/', views.admin_applications, name='admin_applications'),
     path('admin-post-job/', views.admin_post_job),
 ]

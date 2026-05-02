@@ -227,9 +227,11 @@ def update_status(request, app_id, status):
 # ===========================
 @login_required
 def my_applications(request):
-    apps = Application.objects.filter(user=request.user)
-    return render(request, 'my_applications.html', {'applications': apps})
+    applications = Application.objects.filter(user=request.user).select_related('job')
 
+    return render(request, 'my_applications.html', {
+        'applications': applications
+    })
 
 @login_required
 def profile(request):
@@ -375,3 +377,14 @@ def admin_jobs(request):
 @staff_member_required(login_url='/login/')
 def admin_applications(request):
     return render(request, "admin_applications.html")
+@login_required
+def update_status(request, app_id, status):
+    app = Application.objects.get(id=app_id)
+
+    app.status = status
+
+    if status == "viewed":
+        app.viewed_at = timezone.now()
+
+    app.save()
+    return redirect('recruiter_dashboard')
