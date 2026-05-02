@@ -1,19 +1,24 @@
+# Virtual environments
+.venv/
+.venv-1/
+venv/
+
 # Python
 __pycache__/
 *.pyc
 
-# Virtual Environment
-venv/
-.venv/
-
 # Database
 db.sqlite3
 
-# Media files
+# Static files
+staticfiles/
+
+# Media
 media/
 
-# OS files
-.DS_jobs
-Thumbs.db
+# VS Code
+.vscode/
 
+# OS files
+.DS_Store
 
