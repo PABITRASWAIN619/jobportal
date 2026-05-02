@@ -157,3 +157,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://barsapalei.onrender.com",
+    "https://easypalei.onrender.com"
+]
