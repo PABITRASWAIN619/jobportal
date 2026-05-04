@@ -2,10 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from django.contrib.auth.models import AbstractUser
 
 # =========================
 # 👤 PROFILE
+# =========================
+# =========================
+# 👤 PROFILE (UPDATED)
 # =========================
 class Profile(models.Model):
     ROLE_CHOICES = (
@@ -22,23 +25,37 @@ class Profile(models.Model):
     skills = models.TextField(blank=True)
     location = models.CharField(max_length=100, blank=True)
 
+    # ================= NEW FEATURES =================
+    phone = models.CharField(max_length=15, blank=True)
+
+    notifications_enabled = models.BooleanField(default=True)
+    dark_mode = models.BooleanField(default=False)
+
+    two_factor_enabled = models.BooleanField(default=False)
+
     def __str__(self):
         return self.user.username
 
+    # ================= PROFILE COMPLETION =================
+    def profile_completion(self):
+        score = 0
 
-@receiver(post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
+        if self.user.username:
+            score += 15
+        if self.user.email:
+            score += 15
+        if self.profile_pic:
+            score += 20
+        if self.resume:
+            score += 20
+        if self.skills:
+            score += 15
+        if self.location:
+            score += 10
+        if self.phone:
+            score += 5
 
-
-@receiver(post_save, sender=User)
-def save_profile(sender, instance, **kwargs):
-    try:
-        instance.profile.save()
-    except:
-        pass
-
+        return score
 
 # =========================
 # 💼 JOB
@@ -83,10 +100,11 @@ class Application(models.Model):
 
     resume = models.FileField(upload_to='resumes/', blank=True, null=True)
 
+    linkedin = models.URLField(blank=True, null=True)  # ✅ ADD THIS
+
     viewed_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     applied_at = models.DateTimeField(auto_now_add=True)
-
 
 # =========================
 # 🧠 POST
@@ -125,3 +143,4 @@ class SupportMessage(models.Model):
     message = models.TextField()
     reply = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+  

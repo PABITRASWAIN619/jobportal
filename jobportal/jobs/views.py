@@ -1,3 +1,5 @@
+
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -45,6 +47,13 @@ def login_view(request):
 # ===========================
 # 🆕 SIGNUP
 # ===========================
+from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Profile
+
+User = get_user_model()
+
 def signup_view(request):
     if request.method == "POST":
         name = request.POST.get("name")
@@ -52,28 +61,37 @@ def signup_view(request):
         password = request.POST.get("password")
         role = request.POST.get("role")
 
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "Email already exists")
-            return redirect("/signup/")
-
-        user = User.objects.create_user(
-            username=email,
+        # ✅ Check if user already exists
+        user, created = User.objects.get_or_create(
             email=email,
-            password=password,
-            first_name=name
+            defaults={"username": name}
         )
 
-        Profile.objects.create(user=user, role=role)
+        if created:
+            user.set_password(password)
+            user.save()
 
-        messages.success(request, "Account created successfully")
+        # ✅ FIX: avoid duplicate profile
+        profile, created = Profile.objects.get_or_create(
+            user=user,
+            defaults={"role": role}
+        )
+
+        messages.success(request, "Signup successful!")
         return redirect("/login/")
 
-    return render(request, "signup.html", {"hide_navbar": True})
+    return render(request, "signup.html")
 
 
 # ===========================
 # 🔢 OTP VERIFY
 # ===========================
+from django.contrib.auth import login, get_user_model
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+User = get_user_model()
+
 def verify_otp(request):
     if request.method == "POST":
         user_otp = request.POST.get('otp')
@@ -95,7 +113,8 @@ def verify_otp(request):
                 user.set_unusable_password()
                 user.save()
 
-            login(request, user)
+            # ✅ IMPORTANT FIX
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
             return redirect("/home/")
 
@@ -103,8 +122,6 @@ def verify_otp(request):
             messages.error(request, "Invalid OTP")
 
     return render(request, "verify_otp.html", {"hide_navbar": True})
-
-
 # ===========================
 # 📩 SEND OTP
 # ===========================
@@ -123,12 +140,12 @@ def send_otp(request):
         request.session["otp_time"] = str(timezone.now())
 
         send_mail(
-            subject="Your OTP for Login",
-            message=f"Your OTP is: {otp}",
-            from_email=None,
-            recipient_list=[email],
-            fail_silently=False,
-        )
+    subject="Your OTP for Login",
+    message=f"Your OTP is: {otp}",
+    from_email=settings.EMAIL_HOST_USER,   # ✅ FIX
+    recipient_list=[email],
+    fail_silently=False,
+)
 
         messages.success(request, "OTP sent successfully!")
         return redirect("/verify-otp/")
@@ -141,28 +158,29 @@ def send_otp(request):
 # ===========================
 @login_required
 def apply_job(request, job_id):
-    if request.user.profile.role != 'jobseeker':
-        return redirect('/')
-
     job = get_object_or_404(Job, id=job_id)
 
-    if Application.objects.filter(user=request.user, job=job).exists():
-        messages.warning(request, "Already applied")
-        return redirect('/jobs/')
-
     if request.method == "POST":
+
+        linkedin = request.POST.get("linkedin")
+
+        # ✅ VALIDATION (ADD HERE)
+        if linkedin and "linkedin.com" not in linkedin:
+            messages.error(request, "Please enter a valid LinkedIn URL")
+            return redirect(request.path)
+
+        # ✅ SAVE APPLICATION ONLY AFTER VALIDATION PASSES
         Application.objects.create(
             user=request.user,
             job=job,
-            resume=request.FILES.get('resume'),
-            linkedin=request.POST.get('linkedin')
+            resume=request.FILES.get("resume"),
+            linkedin=linkedin
         )
 
-        messages.success(request, "Application submitted")
-        return redirect('/jobs/')
+        messages.success(request, "Application submitted successfully!")
+        return redirect("job_list")
 
-    return render(request, 'apply.html', {'job': job})
-
+    return render(request, "apply.html", {"job": job})
 
 # ===========================
 # 🏢 RECRUITER
@@ -184,7 +202,7 @@ def post_job(request):
         messages.success(request, "Job posted")
         return redirect('/jobs/')
 
-    return render(request, 'post_job.html')
+    return render(request, "admin_post_job.html")
 
 
 @login_required
@@ -252,19 +270,46 @@ def profile(request):
 
     return render(request, "profile.html", {"profile": profile})
 
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
 @login_required
-def settings(request):
+def user_settings(request):
+    user = request.user
+    profile = user.profile
+
     if request.method == "POST":
-        password = request.POST.get('password')
 
-        if password:
-            request.user.set_password(password)
-            request.user.save()
-            messages.success(request, "Password updated")
-            return redirect('/login/')
+        # ================= BASIC INFO =================
+        user.username = request.POST.get("username")
+        user.email = request.POST.get("email")
+        user.save()
 
-    return render(request, 'settings.html')
+        profile.phone = request.POST.get("phone")
+        profile.skills = request.POST.get("skills")
+        profile.location = request.POST.get("location")
+
+        # ================= FILE UPLOAD =================
+        if request.FILES.get("profile_pic"):
+            profile.profile_pic = request.FILES["profile_pic"]
+
+        if request.FILES.get("resume"):
+            profile.resume = request.FILES["resume"]
+
+        # ================= TOGGLES =================
+        profile.notifications_enabled = True if request.POST.get("notifications") == "on" else False
+        profile.dark_mode = True if request.POST.get("dark_mode") == "on" else False
+        profile.two_factor_enabled = True if request.POST.get("two_factor") == "on" else False
+
+        profile.save()
+
+        messages.success(request, "Settings updated successfully!")
+        return redirect("user_settings")
+
+    return render(request, "settings.html", {
+        "profile": profile
+    })
 
 
 def support(request):
@@ -346,7 +391,33 @@ def job_list(request):
 # ===========================
 @staff_member_required(login_url='/login/')
 def admin_dashboard(request):
-    return render(request, "admin_dashboard.html")
+    from django.contrib.auth.models import User
+    from .models import Job, Application
+
+    users = User.objects.all()
+    jobs = Job.objects.all()
+    applications = Application.objects.all()
+
+    stats = {
+        "total_users": users.count(),
+        "total_jobs": jobs.count(),
+        "total_apps": applications.count(),
+    }
+
+    analytics = {
+        "pending": applications.filter(status="applied").count(),
+        "accepted": applications.filter(status="accepted").count(),
+        "rejected": applications.filter(status="rejected").count(),
+    }
+
+    return render(request, "admin_dashboard.html", {
+        "users": users,
+        "jobs": jobs,
+        "applications": applications,
+        "stats": stats,
+        "analytics": analytics,
+        "support_msgs": []
+    })
 
 
 @staff_member_required(login_url='/login/')
@@ -364,19 +435,28 @@ def admin_post_job(request):
     return render(request, "admin_post_job.html")
 
 
-@staff_member_required(login_url='/login/')
+from django.contrib.auth.models import User
+
 def admin_users(request):
-    return render(request, "admin_users.html")
+    users = User.objects.all()
+    return render(request, "admin_users.html", {"users": users})
 
 
-@staff_member_required(login_url='/login/')
+from django.core.paginator import Paginator
+
 def admin_jobs(request):
-    return render(request, "admin_jobs.html")
+    job_list = Job.objects.all().order_by('-id')
 
+    paginator = Paginator(job_list, 5)
+    page_number = request.GET.get('page')
+    jobs = paginator.get_page(page_number)
 
-@staff_member_required(login_url='/login/')
+    return render(request, "jobs/admin_jobs.html", {"jobs": jobs})
+
 def admin_applications(request):
-    return render(request, "admin_applications.html")
+    applications = Application.objects.select_related('user', 'job').all()
+    return render(request, "jobs/admin_applications.html", {"applications": applications})
+    
 @login_required
 def update_status(request, app_id, status):
     app = Application.objects.get(id=app_id)
@@ -388,3 +468,149 @@ def update_status(request, app_id, status):
 
     app.save()
     return redirect('recruiter_dashboard')
+from django.http import JsonResponse
+from django.utils.timezone import now
+from django.views.decorators.csrf import csrf_exempt
+from .models import Application
+
+
+@csrf_exempt  # remove this if you properly send CSRF token via AJAX
+def update_application_status(request):
+    if request.method == "POST":
+        app_id = request.POST.get("id")
+        status = request.POST.get("status")
+
+        # ✅ Validate input
+        if not app_id or not status:
+            return JsonResponse({
+                "success": False,
+                "error": "Missing data"
+            })
+
+        try:
+            app = Application.objects.get(id=app_id)
+
+            # ✅ Update status
+            app.status = status
+
+            # ✅ Mark viewed time
+            if status == "viewed" and not app.viewed_at:
+                app.viewed_at = now()
+
+            app.save()
+
+            return JsonResponse({
+                "success": True,
+                "new_status": app.get_status_display()
+            })
+
+        except Application.DoesNotExist:
+            return JsonResponse({
+                "success": False,
+                "error": "Application not found"
+            })
+
+    # ❌ Wrong method
+    return JsonResponse({
+        "success": False,
+        "error": "Invalid request method"
+    })
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .models import Job
+
+@login_required
+def edit_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if request.method == "POST":
+        job.title = request.POST.get('title')
+        job.company = request.POST.get('company')
+        job.location = request.POST.get('location')
+        job.description = request.POST.get('description')
+        job.save()
+
+        messages.success(request, "Job updated successfully ✅")
+        return redirect('/dashboard/jobs/')
+
+    return render(request, 'jobs/edit_job.html', {'job': job})
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Job
+
+def delete_job(request, job_id):
+    print("DELETE REQUEST HIT")   # 👈 DEBUG HERE
+
+    if request.method == "POST":
+        print("Job ID:", job_id)
+
+        job = get_object_or_404(Job, id=job_id)
+        job.delete()
+
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"success": False, "error": "Invalid request method"})
+def admin_dashboard(request):
+    total_jobs = Job.objects.count()
+    total_users = User.objects.count()
+    total_apps = Application.objects.count()
+    accepted = Application.objects.filter(status="accepted").count()
+
+    return render(request, "admin_dashboard.html", {
+        "total_jobs": total_jobs,
+        "total_users": total_users,
+        "total_apps": total_apps,
+        "accepted": accepted,
+    })
+from openpyxl import Workbook
+from django.http import HttpResponse
+
+def export_jobs(request):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Jobs"
+
+    ws.append(["Title", "Company", "Location"])
+
+    for job in Job.objects.all():
+        ws.append([job.title, job.company, job.location])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=jobs.xlsx'
+
+    wb.save(response)
+    return response
+from django.core.exceptions import PermissionDenied
+
+def recruiter_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if request.user.role != "recruiter":
+            raise PermissionDenied
+        return view_func(request, *args, **kwargs)
+    return wrapper
+@login_required
+@recruiter_required
+def recruiter_dashboard(request):
+    jobs = Job.objects.filter(posted_by=request.user)
+    return render(request, "recruiter_dashboard.html", {"jobs": jobs})
+def login_redirect(request):
+    if request.user.role == "admin":
+        return redirect('admin_dashboard')
+    elif request.user.role == "recruiter":
+        return redirect('recruiter_dashboard')
+    else:
+        return redirect('home')
+from django.shortcuts import render
+from .models import Job
+
+def job_list(request):
+    jobs = Job.objects.filter(status='active').order_by('-created_at')
+
+    context = {
+        "jobs": jobs
+    }
+
+    return render(request, "jobs.html", context)  # ✅ FIXED

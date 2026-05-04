@@ -1,31 +1,146 @@
 {% extends 'base.html' %} {% block content %}
 
+<style>
+  body {
+    background: #0f172a;
+    color: #e5e7eb;
+    font-family: Arial, sans-serif;
+  }
+
+  /* TITLE */
+  .page-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 25px 0;
+    color: #60a5fa;
+  }
+
+  /* GRID */
+  .jobs-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  /* CARD */
+  .job-card {
+    width: 320px;
+    background: #1e293b;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    transition: 0.3s ease;
+  }
+
+  .job-card:hover {
+    transform: translateY(-8px);
+  }
+
+  /* FIXED PROFESSIONAL IMAGE */
+  .job-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  /* CONTENT */
+  .job-content {
+    padding: 15px;
+  }
+
+  .job-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .company {
+    color: #93c5fd;
+    margin-top: 5px;
+    font-weight: bold;
+  }
+
+  .location {
+    font-size: 13px;
+    color: #94a3b8;
+    margin: 5px 0;
+  }
+
+  /* APPLY BUTTON */
+  .apply-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+
+  .apply-btn:hover {
+    background: #1d4ed8;
+  }
+
+  /* RECRUITER TAG */
+  .posted {
+    color: #22c55e;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+  /* EMPTY */
+  .no-job {
+    text-align: center;
+    width: 100%;
+    color: #94a3b8;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .job-card {
+      width: 90%;
+    }
+  }
+</style>
+
+<h2 class="page-title">💼 Available Jobs</h2>
+
 <div class="jobs-container">
-  <h2 style="text-align: center">💼 Available Jobs</h2>
+  {% for job in jobs %}
+  <div class="job-card">
+    <!-- ✅ PROFESSIONAL STATIC BANNER IMAGE -->
+    <img
+      class="job-img"
+      src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d"
+      alt="Job Banner"
+    />
 
-  <div style="display: flex; flex-wrap: wrap; justify-content: center">
-    {% for job in jobs %}
-    <div class="job-card">
-      <h3 class="job-title">{{ job.title }}</h3>
-      <p><strong>{{ job.company }}</strong></p>
-      <p>{{ job.location }}</p>
+    <div class="job-content">
+      <div class="job-title">{{ job.title }}</div>
 
-      <hr />
+      <div class="company">🏢 {{ job.company }}</div>
+
+      <div class="location">📍 {{ job.location }}</div>
+
+      <hr style="border-color: #334155" />
 
       {% if user.is_authenticated and user.profile.role == "jobseeker" %}
-      <a href="/apply/{{ job.id }}/" class="apply-btn"> Apply Now </a>
+      <a href="/apply/{{ job.id }}/" class="apply-btn">🚀 Apply Now</a>
 
       {% elif user.is_authenticated and user.profile.role == "recruiter" %}
-      <p style="color: green">You posted this job</p>
-
+      <div class="posted">✔ You posted this job</div>
       {% endif %}
     </div>
-
-    {% empty %}
-    <p class="no-job">No jobs available</p>
-
-    {% endfor %}
   </div>
+
+  {% empty %}
+  <p class="no-job">No jobs available</p>
+  {% endfor %}
 </div>
 
 {% endblock %}

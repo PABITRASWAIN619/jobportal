@@ -18,7 +18,7 @@ urlpatterns = [
 
     # USER
     path('profile/', views.profile),
-    path('settings/', views.settings),
+   path('settings/', views.user_settings, name='user_settings'),
     path('support/', views.support),
     path('my-applications/', views.my_applications),
 
@@ -40,7 +40,14 @@ urlpatterns = [
     # ADMIN
     path('admin-dashboard/', views.admin_dashboard),
     path('dashboard/users/', views.admin_users, name='admin_users'),
-path('dashboard/jobs/', views.admin_jobs, name='admin_jobs'),
+path("dashboard/jobs/", views.admin_jobs, name="admin_jobs"),
+path('dashboard/jobs/edit/<int:job_id>/', views.edit_job, name='edit_job'),
+path('jobs/', views.job_list, name='job_list'),
+
+path('dashboard/jobs/delete/<int:job_id>/', views.delete_job, name='delete_job'),
 path('dashboard/applications/', views.admin_applications, name='admin_applications'),
-    path('admin-post-job/', views.admin_post_job),
+path("update-status/", views.update_application_status, name="update_status"),
+    path('admin-post-job/', views.admin_post_job, name='admin_post_job'),
+    path('dashboard/export-jobs/', views.export_jobs, name='export_jobs'),
+   path('dashboard/jobs/delete/<int:job_id>/', views.delete_job, name='delete_job'),
 ]

@@ -1,25 +1,240 @@
 {% extends 'base.html' %} {% block content %}
+<style>
+  /* ===================== GLOBAL CARD ===================== */
+  .settings-container {
+    max-width: 750px;
+    margin: 40px auto;
+    font-family: Arial, sans-serif;
+  }
 
-<div style="max-width: 500px; margin: auto; margin-top: 50px">
-  <h2 style="text-align: center">⚙️ Settings</h2>
+  /* Title */
+  .settings-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #222;
+  }
 
-  <form method="POST">
+  /* ===================== CARD STYLE ===================== */
+  .card {
+    background: #fff;
+    padding: 18px;
+    margin-top: 15px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transition: 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  /* ===================== INPUTS ===================== */
+  input[type="text"],
+  input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+
+  input:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 8px rgba(13, 110, 253, 0.3);
+  }
+
+  /* ===================== FILE UPLOAD ===================== */
+  input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 2px dashed #0d6efd;
+    border-radius: 10px;
+    background: #f8fbff;
+    cursor: pointer;
+  }
+
+  input[type="file"]:hover {
+    background: #eaf3ff;
+  }
+
+  /* ===================== BUTTON ===================== */
+  button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: linear-gradient(135deg, #0d6efd, #3a8dff);
+    color: white;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+  }
+
+  /* ===================== PROGRESS BAR ===================== */
+  .progress {
+    height: 10px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 10px;
+    background: linear-gradient(90deg, #28a745, #00c853);
+    transition: width 0.5s ease;
+  }
+
+  /* ===================== CHECKBOX STYLE ===================== */
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .toggle input {
+    transform: scale(1.2);
+    cursor: pointer;
+  }
+
+  /* Smooth page animation */
+  .settings-container {
+    animation: fadeIn 0.6s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+<div class="settings-container">
+  <h2>⚙️ Account Settings</h2>
+
+  <!-- PROFILE COMPLETION -->
+  <div class="card">
+    🧑‍💼 Profile Completion: <b>{{ profile.profile_completion }}%</b>
+
+    <div class="progress" style="margin-top: 10px">
+      <div
+        class="progress-bar"
+        style="width: {{ profile.profile_completion }}%"
+      ></div>
+    </div>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <label>Change Password</label>
-    <input
-      type="password"
-      name="password"
-      placeholder="New Password"
-      style="width: 100%; padding: 10px; margin: 10px 0"
-    />
+    <!-- PROFILE INFO -->
+    <div class="card">
+      <h4>👤 Profile Info</h4>
 
-    <button
-      type="submit"
-      style="width: 100%; padding: 10px; background: #dc3545; color: white"
-    >
-      Update Settings
-    </button>
+      <input
+        type="text"
+        name="username"
+        value="{{ request.user.username }}"
+        placeholder="Username"
+      />
+      <input
+        type="email"
+        name="email"
+        value="{{ request.user.email }}"
+        placeholder="Email"
+      />
+      <input
+        type="text"
+        name="phone"
+        value="{{ profile.phone }}"
+        placeholder="Phone"
+      />
+      <input
+        type="text"
+        name="skills"
+        value="{{ profile.skills }}"
+        placeholder="Skills (Python, Django...)"
+      />
+      <input
+        type="text"
+        name="location"
+        value="{{ profile.location }}"
+        placeholder="Location"
+      />
+    </div>
+
+    <!-- UPLOADS -->
+    <div class="card">
+      <h4>📂 Uploads</h4>
+
+      <label>Profile Photo</label>
+      <input type="file" name="profile_pic" />
+
+      <label>Resume (PDF)</label>
+      <input type="file" name="resume" accept=".pdf" />
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="card">
+      <h4>🔧 Preferences</h4>
+
+      <label class="toggle">
+        <input
+          type="checkbox"
+          name="notifications"
+          {%
+          if
+          profile.notifications_enabled
+          %}checked{%
+          endif
+          %}
+        />
+        🔔 Notifications
+      </label>
+
+      <label class="toggle">
+        <input
+          type="checkbox"
+          name="dark_mode"
+          {%
+          if
+          profile.dark_mode
+          %}checked{%
+          endif
+          %}
+        />
+        🌙 Dark Mode
+      </label>
+
+      <label class="toggle">
+        <input
+          type="checkbox"
+          name="two_factor"
+          {%
+          if
+          profile.two_factor_enabled
+          %}checked{%
+          endif
+          %}
+        />
+        🔐 Two-Factor Login
+      </label>
+    </div>
+
+    <button type="submit">Save Changes</button>
   </form>
 </div>
 
