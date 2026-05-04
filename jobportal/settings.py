@@ -7,9 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 # =========================
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-key')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     'barsapalei.onrender.com',
@@ -24,6 +24,11 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 
 # =========================
@@ -56,6 +61,7 @@ SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -66,7 +72,12 @@ MIDDLEWARE = [
 ]
 
 
+# =========================
+# URL & WSGI
+# =========================
+
 ROOT_URLCONF = 'jobportal.urls'
+WSGI_APPLICATION = 'jobportal.wsgi.application'
 
 
 # =========================
@@ -89,9 +100,6 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = 'jobportal.wsgi.application'
-
-
 # =========================
 # DATABASE
 # =========================
@@ -105,7 +113,7 @@ DATABASES = {
 
 
 # =========================
-# AUTH
+# AUTH PASSWORD VALIDATION
 # =========================
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -132,14 +140,19 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+] if (BASE_DIR / 'static').exists() else []
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # =========================
-# LOGIN
+# LOGIN SETTINGS
 # =========================
 
 LOGIN_REDIRECT_URL = "/home/"
@@ -148,7 +161,7 @@ LOGOUT_REDIRECT_URL = "/login/"
 
 
 # =========================
-# EMAIL (FIXED)
+# EMAIL CONFIG
 # =========================
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -156,10 +169,13 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'swainpabitra9861@gmail.com'
-EMAIL_HOST_PASSWORD = 'mtzisgketpvzkigz'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+# =========================
 # AUTH BACKENDS
 # =========================
 
@@ -172,6 +188,7 @@ AUTHENTICATION_BACKENDS = [
 # =========================
 # ALLAUTH SETTINGS
 # =========================
+
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_USERNAME_REQUIRED = True
