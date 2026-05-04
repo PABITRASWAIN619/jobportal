@@ -14,6 +14,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'barsapalei.onrender.com',
     'easypalei.onrender.com',
+    'jobportal-swainpapu.onrender.com',  # ✅ ADD THIS
     'localhost',
     '127.0.0.1'
 ]
