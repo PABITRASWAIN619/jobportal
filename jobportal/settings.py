@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'barsapalei.onrender.com',
@@ -202,3 +202,4 @@ ACCOUNT_SIGNUP_FIELDS = [
     'password1*',
     'password2*'
 ]
+SECURE_SSL_REDIRECT = False
