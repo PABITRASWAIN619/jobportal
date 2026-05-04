@@ -125,6 +125,11 @@ def verify_otp(request):
 # ===========================
 # 📩 SEND OTP
 # ===========================
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils import timezone
+import random
+
 def send_otp(request):
     if request.method == "POST":
         email = request.POST.get("email")
@@ -139,13 +144,18 @@ def send_otp(request):
         request.session["email"] = email
         request.session["otp_time"] = str(timezone.now())
 
-        send_mail(
-    subject="Your OTP for Login",
-    message=f"Your OTP is: {otp}",
-    from_email=settings.EMAIL_HOST_USER,   # ✅ FIX
-    recipient_list=[email],
-    fail_silently=False,
-)
+        try:
+            send_mail(
+                subject="Your OTP for Login",
+                message=f"Your OTP is: {otp}",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=False,
+            )
+        except Exception as e:
+             print("EMAIL ERROR:", e)
+             messages.error(request, "OTP sending failed. Check server logs.")
+             return render(request, "send_otp.html", {"hide_navbar": True})
 
         messages.success(request, "OTP sent successfully!")
         return redirect("/verify-otp/")
