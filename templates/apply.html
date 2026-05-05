@@ -4,20 +4,25 @@
   body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background:
-      linear-gradient(rgba(10, 102, 194, 0.8), rgba(10, 102, 194, 0.8)),
-      url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d");
-    background-size: cover;
-    background-position: center;
+    background: #0f172a; /* ONLY COLOR BACKGROUND */
+    color: #111;
+  }
+
+  .apply-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
   }
 
   .apply-container {
+    width: 100%;
     max-width: 520px;
-    margin: 60px auto;
     background: #ffffff;
     padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-radius: 14px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
   }
 
   .job-box {
@@ -35,22 +40,25 @@
   .job-box p {
     margin: 5px 0;
     color: #444;
+    font-size: 14px;
   }
 
   label {
     font-weight: bold;
     display: block;
     margin-top: 10px;
+    font-size: 14px;
   }
 
   input,
   textarea {
     width: 100%;
     padding: 12px;
-    margin-top: 5px;
+    margin-top: 6px;
     border: 1px solid #ccc;
     border-radius: 8px;
     outline: none;
+    font-size: 14px;
   }
 
   input[type="file"] {
@@ -68,6 +76,7 @@
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
+    transition: 0.3s;
   }
 
   button:hover {
@@ -79,33 +88,53 @@
     padding: 10px;
     border-radius: 6px;
     margin-bottom: 10px;
+    font-size: 14px;
+  }
+
+  /* ================= MOBILE ================= */
+  @media (max-width: 600px) {
+    .apply-container {
+      padding: 18px;
+    }
+
+    .job-box p {
+      font-size: 13px;
+    }
   }
 </style>
 
-<div class="apply-container">
-  <!-- JOB DETAILS -->
-  <div class="job-box">
-    <h3>{{ job.title }}</h3>
-    <p><b>Company:</b> {{ job.company }}</p>
-    <p><b>Location:</b> {{ job.location }}</p>
-    <p>{{ job.description }}</p>
+<div class="apply-wrapper">
+  <div class="apply-container">
+    <!-- JOB DETAILS -->
+    <div class="job-box">
+      <h3>{{ job.title }}</h3>
+      <p><b>Company:</b> {{ job.company }}</p>
+      <p><b>Location:</b> {{ job.location }}</p>
+      <p>{{ job.description }}</p>
+    </div>
+
+    <!-- MESSAGES -->
+    {% if messages %} {% for message in messages %}
+    <div class="msg">{{ message }}</div>
+    {% endfor %} {% endif %}
+
+    <!-- APPLY FORM -->
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <label>LinkedIn Profile</label>
+      <input
+        type="url"
+        name="linkedin"
+        placeholder="https://linkedin.com/in/yourprofile"
+      />
+
+      <label>Upload Resume</label>
+      <input type="file" name="resume" required />
+
+      <button type="submit">Apply Now 🚀</button>
+    </form>
   </div>
-
-  <!-- SUCCESS / ERROR MESSAGES -->
-  {% if messages %} {% for message in messages %}
-  <div class="msg">{{ message }}</div>
-  {% endfor %} {% endif %}
-
-  <!-- APPLY FORM -->
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    <input type="url" name="linkedin" placeholder="LinkedIn Profile URL" />
-
-    <input type="file" name="resume" required />
-
-    <button type="submit">Apply Now 🚀</button>
-  </form>
-
-  {% endblock %}
 </div>
+
+{% endblock %}

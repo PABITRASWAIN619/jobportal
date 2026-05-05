@@ -1,0 +1,154 @@
+{% extends 'base.html' %} {% block content %}
+
+<style>
+  /* BACKGROUND */
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(120deg, #f3f4f6, #ffffff);
+  }
+
+  /* HERO */
+  .contact-hero {
+    text-align: center;
+    padding: 50px 20px;
+    animation: fadeDown 1s ease-in-out;
+  }
+
+  .contact-hero h1 {
+    font-size: 42px;
+    color: #0a66c2;
+  }
+
+  .contact-hero p {
+    color: #555;
+    font-size: 16px;
+  }
+
+  /* CONTAINER */
+  .contact-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 40px;
+  }
+
+  /* CARD */
+  .contact-card {
+    background: white;
+    width: 300px;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+    text-align: center;
+  }
+
+  .contact-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(10, 102, 194, 0.2);
+  }
+
+  .contact-card img {
+    width: 60px;
+    margin-bottom: 10px;
+  }
+
+  /* FORM */
+  .contact-form {
+    width: 320px;
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+
+  .contact-form button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background: #0a66c2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .contact-form button:hover {
+    background: #084a9a;
+  }
+
+  /* ANIMATION */
+  @keyframes fadeDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .contact-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
+
+<!-- HERO -->
+<div class="contact-hero">
+  <h1>Contact Us 📞</h1>
+  <p>We are here to help you with your career journey</p>
+</div>
+
+<!-- CONTACT SECTION -->
+<div class="contact-container">
+  <!-- INFO CARD -->
+  <div class="contact-card">
+    <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" />
+    <h3>Email Support</h3>
+    <p>support@jobportal.com</p>
+  </div>
+
+  <div class="contact-card">
+    <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" />
+    <h3>Phone</h3>
+    <p>+91 98765 43210</p>
+  </div>
+
+  <div class="contact-card">
+    <img src="https://cdn-icons-png.flaticon.com/512/684/684809.png" />
+    <h3>Location</h3>
+    <p>Mumbai, India</p>
+  </div>
+
+  <!-- FORM -->
+  <div class="contact-form">
+    <h3>Send Message</h3>
+
+    <form method="POST">
+      {% csrf_token %}
+      <input type="text" name="name" placeholder="Your Name" required />
+      <input type="email" name="email" placeholder="Your Email" required />
+      <textarea name="message" rows="4" placeholder="Your Message"></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

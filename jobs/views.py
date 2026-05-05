@@ -191,13 +191,29 @@ def apply_job(request, job_id):
         return redirect("job_list")
 
     return render(request, "apply.html", {"job": job})
+def job_list(request):
+    
+    jobs = Job.objects.filter(status='active')
 
+    # 🔥 EASY APPLY FILTER LOGIC
+    if request.GET.get("filter") == "easy":
+        jobs = jobs.filter(status='active')  # you can improve later
+
+    jobs = jobs.order_by('-created_at')
+
+    context = {
+        "jobs": jobs
+    }
+
+    return render(request, "jobs.html", context)
 # ===========================
 # 🏢 RECRUITER
 # ===========================
 @login_required
 def post_job(request):
-    if request.user.profile.role != 'recruiter':
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    if profile.role != 'recruiter':
         return redirect('/')
 
     if request.method == "POST":
@@ -209,8 +225,8 @@ def post_job(request):
             posted_by=request.user
         )
 
-        messages.success(request, "Job posted")
-        return redirect('/jobs/')
+        messages.success(request, "Job posted successfully")
+        return redirect('/dashboard/jobs/')
 
     return render(request, "admin_post_job.html")
 
@@ -260,10 +276,16 @@ def my_applications(request):
     return render(request, 'my_applications.html', {
         'applications': applications
     })
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import Profile
+
 
 @login_required
 def profile(request):
-    profile = request.user.profile
+    # ✅ SAFE: auto-create profile if missing
+    profile, created = Profile.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
         request.user.first_name = request.POST.get("name")
@@ -276,18 +298,22 @@ def profile(request):
         profile.save()
 
         messages.success(request, "Profile updated successfully")
-        return redirect("/profile/")
+        return redirect("profile")
 
     return render(request, "profile.html", {"profile": profile})
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from .models import Profile
+
 
 @login_required
 def user_settings(request):
     user = request.user
-    profile = user.profile
+
+    # ✅ SAFE: prevents "User has no profile" crash
+    profile, created = Profile.objects.get_or_create(user=user)
 
     if request.method == "POST":
 
@@ -308,9 +334,9 @@ def user_settings(request):
             profile.resume = request.FILES["resume"]
 
         # ================= TOGGLES =================
-        profile.notifications_enabled = True if request.POST.get("notifications") == "on" else False
-        profile.dark_mode = True if request.POST.get("dark_mode") == "on" else False
-        profile.two_factor_enabled = True if request.POST.get("two_factor") == "on" else False
+        profile.notifications_enabled = request.POST.get("notifications") == "on"
+        profile.dark_mode = request.POST.get("dark_mode") == "on"
+        profile.two_factor_enabled = request.POST.get("two_factor") == "on"
 
         profile.save()
 
@@ -320,24 +346,30 @@ def user_settings(request):
     return render(request, "settings.html", {
         "profile": profile
     })
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .models import SupportMessage
 
-
+@login_required
 def support(request):
     if request.method == "POST":
-        message = request.POST.get('message')
+        msg_text = request.POST.get('message')
 
-        send_mail(
-            'Support Request',
-            message,
-            request.user.email if request.user.is_authenticated else 'anonymous',
-            ['admin@jobportal.com'],
-            fail_silently=True,
+        # ✅ PUT IT HERE (THIS IS THE CORRECT PLACE)
+        SupportMessage.objects.create(
+            user=request.user,
+            email=request.user.email,
+            message=msg_text
         )
 
-        messages.success(request, "Support request sent")
+        messages.success(request, "Support request sent successfully!")
+        return redirect("support")
 
-    return render(request, 'support.html')
+    support_msgs = SupportMessage.objects.filter(user=request.user).order_by('-created_at')
 
+    return render(request, 'support.html', {
+        "support_msgs": support_msgs
+    })
 
 # ===========================
 # 💬 CHAT
@@ -351,11 +383,32 @@ def chat(request):
 @login_required
 def send_message(request):
     if request.method == "POST":
-        receiver_id = request.POST.get('receiver')
-        text = request.POST.get('text')
+        receiver_id = request.POST.get("receiver")
+        message = request.POST.get("message")
 
-    return redirect('/chat/')
+        ChatMessage.objects.create(
+            sender=request.user,
+            receiver_id=receiver_id,
+            message=message
+        )
 
+    return redirect("/chat/")
+@login_required
+def chat(request):
+    users = User.objects.exclude(id=request.user.id)
+
+    messages = ChatMessage.objects.filter(
+        receiver=request.user
+    ) | ChatMessage.objects.filter(
+        sender=request.user
+    )
+
+    messages = messages.order_by("created_at")
+
+    return render(request, "chat.html", {
+        "users": users,
+        "messages": messages
+    })
 
 # ===========================
 # 📊 DASHBOARD
@@ -399,14 +452,15 @@ def job_list(request):
 # ===========================
 # 🛠 ADMIN PAGES (FIXED)
 # ===========================
-@staff_member_required(login_url='/login/')
-def admin_dashboard(request):
-    from django.contrib.auth.models import User
-    from .models import Job, Application
+from django.shortcuts import render
+from django.contrib.auth.models import User
+from .models import Job, Application, SupportMessage
 
+def admin_dashboard(request):
     users = User.objects.all()
     jobs = Job.objects.all()
     applications = Application.objects.all()
+    support_msgs = SupportMessage.objects.select_related("user").order_by("-id")
 
     stats = {
         "total_users": users.count(),
@@ -424,12 +478,10 @@ def admin_dashboard(request):
         "users": users,
         "jobs": jobs,
         "applications": applications,
+        "support_msgs": support_msgs,
         "stats": stats,
         "analytics": analytics,
-        "support_msgs": []
     })
-
-
 @staff_member_required(login_url='/login/')
 def admin_post_job(request):
     if request.method == "POST":
@@ -624,3 +676,217 @@ def job_list(request):
     }
 
     return render(request, "jobs.html", context)  # ✅ FIXED
+def job_apply(request):
+    return render(request, 'jobs/apply.html')
+def easy_apply(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if request.method == "POST":
+        # your existing logic here
+        pass
+
+    return render(request, "apply.html", {"job": job})
+from django.shortcuts import render
+
+def companies(request):
+
+    companies_list = [
+        {
+            "name": "Google",
+            "desc": "Search, AI & Cloud technology leader",
+            "type": "Product Company"
+        },
+        {
+            "name": "Microsoft",
+            "desc": "Cloud computing & enterprise software giant",
+            "type": "Product Company"
+        },
+        {
+            "name": "Amazon",
+            "desc": "E-commerce, AWS cloud services",
+            "type": "Product + Service"
+        },
+        {
+            "name": "Meta",
+            "desc": "Social media & VR technology company",
+            "type": "Product Company"
+        },
+        {
+            "name": "Netflix",
+            "desc": "Global streaming entertainment platform",
+            "type": "Media Tech"
+        },
+        {
+            "name": "TCS",
+            "desc": "IT services & consulting company (India)",
+            "type": "Service Company"
+        },
+        {
+            "name": "Infosys",
+            "desc": "Software consulting & IT services",
+            "type": "Service Company"
+        },
+        {
+            "name": "Wipro",
+            "desc": "Global IT solutions & consulting",
+            "type": "Service Company"
+        },
+    ]
+
+    return render(request, "jobs/companies.html", {
+        "companies": companies_list,
+        "total_companies": len(companies_list)
+    })
+def about(request):
+    return render(request, "jobs/about.html")
+
+def contact(request):
+    return render(request, "jobs/contact.html")
+from .models import ContactMessage
+from django.core.mail import send_mail
+from django.conf import settings
+def contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+
+        ContactMessage.objects.create(
+            name=name,
+            email=email,
+            message=message
+        )
+
+        # ✅ AUTO EMAIL REPLY (ADD HERE)
+        send_mail(
+            subject="We received your message",
+            message="Thanks for contacting Job Portal. We will reply soon.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=True,
+        )
+
+        return render(request, "jobs/contact.html", {
+            "success": "Message sent successfully!"
+        })
+
+    return render(request, "jobs/contact.html")
+from django.http import JsonResponse
+
+def chatbot(request):
+    if request.method == "POST":
+        msg = request.POST.get("message")
+
+        return JsonResponse({
+            "reply": "I can help you with jobs, companies, and applications!"
+        })
+
+    return JsonResponse({"reply": "Invalid request"})
+def reply_message(request, id):
+    msg = get_object_or_404(SupportMessage, id=id)
+
+    if request.method == "POST":
+        msg.reply = request.POST.get("reply")
+        msg.is_read = True
+        msg.save()
+
+        return redirect("admin_dashboard")
+
+    return render(request, "reply.html", {"msg": msg})
+def delete_message(request, id):
+    msg = SupportMessage.objects.get(id=id)
+    msg.delete()
+    return redirect("admin_dashboard")
+def mark_read(request, id):
+    msg = SupportMessage.objects.get(id=id)
+    msg.is_read = True
+    msg.save()
+    return redirect("admin_dashboard")
+from django.shortcuts import get_object_or_404, redirect
+from .models import SupportMessage
+
+def support_reply(request, id):
+    msg = get_object_or_404(SupportMessage, id=id)
+
+    if request.method == "POST":
+        msg.reply = request.POST.get("reply")
+        msg.is_read = True
+        msg.save()
+
+    return redirect("admin_dashboard") 
+from django.shortcuts import get_object_or_404, redirect
+from .models import SupportMessage
+
+from django.http import JsonResponse
+
+def admin_reply(request, id):
+    msg = get_object_or_404(SupportMessage, id=id)
+
+    if request.method == "POST":
+        reply_text = request.POST.get("reply")
+
+        msg.reply = reply_text
+        msg.is_read = True
+        msg.save()
+
+        return JsonResponse({"success": True, "message": "Reply sent"})
+
+    return JsonResponse({"success": False, "error": "Invalid method"})
+from django.http import JsonResponse
+from .models import SupportMessage
+
+def support_messages_api(request):
+    msgs = SupportMessage.objects.select_related("user").order_by("-id")
+
+    data = [
+        {
+            "id": m.id,
+            "user": m.user.username,
+            "message": m.message,
+            "reply": m.reply or "",
+            "is_read": m.is_read,
+        }
+        for m in msgs
+    ]
+
+    return JsonResponse({"messages": data})
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import SupportMessage
+
+def mark_support_read(request, id):
+    if request.method == "GET":
+        msg = get_object_or_404(SupportMessage, id=id)
+        msg.is_read = True
+        msg.save()
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"success": False, "error": "Invalid method"})
+
+def support_api(request):
+    msgs = SupportMessage.objects.select_related("user").order_by("-created_at")
+
+    data = {
+        "messages": [
+            {
+                "id": m.id,
+                "user": m.user.username,
+                "message": m.message,
+                "is_read": m.is_read,
+            }
+            for m in msgs
+        ]
+    }
+
+    return JsonResponse(data)
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import SupportMessage
+
+def delete_support_message(request, id):
+    if request.method == "POST":
+        msg = get_object_or_404(SupportMessage, id=id)
+        msg.delete()
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"success": False, "error": "Invalid request"})

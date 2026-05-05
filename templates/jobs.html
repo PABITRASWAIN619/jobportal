@@ -129,9 +129,11 @@
 
       <hr style="border-color: #334155" />
 
-      {% if user.is_authenticated and user.profile.role == "jobseeker" %}
-      <a href="/apply/{{ job.id }}/" class="apply-btn">🚀 Apply Now</a>
-
+      {% if user.is_authenticated and user.profile.role == "jobseeker" %}<a
+        href="{% url 'apply_job' job.id %}"
+        class="apply-btn"
+        >🚀 Apply Now</a
+      >
       {% elif user.is_authenticated and user.profile.role == "recruiter" %}
       <div class="posted">✔ You posted this job</div>
       {% endif %}

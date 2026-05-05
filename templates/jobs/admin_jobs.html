@@ -7,15 +7,14 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-  /* ================= GLOBAL ================= */
   body {
     margin: 0;
+    font-family: "Segoe UI", sans-serif;
     background: #0b1220;
     color: #e5e7eb;
-    font-family: "Segoe UI", sans-serif;
   }
 
-  /* ================= LAYOUT ================= */
+  /* ================= DASHBOARD ================= */
   .dashboard {
     display: flex;
     min-height: 100vh;
@@ -76,11 +75,11 @@
 
   .card:hover {
     transform: translateY(-3px);
-    border-color: #3b82f6;
+    background: #1f2937;
   }
 
   .card h3 {
-    font-size: 16px;
+    font-size: 14px;
     color: #94a3b8;
   }
 
@@ -96,11 +95,13 @@
     padding: 20px;
     border-radius: 12px;
     border: 1px solid #1f2937;
+    overflow-x: auto;
   }
 
   table {
     width: 100%;
     color: white;
+    min-width: 700px;
   }
 
   th {
@@ -113,83 +114,46 @@
     border-bottom: 1px solid #1f2937;
   }
 
-  .btn-sm {
+  /* ================= RESUME ================= */
+  .resume-btn {
+    background: #10b981;
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
     font-size: 12px;
   }
-  /* ================= SIDEBAR ================= */
-  .sidebar {
-    width: 260px;
-    background: #0f172a;
-    padding: 20px;
-    position: fixed;
-    height: 100%;
-    border-right: 1px solid #1f2937;
-    transition: 0.3s;
-    z-index: 999;
-  }
 
-  .sidebar.hide {
-    transform: translateX(-100%);
-  }
-
-  /* ================= MAIN ================= */
-  .main {
-    margin-left: 260px;
-    padding: 25px;
-    width: 100%;
-    transition: 0.3s;
-  }
-
-  /* ================= HAMBURGER BUTTON ================= */
-  .menu-btn {
-    display: none;
-    background: #1e293b;
-    color: white;
+  /* ================= BUTTONS ================= */
+  .btn-success {
+    background: #22c55e;
     border: none;
-    padding: 10px 15px;
-    font-size: 18px;
-    border-radius: 8px;
-    margin-bottom: 15px;
   }
 
-  /* ================= RESPONSIVE ================= */
-  @media (max-width: 992px) {
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      height: 100%;
-      transform: translateX(-100%);
-    }
+  .btn-warning {
+    background: #f59e0b;
+    border: none;
+  }
 
-    .sidebar.show {
-      transform: translateX(0);
+  .btn-danger {
+    background: #ef4444;
+    border: none;
+  }
+
+  /* ================= MOBILE ================= */
+  @media (max-width: 768px) {
+    .sidebar {
+      position: relative;
+      width: 100%;
+      height: auto;
     }
 
     .main {
       margin-left: 0;
     }
 
-    .menu-btn {
-      display: inline-block;
-    }
-
-    .cards {
-      grid-template-columns: 1fr;
-    }
-
     table {
-      font-size: 12px;
-    }
-  }
-
-  @media (max-width: 576px) {
-    .table-box {
-      overflow-x: auto;
-    }
-
-    .card p {
-      font-size: 18px;
+      min-width: 100%;
     }
   }
 </style>
@@ -199,18 +163,21 @@
   <div class="sidebar">
     <h2>🚀 Admin Panel</h2>
 
-    <a href="/admin-dashboard/">📊 Dashboard</a>
-    <a href="/dashboard/jobs/">💼 Jobs</a>
-    <a href="/dashboard/users/">👥 Users</a>
-    <a href="/dashboard/applications/">📄 Applications</a>
-    <a href="/post-job/">➕ Post Job</a>
+    <a href="{% url 'admin_dashboard' %}">📊 Dashboard</a>
+    <a href="{% url 'admin_jobs' %}">💼 Jobs</a>
+    <a href="{% url 'admin_users' %}">👥 Users</a>
+    <a href="{% url 'admin_applications' %}">📄 Applications</a>
   </div>
 
   <!-- ================= MAIN ================= -->
   <div class="main">
     <h2 class="mb-3">💼 Jobs Management</h2>
 
-    <!-- ================= REAL-TIME CARDS ================= -->
+    <a href="{% url 'post_job' %}" class="btn btn-success mb-3">
+      ➕ Post Job
+    </a>
+
+    <!-- ================= CARDS ================= -->
     <div class="cards">
       <div class="card">
         <h3>Total Jobs</h3>
@@ -233,7 +200,7 @@
       </div>
     </div>
 
-    <!-- ================= JOB TABLE ================= -->
+    <!-- ================= TABLE ================= -->
     <div class="table-box mt-4">
       <div class="d-flex justify-content-between mb-3">
         <h4>All Jobs</h4>
@@ -252,6 +219,7 @@
             <th>Title</th>
             <th>Company</th>
             <th>Location</th>
+            <th>Resume</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -262,12 +230,26 @@
             <td>{{ job.title }}</td>
             <td>{{ job.company }}</td>
             <td>{{ job.location }}</td>
+
+            <!-- Resume -->
+            <td>
+              {% if job.resume %}
+              <a href="{{ job.resume.url }}" target="_blank" class="resume-btn">
+                View Resume
+              </a>
+              {% else %}
+              <span style="color: gray">No Resume</span>
+              {% endif %}
+            </td>
+
             <td>
               <a
                 href="/dashboard/jobs/edit/{{ job.id }}/"
                 class="btn btn-warning btn-sm"
-                >Edit</a
               >
+                Edit
+              </a>
+
               <button
                 onclick="deleteJob({{ job.id }})"
                 class="btn btn-danger btn-sm"
@@ -283,14 +265,11 @@
   </div>
 </div>
 
-<!-- ================= SCRIPTS ================= -->
-
+<!-- ================= SCRIPT ================= -->
 <script>
-  /* ================= SWEET ALERT DELETE ================= */
   function deleteJob(id) {
     Swal.fire({
       title: "Delete this job?",
-      text: "This action cannot be undone!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes delete",
@@ -303,14 +282,12 @@
           },
         }).then(() => {
           document.getElementById("row-" + id).remove();
-
           Swal.fire("Deleted!", "Job removed.", "success");
         });
       }
     });
   }
 
-  /* ================= SEARCH FILTER ================= */
   document.getElementById("search").addEventListener("keyup", function () {
     let value = this.value.toLowerCase();
     let rows = document.querySelectorAll("#jobTable tr");
@@ -322,7 +299,6 @@
     });
   });
 
-  /* ================= AUTO REFRESH STATS (REAL-TIME SIMULATION) ================= */
   setInterval(() => {
     fetch("/dashboard/api/stats/")
       .then((res) => res.json())
@@ -331,16 +307,6 @@
         document.getElementById("activeUsers").innerText = data.active_users;
       });
   }, 5000);
-  function toggleSidebar() {
-    document.querySelector(".sidebar").classList.toggle("show");
-  }
-  document.querySelectorAll(".sidebar a").forEach((link) => {
-    link.addEventListener("click", () => {
-      if (window.innerWidth < 992) {
-        document.querySelector(".sidebar").classList.remove("show");
-      }
-    });
-  });
 </script>
 
 {% endblock %}

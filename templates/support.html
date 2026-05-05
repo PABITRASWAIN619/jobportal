@@ -1,66 +1,151 @@
 {% extends 'base.html' %} {% block content %}
 
-<div style="max-width: 600px; margin: auto; margin-top: 50px">
-  <h2 style="text-align: center">🆘 Help & Support</h2>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #e5e7eb;
+
+    /* 🌈 Instagram gradient */
+    background: linear-gradient(-45deg, #833ab4, #fd1d1d, #fcb045, #405de6);
+    background-size: 400% 400%;
+    animation: gradientBG 12s ease infinite;
+    min-height: 100vh;
+  }
+
+  @keyframes gradientBG {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .section {
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(14px);
+    padding: 20px;
+    border-radius: 16px;
+    margin: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  h2,
+  h3 {
+    text-align: center;
+    color: white;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    margin-top: 10px;
+    background: #1e293b;
+    color: white;
+  }
+
+  button {
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background: #22c55e;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  button:hover {
+    opacity: 0.8;
+  }
+
+  /* CHAT STYLE */
+  .chat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .msg {
+    padding: 12px;
+    border-radius: 14px;
+    max-width: 80%;
+    font-size: 14px;
+    word-wrap: break-word;
+  }
+
+  .user-msg {
+    background: #1e293b;
+    align-self: flex-start;
+    border-left: 4px solid #f97316;
+  }
+
+  .admin-msg {
+    background: #22c55e;
+    align-self: flex-end;
+    text-align: right;
+    color: white;
+    border-right: 4px solid #16a34a;
+  }
+
+  .meta {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 5px;
+  }
+
+  .no-reply {
+    font-size: 12px;
+    color: #f97316;
+    margin-top: 5px;
+  }
+</style>
+
+<!-- HELP FORM -->
+<div class="section">
+  <h2>🆘 Help & Support</h2>
 
   <form method="POST">
     {% csrf_token %}
-
     <textarea
       name="message"
-      rows="6"
+      rows="5"
       placeholder="Describe your issue..."
-      style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px"
     ></textarea>
-
-    <button
-      type="submit"
-      style="width: 100%; padding: 10px; background: #28a745; color: white"
-    >
-      Send Request
-    </button>
+    <button type="submit">Send Request</button>
   </form>
 </div>
-<!-- SUPPORT / SOS -->
+
+<!-- CHAT INBOX -->
 <div class="section">
-  <h3>🆘 SOS Messages</h3>
+  <h3>💬 Support Chat</h3>
 
-  <table>
-    <tr>
-      <th>User</th>
-      <th>Message</th>
-      <th>Reply</th>
-      <th>Action</th>
-    </tr>
-
+  <div class="chat-box">
     {% for s in support_msgs %}
-    <tr>
-      <td>{{ s.user.username }}</td>
 
-      <td style="color: #f97316">{{ s.message }}</td>
+    <!-- USER MESSAGE -->
+    <div class="msg user-msg">
+      <div class="meta">👤 {{ s.user.username }} • {{ s.created_at }}</div>
+      {{ s.message }}
+    </div>
 
-      <td>
-        {% if s.reply %}
-        <span style="color: green">{{ s.reply }}</span>
-        {% else %}
-        <span style="color: red">No reply</span>
-        {% endif %}
-      </td>
-
-      <td>
-        <form method="POST" action="/admin-reply/{{ s.id }}/">
-          {% csrf_token %}
-          <input
-            type="text"
-            name="reply"
-            placeholder="Write reply"
-            style="padding: 5px; width: 120px"
-          />
-          <button type="submit">Reply</button>
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
+    <!-- ADMIN REPLY -->
+    {% if s.reply %}
+    <div class="msg admin-msg">
+      <div class="meta">🛠 Admin Reply</div>
+      {{ s.reply }}
+    </div>
+    {% else %}
+    <div class="no-reply">⏳ Waiting for admin reply...</div>
+    {% endif %} {% endfor %}
+  </div>
 </div>
+
 {% endblock %}

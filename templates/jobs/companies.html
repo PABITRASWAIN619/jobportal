@@ -1,0 +1,70 @@
+{% extends 'base.html' %} {% block content %}
+
+<style>
+  body {
+    background: #f4f6f9;
+    font-family: Arial;
+  }
+
+  .title {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 32px;
+    color: #0a66c2;
+    font-weight: bold;
+  }
+
+  .company-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 40px;
+  }
+
+  .company-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+  }
+
+  .company-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .company-card h3 {
+    color: #111827;
+  }
+
+  .company-card p {
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  .tag {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: #0a66c2;
+    color: white;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+</style>
+
+<h2 class="title">Top Companies</h2>
+
+<div class="company-grid">
+  {% for c in companies %}
+  <div class="company-card">
+    <h3>{{ c.name }}</h3>
+    <p>{{ c.desc }}</p>
+    <span class="tag">Hiring</span>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

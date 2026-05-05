@@ -6,14 +6,14 @@
   body {
     background: #0f172a;
     color: #e5e7eb;
-    font-family: Arial, sans-serif;
+    font-family: Arial;
   }
 
   .title {
     text-align: center;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: bold;
-    color: #3b82f6;
+    color: #60a5fa;
     margin: 20px 0;
   }
 
@@ -21,41 +21,32 @@
     display: flex;
     justify-content: center;
     gap: 15px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
   }
 
   .card {
-    width: 200px;
-    padding: 20px;
-    border-radius: 15px;
+    width: 220px;
+    padding: 18px;
+    border-radius: 14px;
     text-align: center;
     color: white;
     font-weight: bold;
-    transition: 0.3s;
-    text-decoration: none;
-  }
-
-  .card:hover {
-    transform: scale(1.05);
   }
 
   .card1 {
-    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    background: #3b82f6;
   }
   .card2 {
-    background: linear-gradient(135deg, #22c55e, #86efac);
+    background: #22c55e;
   }
   .card3 {
-    background: linear-gradient(135deg, #f97316, #fb923c);
+    background: #f97316;
   }
 
   .section {
     background: #1e293b;
+    margin: 20px;
     padding: 20px;
     border-radius: 16px;
-    margin: 20px;
-    overflow-x: auto;
   }
 
   table {
@@ -65,8 +56,7 @@
 
   th {
     background: #2563eb;
-    color: white;
-    padding: 12px;
+    padding: 10px;
   }
 
   td {
@@ -74,69 +64,94 @@
     border-bottom: 1px solid #334155;
   }
 
-  tr:hover {
+  .chat-wrapper {
+    display: flex;
+    gap: 10px;
+  }
+
+  .chat-list {
+    width: 35%;
+    height: 500px;
+    overflow-y: auto;
+    background: #0f172a;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .chat-box {
+    width: 65%;
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .msg-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #1e293b;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+  }
+
+  .msg-item:hover {
     background: #334155;
   }
 
-  .btn {
-    display: inline-block;
-    padding: 8px 12px;
-    border-radius: 6px;
-    background: #2563eb;
+  textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  #toast {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #22c55e;
     color: white;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-  }
-
-  .btn-danger {
-    background: #ef4444;
-  }
-
-  .btn-warning {
-    background: #f59e0b;
+    padding: 10px 15px;
+    border-radius: 8px;
+    z-index: 9999;
   }
 </style>
 
 <h2 class="title">🛠 Admin Dashboard</h2>
 
+<!-- TOAST -->
+<div id="toast">Success</div>
+
 <!-- CARDS -->
 <div class="cards">
-  <a href="/dashboard/users/" class="card card1">
-    👥 Users <br />{{ stats.total_users }}
+  <!-- USERS -->
+  <a href="{% url 'admin_users' %}" style="text-decoration: none">
+    <div class="card card1">👥 Users <br />{{ stats.total_users }}</div>
   </a>
 
-  <a href="/dashboard/jobs/" class="card card2">
-    💼 Jobs <br />{{ stats.total_jobs }}
+  <!-- JOBS -->
+  <a href="{% url 'admin_jobs' %}" style="text-decoration: none">
+    <div class="card card2">💼 Jobs <br />{{ stats.total_jobs }}</div>
   </a>
 
-  <a href="/dashboard/applications/" class="card card3">
-    📄 Applications <br />{{ stats.total_apps }}
+  <!-- APPLICATIONS -->
+  <a href="{% url 'admin_applications' %}" style="text-decoration: none">
+    <div class="card card3">📄 Apps <br />{{ stats.total_apps }}</div>
+  </a>
+
+  <!-- ⭐ NEW: POST JOB CARD -->
+  <a href="{% url 'admin_post_job' %}" style="text-decoration: none">
+    <div class="card" style="background: #a855f7">
+      ➕ Post Job <br />Create New
+    </div>
   </a>
 </div>
-
-<!-- CHART -->
+<!-- ANALYTICS -->
 <div class="section">
   <h3>📊 Analytics</h3>
   <canvas id="chart"></canvas>
 </div>
-
-<script>
-  new Chart(document.getElementById("chart"), {
-    type: "doughnut",
-    data: {
-      labels: ["Pending", "Accepted", "Rejected"],
-      datasets: [{
-        data: [
-          {{ analytics.pending }},
-          {{ analytics.accepted }},
-          {{ analytics.rejected }}
-        ],
-        backgroundColor: ["#f97316", "#22c55e", "#ef4444"]
-      }]
-    }
-  });
-</script>
 
 <!-- USERS -->
 <div class="section">
@@ -146,86 +161,191 @@
       <th>Name</th>
       <th>Email</th>
     </tr>
-
     {% for u in users %}
     <tr>
-      <td>{{ u.first_name|default:u.username }}</td>
+      <td>{{ u.username }}</td>
       <td>{{ u.email }}</td>
     </tr>
     {% endfor %}
   </table>
 </div>
 
-<!-- JOBS (ONLY ONE TABLE - CLEAN) -->
+<!-- JOBS -->
 <div class="section">
-  <h3>💼 Jobs Management</h3>
-
-  <a href="/post-job/" class="btn" style="margin-bottom: 10px"
-    >➕ Post New Job</a
-  >
-
+  <h3>💼 Jobs</h3>
   <table>
     <tr>
       <th>Title</th>
       <th>Company</th>
       <th>Location</th>
-      <th>Actions</th>
     </tr>
-
     {% for job in jobs %}
     <tr>
       <td>{{ job.title }}</td>
       <td>{{ job.company }}</td>
       <td>{{ job.location }}</td>
-      <td>
-        <a href="/dashboard/jobs/edit/{{ job.id }}/" class="btn btn-warning"
-          >Edit</a
-        >
-        <button class="btn btn-danger" onclick="deleteJob({{ job.id }})">
-          Delete
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+<!-- SUPPORT CHAT -->
+<div class="section">
+  <h3>💬 Support Chat</h3>
+
+  <div class="chat-wrapper">
+    <div class="chat-list" id="chatList"></div>
+
+    <div class="chat-box" id="chatBox">
+      <p style="color: #94a3b8">Select a message</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentId = null;
+
+  // ---------------- TOAST ----------------
+  function showToast(msg, color = "#22c55e") {
+    let toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.style.background = color;
+    toast.style.display = "block";
+
+    setTimeout(() => {
+      toast.style.display = "none";
+    }, 2000);
+  }
+
+  // ---------------- CSRF ----------------
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie) {
+      const cookies = document.cookie.split(";");
+      for (let c of cookies) {
+        c = c.trim();
+        if (c.startsWith(name + "=")) {
+          cookieValue = decodeURIComponent(c.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  const csrftoken = getCookie("csrftoken");
+
+  // ---------------- LOAD CHAT ----------------
+  function loadChats() {
+    fetch("/api/support/")
+      .then((r) => r.json())
+      .then((data) => {
+        let html = "";
+
+        data.messages.forEach((m) => {
+          html += `
+          <div class="msg-item" onclick="openChat(${m.id})"
+            style="background:${m.is_read ? "#1e293b" : "#334155"}">
+
+            <b>${m.user}</b><br>
+            <small>${m.message.substring(0, 40)}</small><br>
+            ${m.is_read ? "✔ Seen" : "● New"}
+          </div>
+        `;
+        });
+
+        document.getElementById("chatList").innerHTML = html;
+      });
+  }
+
+  // ---------------- OPEN CHAT ----------------
+  function openChat(id) {
+    currentId = id;
+
+    fetch("/api/support/")
+      .then((r) => r.json())
+      .then((data) => {
+        let msg = data.messages.find((m) => m.id === id);
+
+        document.getElementById("chatBox").innerHTML = `
+        <h4>👤 ${msg.user}</h4>
+
+        <div style="background:#0f172a;padding:10px;border-radius:10px;">
+          ${msg.message}
+        </div>
+
+        <hr>
+
+        <textarea id="replyText" placeholder="Type reply..."></textarea>
+
+        <button onclick="sendReply(${id})"
+          style="margin-top:10px;padding:8px 14px;background:#2563eb;
+          color:white;border:none;border-radius:6px;cursor:pointer;">
+          Send Reply
         </button>
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
 
-<!-- APPLICATIONS -->
-<div class="section">
-  <h3>📄 Applications</h3>
-  <table>
-    <tr>
-      <th>User</th>
-      <th>Job</th>
-      <th>Status</th>
-    </tr>
+        <button onclick="deleteChat(${id})"
+          style="margin-top:10px;margin-left:10px;padding:8px 14px;
+          background:#ef4444;color:white;border:none;
+          border-radius:6px;cursor:pointer;">
+          Delete Chat
+        </button>
+      `;
 
-    {% for a in applications %}
-    <tr>
-      <td>{{ a.user.email }}</td>
-      <td>{{ a.job.title }}</td>
-      <td>{{ a.get_status_display }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
+        fetch(`/support/read/${id}/`);
+      });
+  }
 
-<!-- SUPPORT -->
-<div class="section">
-  <h3>🆘 Support Messages</h3>
-  <table>
-    <tr>
-      <th>User</th>
-      <th>Message</th>
-    </tr>
+  // ---------------- SEND REPLY ----------------
+  function sendReply(id) {
+    let replyText = document.getElementById("replyText").value;
 
-    {% for s in support_msgs %}
-    <tr>
-      <td>{{ s.user.username }}</td>
-      <td>{{ s.message }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
+    fetch(`/support/admin-reply/${id}/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRFToken": csrftoken,
+      },
+      body: new URLSearchParams({
+        reply: replyText,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          showToast("Reply sent ✔");
+          loadChats();
+        } else {
+          showToast("Failed ❌", "#ef4444");
+        }
+      });
+  }
+
+  // ---------------- DELETE CHAT ----------------
+  function deleteChat(id) {
+    if (!confirm("Delete this chat?")) return;
+
+    fetch(`/support/delete/${id}/`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrftoken,
+      },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          showToast("Deleted 🗑️", "#ef4444");
+          document.getElementById("chatBox").innerHTML =
+            "<p style='color:#94a3b8'>Select a message</p>";
+          loadChats();
+        } else {
+          showToast("Failed ❌", "#ef4444");
+        }
+      });
+  }
+
+  // AUTO REFRESH
+  setInterval(loadChats, 5000);
+  loadChats();
+</script>
 
 {% endblock %}

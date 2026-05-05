@@ -1,14 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.contrib.auth.models import AbstractUser
+
 
 # =========================
 # 👤 PROFILE
-# =========================
-# =========================
-# 👤 PROFILE (UPDATED)
 # =========================
 class Profile(models.Model):
     ROLE_CHOICES = (
@@ -24,38 +19,15 @@ class Profile(models.Model):
 
     skills = models.TextField(blank=True)
     location = models.CharField(max_length=100, blank=True)
-
-    # ================= NEW FEATURES =================
     phone = models.CharField(max_length=15, blank=True)
 
     notifications_enabled = models.BooleanField(default=True)
     dark_mode = models.BooleanField(default=False)
-
     two_factor_enabled = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
 
-    # ================= PROFILE COMPLETION =================
-    def profile_completion(self):
-        score = 0
-
-        if self.user.username:
-            score += 15
-        if self.user.email:
-            score += 15
-        if self.profile_pic:
-            score += 20
-        if self.resume:
-            score += 20
-        if self.skills:
-            score += 15
-        if self.location:
-            score += 10
-        if self.phone:
-            score += 5
-
-        return score
 
 # =========================
 # 💼 JOB
@@ -97,14 +69,13 @@ class Application(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='applied')
 
     recruiter_feedback = models.TextField(blank=True, null=True)
-
     resume = models.FileField(upload_to='resumes/', blank=True, null=True)
-
-    linkedin = models.URLField(blank=True, null=True)  # ✅ ADD THIS
+    linkedin = models.URLField(blank=True, null=True)
 
     viewed_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     applied_at = models.DateTimeField(auto_now_add=True)
+
 
 # =========================
 # 🧠 POST
@@ -126,13 +97,14 @@ class Notification(models.Model):
 
 
 # =========================
-# 💬 MESSAGE
+# 💬 CHAT MESSAGE
 # =========================
-class Message(models.Model):
-    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
-    receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
-    text = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sent_msgs")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recv_msgs")
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
 
 
 # =========================
@@ -140,7 +112,25 @@ class Message(models.Model):
 # =========================
 class SupportMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField(blank=True, null=True)
+    message = models.TextField()
+    reply = models.TextField(blank=True, null=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+# =========================
+# 📩 CONTACT
+# =========================
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
     message = models.TextField()
     reply = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-  
+
+    def __str__(self):
+        return self.name

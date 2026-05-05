@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import Profile, Job, Application
+from .models import Profile, Job, Application, ContactMessage
 
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'role', )
+    list_display = ('user', 'role')
 
 
 @admin.register(Job)
@@ -14,7 +14,10 @@ class JobAdmin(admin.ModelAdmin):
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ('user', 'job', 'status', 'get_applied_at')
+    list_display = ('user', 'job', 'status', 'applied_at')
 
-    def get_applied_at(self, obj):
-        return obj.created_at
+
+@admin.register(ContactMessage)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'created_at', 'reply')
+    fields = ('name', 'email', 'message', 'reply')
