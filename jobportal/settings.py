@@ -1,6 +1,5 @@
 from pathlib import Path
 import os
-import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -10,14 +9,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
-DEBUG = False
+DEBUG = True
 SECURE_SSL_REDIRECT = False
-
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    ".railway.app",
-    ".onrender.com"
+    ".onrender.com",   # allows all your render domains
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -52,7 +49,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 
     'jobs.apps.JobsConfig',
-     
 ]
 
 SITE_ID = 1
@@ -81,13 +77,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'jobportal.urls'
 WSGI_APPLICATION = 'jobportal.wsgi.application'
-ASGI_APPLICATION = "jobportal.asgi.application"
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
-}
 
 # =========================
 # TEMPLATES
@@ -114,10 +104,10 @@ TEMPLATES = [
 # =========================
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 
@@ -178,8 +168,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = 'swainpabitra9861@gmail.com'
+EMAIL_HOST_PASSWORD = 'mtzisgketpvzkigz'
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

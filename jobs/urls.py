@@ -66,4 +66,5 @@ urlpatterns = [
     path('support/read/<int:id>/', views.mark_support_read, name='support_read'),
     path('support/delete/<int:id>/', views.delete_support_message, name='delete_support_message'),
     path('support/admin-reply/<int:id>/', views.admin_reply, name='admin_reply'),
+    path('update-status/<int:app_id>/<str:status>/', views.update_status)
 ]

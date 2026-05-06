@@ -1,9 +1,8 @@
 {% extends 'base.html' %} {% block content %}
 
 <style>
-  /* Use a clean, professional background color instead of an image */
   body {
-    background-color: #f3f4f6; /* Soft light grey */
+    background-color: #f3f4f6;
     margin: 0;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   }
@@ -42,7 +41,6 @@
     display: inline-block;
   }
 
-  /* Table styles */
   .table-responsive {
     width: 100%;
     overflow-x: auto;
@@ -75,7 +73,6 @@
     background-color: #f8fafc;
   }
 
-  /* Status Badges */
   .status {
     padding: 4px 10px;
     border-radius: 9999px;
@@ -84,7 +81,6 @@
     background: #e2e8f0;
   }
 
-  /* Buttons */
   .btn-group {
     display: flex;
     gap: 8px;
@@ -127,6 +123,54 @@
   .link:hover {
     text-decoration: underline;
   }
+
+  /* ================= MOBILE ================= */
+  @media (max-width: 768px) {
+    .section {
+      padding: 15px;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+    }
+
+    .stats-bar {
+      font-size: 14px;
+    }
+
+    table {
+      min-width: 700px;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .btn-group {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+      font-size: 13px;
+    }
+  }
+  /* BUTTON RESPONSIVE FIX */
+@media (max-width: 768px) {
+
+  .btn-group {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .btn {
+    width: 100%;
+    font-size: 13px;
+    padding: 10px;
+  }
+}
 </style>
 
 <div class="admin-wrapper">
@@ -141,7 +185,8 @@
       <table>
         <thead>
           <tr>
-            <th>User Email</th>
+            <th>Email</th>
+            <th>Phone</th>
             <th>Position</th>
             <th>Documents</th>
             <th>Social</th>
@@ -149,17 +194,20 @@
             <th>Action</th>
           </tr>
         </thead>
+
         <tbody>
           {% for a in applications %}
           <tr>
-            <td>{{ a.user.email }}</td>
+            <td>{{ a.email }}</td>
+            <td>{{ a.phone }}</td>
+
             <td><b>{{ a.job.title }}</b></td>
 
             <td>
               {% if a.resume %}
-              <a href="{{ a.resume.url }}" class="link" target="_blank"
-                >View Resume</a
-              >
+              <a href="{{ a.resume.url }}" class="link" target="_blank">
+                View Resume
+              </a>
               {% else %}
               <span style="color: #94a3b8">None</span>
               {% endif %}
@@ -167,37 +215,36 @@
 
             <td>
               {% if a.linkedin %}
-              <a href="{{ a.linkedin }}" class="link" target="_blank"
-                >LinkedIn</a
-              >
+              <a href="{{ a.linkedin }}" class="link" target="_blank">
+                LinkedIn
+              </a>
               {% else %}
               <span style="color: #94a3b8">N/A</span>
               {% endif %}
             </td>
 
-            <td><span class="status">{{ a.status }}</span></td>
+            <td>
+              <span class="status">{{ a.status }}</span>
+            </td>
 
             <td>
-              <div class="btn-group">
-                <button
-                  class="btn accept"
-                  onclick="updateStatus({{ a.id }}, 'Accepted')"
-                >
-                  Accept
-                </button>
-                <button
-                  class="btn reject"
-                  onclick="updateStatus({{ a.id }}, 'Rejected')"
-                >
-                  Reject
-                </button>
+              <button class="btn accept"
+  onclick="updateStatus({{ a.id }}, 'accepted')">
+  Accept
+</button>
+
+<button class="btn reject"
+  onclick="updateStatus({{ a.id }}, 'rejected')">
+  Reject
+</button>
               </div>
             </td>
           </tr>
+
           {% empty %}
           <tr>
             <td
-              colspan="6"
+              colspan="7"
               style="text-align: center; padding: 50px; color: #94a3b8"
             >
               No applications found yet.
@@ -211,39 +258,45 @@
 </div>
 
 <script>
-  function updateStatus(id, status) {
-    fetch("/update-status/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "X-CSRFToken": getCookie("csrftoken"),
-      },
-      body: `id=${id}&status=${status}`,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          location.reload();
-        } else {
-          alert(data.error || "Update failed");
-        }
-      });
-  }
+function updateStatus(id, status) {
 
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
+  let row = document.querySelector(`[data-id="${id}"]`);
+  let buttons = row.querySelectorAll(".btn");
+
+  // Disable buttons while loading
+  buttons.forEach(btn => btn.disabled = true);
+
+  fetch(`/update-status/${id}/${status}/`, {   // ✅ FIXED URL
+    method: "GET"
+  })
+  .then(res => res.json())
+  .then(data => {
+
+    buttons.forEach(btn => btn.disabled = false);
+
+    if (data.success) {
+
+      // ✅ Update UI instantly
+      let statusText = status.charAt(0).toUpperCase() + status.slice(1);
+      let statusBox = row.querySelector(".status");
+
+      statusBox.innerText = statusText;
+
+      // ✅ Color change
+      if (status === "accepted") {
+        statusBox.style.background = "#10b981";
+        statusBox.style.color = "#fff";
+      } 
+      else if (status === "rejected") {
+        statusBox.style.background = "#ef4444";
+        statusBox.style.color = "#fff";
       }
+
+    } else {
+      alert("Update failed");
     }
-    return cookieValue;
-  }
+  });
+}
 </script>
 
 {% endblock %}

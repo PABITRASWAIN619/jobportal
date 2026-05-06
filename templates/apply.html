@@ -4,7 +4,7 @@
   body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #0f172a; /* ONLY COLOR BACKGROUND */
+    background: #0f172a;
     color: #111;
   }
 
@@ -59,6 +59,12 @@
     border-radius: 8px;
     outline: none;
     font-size: 14px;
+    transition: 0.3s;
+  }
+
+  input:focus {
+    border-color: #0a66c2;
+    box-shadow: 0 0 6px rgba(10, 102, 194, 0.3);
   }
 
   input[type="file"] {
@@ -91,7 +97,6 @@
     font-size: 14px;
   }
 
-  /* ================= MOBILE ================= */
   @media (max-width: 600px) {
     .apply-container {
       padding: 18px;
@@ -113,7 +118,7 @@
       <p>{{ job.description }}</p>
     </div>
 
-    <!-- MESSAGES -->
+    <!-- MESSAGE -->
     {% if messages %} {% for message in messages %}
     <div class="msg">{{ message }}</div>
     {% endfor %} {% endif %}
@@ -121,6 +126,23 @@
     <!-- APPLY FORM -->
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
+
+      <label>Email Address</label>
+      <input
+        type="email"
+        name="email"
+        placeholder="Enter your email"
+        required
+      />
+
+      <label>Mobile Number</label>
+      <input
+        type="tel"
+        name="phone"
+        placeholder="Enter your mobile number"
+        pattern="[0-9]{10}"
+        required
+      />
 
       <label>LinkedIn Profile</label>
       <input

@@ -116,6 +116,73 @@
     border-radius: 8px;
     z-index: 9999;
   }
+  /* ================= MOBILE RESPONSIVE ================= */
+  @media (max-width: 768px) {
+    /* CARDS STACK */
+    .cards {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card {
+      width: 90%;
+    }
+
+    /* SECTIONS PADDING */
+    .section {
+      margin: 10px;
+      padding: 15px;
+    }
+
+    /* TABLE SCROLL */
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    /* CHAT STACK */
+    .chat-wrapper {
+      flex-direction: column;
+    }
+
+    .chat-list {
+      width: 100%;
+      height: 200px;
+    }
+
+    .chat-box {
+      width: 100%;
+    }
+
+    /* TEXTAREA */
+    textarea {
+      height: 70px;
+    }
+
+    /* TITLE SIZE */
+    .title {
+      font-size: 24px;
+    }
+  }
+
+  /* EXTRA SMALL DEVICES */
+  @media (max-width: 480px) {
+    .title {
+      font-size: 20px;
+    }
+
+    .card {
+      font-size: 14px;
+      padding: 14px;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      font-size: 13px;
+    }
+  }
 </style>
 
 <h2 class="title">🛠 Admin Dashboard</h2>

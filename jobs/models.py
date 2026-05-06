@@ -66,6 +66,10 @@ class Application(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
 
+    # ✅ ADD THESE
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='applied')
 
     recruiter_feedback = models.TextField(blank=True, null=True)

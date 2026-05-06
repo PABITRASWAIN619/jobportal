@@ -14,13 +14,13 @@
     color: #e5e7eb;
   }
 
-  /* ================= DASHBOARD ================= */
+  /* ===== LAYOUT ===== */
   .dashboard {
     display: flex;
     min-height: 100vh;
   }
 
-  /* ================= SIDEBAR ================= */
+  /* ===== SIDEBAR ===== */
   .sidebar {
     width: 260px;
     background: #0f172a;
@@ -43,6 +43,7 @@
     text-decoration: none;
     border-radius: 8px;
     margin-bottom: 8px;
+    transition: 0.2s;
   }
 
   .sidebar a:hover {
@@ -50,14 +51,14 @@
     color: white;
   }
 
-  /* ================= MAIN ================= */
+  /* ===== MAIN ===== */
   .main {
     margin-left: 260px;
     padding: 25px;
     width: 100%;
   }
 
-  /* ================= CARDS ================= */
+  /* ===== CARDS ===== */
   .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -74,7 +75,7 @@
   }
 
   .card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
     background: #1f2937;
   }
 
@@ -86,10 +87,9 @@
   .card p {
     font-size: 22px;
     font-weight: bold;
-    margin: 0;
   }
 
-  /* ================= TABLE ================= */
+  /* ===== TABLE ===== */
   .table-box {
     background: #111827;
     padding: 20px;
@@ -100,7 +100,6 @@
 
   table {
     width: 100%;
-    color: white;
     min-width: 700px;
   }
 
@@ -114,53 +113,191 @@
     border-bottom: 1px solid #1f2937;
   }
 
-  /* ================= RESUME ================= */
+  /* ===== BUTTONS ===== */
+  .btn-success {
+    background: #22c55e;
+    border: none;
+  }
+  .btn-warning {
+    background: #f59e0b;
+    border: none;
+  }
+  .btn-danger {
+    background: #ef4444;
+    border: none;
+  }
+
+  .btn {
+    transition: 0.2s;
+  }
+
+  .btn:hover {
+    opacity: 0.85;
+  }
+
+  /* ===== RESUME ===== */
   .resume-btn {
     background: #10b981;
-    padding: 5px 10px;
+    padding: 6px 10px;
     border-radius: 6px;
     color: white;
     text-decoration: none;
     font-size: 12px;
   }
 
-  /* ================= BUTTONS ================= */
-  .btn-success {
-    background: #22c55e;
-    border: none;
-  }
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 992px) {
+    .dashboard {
+      flex-direction: column;
+    }
 
-  .btn-warning {
-    background: #f59e0b;
-    border: none;
-  }
-
-  .btn-danger {
-    background: #ef4444;
-    border: none;
-  }
-
-  /* ================= MOBILE ================= */
-  @media (max-width: 768px) {
     .sidebar {
       position: relative;
       width: 100%;
       height: auto;
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    .sidebar h2 {
+      display: none;
+    }
+
+    .sidebar a {
+      flex: 1;
+      text-align: center;
+      font-size: 13px;
+      padding: 10px;
+      white-space: nowrap;
+    }
+
+    .main {
+      margin-left: 0;
+      padding: 15px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .cards {
+      grid-template-columns: 1fr;
+    }
+
+    .card {
+      padding: 15px;
+    }
+
+    .table-box {
+      padding: 10px;
+    }
+
+    table {
+      min-width: 600px;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      padding: 8px;
+    }
+
+    .btn {
+      width: 100%;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    #search {
+      width: 100% !important;
+      margin-top: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .sidebar {
+      flex-wrap: wrap;
+    }
+
+    .sidebar a {
+      flex: 48%;
+      font-size: 12px;
+    }
+
+    .card p {
+      font-size: 18px;
+    }
+  }
+  /* ===== TOPBAR ===== */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  #menuToggle {
+    font-size: 22px;
+    background: #1e293b;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: none;
+  }
+
+  /* ===== COLLAPSIBLE SIDEBAR ===== */
+  .sidebar {
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.hide {
+    transform: translateX(-100%);
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 992px) {
+    #menuToggle {
+      display: block;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 230px;
+      height: 100%;
+      z-index: 999;
+      transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+      transform: translateX(0);
     }
 
     .main {
       margin-left: 0;
     }
-
-    table {
-      min-width: 100%;
-    }
   }
+  .card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-link:hover .card {
+  transform: translateY(-5px) scale(1.02);
+  background: #1f2937;
+  cursor: pointer;
+}
+.card:active {
+  transform: scale(0.98);
+}
 </style>
 
 <div class="dashboard">
-  <!-- ================= SIDEBAR ================= -->
-  <div class="sidebar">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
     <h2>🚀 Admin Panel</h2>
 
     <a href="{% url 'admin_dashboard' %}">📊 Dashboard</a>
@@ -168,41 +305,51 @@
     <a href="{% url 'admin_users' %}">👥 Users</a>
     <a href="{% url 'admin_applications' %}">📄 Applications</a>
   </div>
-
-  <!-- ================= MAIN ================= -->
-  <div class="main">
+  <!-- MAIN -->
+  
+      <h2>💼 Jobs Management</h2>
+    </div>
     <h2 class="mb-3">💼 Jobs Management</h2>
 
     <a href="{% url 'post_job' %}" class="btn btn-success mb-3">
       ➕ Post Job
     </a>
 
-    <!-- ================= CARDS ================= -->
-    <div class="cards">
-      <div class="card">
-        <h3>Total Jobs</h3>
-        <p id="totalJobs">{{ stats.total_jobs }}</p>
-      </div>
+ <div class="cards">
 
-      <div class="card">
-        <h3>Total Users</h3>
-        <p>{{ stats.total_users }}</p>
-      </div>
-
-      <div class="card">
-        <h3>Applications</h3>
-        <p>{{ stats.total_apps }}</p>
-      </div>
-
-      <div class="card">
-        <h3>Active Today</h3>
-        <p id="activeUsers">--</p>
-      </div>
+  <a href="{% url 'admin_jobs' %}" class="card-link">
+    <div class="card">
+      <h3>Total Jobs</h3>
+      <p id="totalJobs">{{ stats.total_jobs }}</p>
     </div>
+  </a>
 
-    <!-- ================= TABLE ================= -->
+  <a href="{% url 'admin_users' %}" class="card-link">
+    <div class="card">
+      <h3>Total Users</h3>
+      <p>{{ stats.total_users }}</p>
+    </div>
+  </a>
+
+  <a href="{% url 'admin_applications' %}" class="card-link">
+    <div class="card">
+      <h3>Applications</h3>
+      <p>{{ stats.total_apps }}</p>
+    </div>
+  </a>
+
+  <a href="{% url 'admin_dashboard' %}" class="card-link">
+    <div class="card">
+      <h3>Active Today</h3>
+      <p id="activeUsers">--</p>
+    </div>
+  </a>
+
+</div>
+
+    <!-- TABLE -->
     <div class="table-box mt-4">
-      <div class="d-flex justify-content-between mb-3">
+      <div class="d-flex justify-content-between mb-3 flex-wrap">
         <h4>All Jobs</h4>
 
         <input
@@ -231,7 +378,6 @@
             <td>{{ job.company }}</td>
             <td>{{ job.location }}</td>
 
-            <!-- Resume -->
             <td>
               {% if job.resume %}
               <a href="{{ job.resume.url }}" target="_blank" class="resume-btn">
@@ -246,9 +392,8 @@
               <a
                 href="/dashboard/jobs/edit/{{ job.id }}/"
                 class="btn btn-warning btn-sm"
+                >Edit</a
               >
-                Edit
-              </a>
 
               <button
                 onclick="deleteJob({{ job.id }})"
@@ -265,7 +410,6 @@
   </div>
 </div>
 
-<!-- ================= SCRIPT ================= -->
 <script>
   function deleteJob(id) {
     Swal.fire({
@@ -277,9 +421,7 @@
       if (result.isConfirmed) {
         fetch(`/dashboard/jobs/delete/${id}/`, {
           method: "POST",
-          headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-          },
+          headers: { "X-CSRFToken": "{{ csrf_token }}" },
         }).then(() => {
           document.getElementById("row-" + id).remove();
           Swal.fire("Deleted!", "Job removed.", "success");
@@ -298,15 +440,20 @@
         : "none";
     });
   });
-
-  setInterval(() => {
-    fetch("/dashboard/api/stats/")
-      .then((res) => res.json())
-      .then((data) => {
-        document.getElementById("totalJobs").innerText = data.total_jobs;
-        document.getElementById("activeUsers").innerText = data.active_users;
-      });
-  }, 5000);
 </script>
+<script>
+  const toggleBtn = document.getElementById("menuToggle");
+  const sidebar = document.getElementById("sidebar");
 
+  toggleBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("show");
+  });
+</script>
+<script>
+  document.querySelectorAll(".sidebar a").forEach((link) => {
+    link.addEventListener("click", () => {
+      sidebar.classList.remove("show");
+    });
+  });
+</script>
 {% endblock %}

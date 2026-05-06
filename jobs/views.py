@@ -172,19 +172,24 @@ def apply_job(request, job_id):
 
     if request.method == "POST":
 
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
         linkedin = request.POST.get("linkedin")
+        resume = request.FILES.get("resume")
 
-        # ✅ VALIDATION (ADD HERE)
+        # ✅ LinkedIn validation
         if linkedin and "linkedin.com" not in linkedin:
             messages.error(request, "Please enter a valid LinkedIn URL")
             return redirect(request.path)
 
-        # ✅ SAVE APPLICATION ONLY AFTER VALIDATION PASSES
+        # ✅ Save everything
         Application.objects.create(
             user=request.user,
             job=job,
-            resume=request.FILES.get("resume"),
-            linkedin=linkedin
+            email=email,
+            phone=phone,
+            linkedin=linkedin,
+            resume=resume
         )
 
         messages.success(request, "Application submitted successfully!")
@@ -890,3 +895,17 @@ def delete_support_message(request, id):
         return JsonResponse({"success": True})
 
     return JsonResponse({"success": False, "error": "Invalid request"})
+from django.http import JsonResponse
+from .models import Application
+
+def update_status(request, app_id, status):
+    print("CALLED:", app_id, status)  # 👈 ADD THIS
+
+    try:
+        app = Application.objects.get(id=app_id)
+        app.status = status
+        app.save()
+        return JsonResponse({"success": True})
+    except Exception as e:
+        print("ERROR:", e)
+        return JsonResponse({"success": False})
