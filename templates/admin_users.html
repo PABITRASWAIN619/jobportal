@@ -1,21 +1,145 @@
 {% extends 'base.html' %} {% block content %}
 
-<div class="section">
-  <h2>👥 All Users</h2>
+<style>
+  body {
+    background: #0b1220;
+    color: #e5e7eb;
+    font-family: "Segoe UI", sans-serif;
+  }
 
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-    </tr>
+  .wrapper {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+  }
 
-    {% for u in users %}
-    <tr>
-      <td>{{ u.username }}</td>
-      <td>{{ u.email }}</td>
-    </tr>
-    {% endfor %}
-  </table>
+  .section {
+    background: #111827;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #1f2937;
+  }
+
+  h2 {
+    margin-bottom: 15px;
+    color: #60a5fa;
+  }
+
+  .stats {
+    margin-bottom: 15px;
+    color: #94a3b8;
+    font-size: 14px;
+  }
+
+  /* ===== TABLE ===== */
+  .table-box {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+
+  th {
+    background: #1e293b;
+    padding: 12px;
+    text-align: left;
+    font-size: 13px;
+    color: #94a3b8;
+  }
+
+  td {
+    padding: 12px;
+    border-bottom: 1px solid #1f2937;
+    font-size: 14px;
+  }
+
+  tr:hover {
+    background: #1f2937;
+  }
+
+  /* Badge */
+  .badge {
+    background: #22c55e;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: white;
+  }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 40px;
+    color: #94a3b8;
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 768px) {
+    .wrapper {
+      padding: 10px;
+    }
+
+    table {
+      font-size: 12px;
+      min-width: 500px;
+    }
+
+    th,
+    td {
+      padding: 8px;
+    }
+
+    h2 {
+      font-size: 18px;
+    }
+  }
+</style>
+
+<div class="wrapper">
+  <div class="section">
+    <h2>👥 All Users</h2>
+
+    <div class="stats">Total Users: <b>{{ users|length }}</b></div>
+
+    <div class="table-box">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Date Joined</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td>#{{ u.id }}</td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.date_joined|date:"M d, Y" }}</td>
+            <td>
+              {% if u.is_active %}
+              <span class="badge">Active</span>
+              {% else %}
+              <span style="color: #ef4444">Inactive</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="empty">🚫 No users found</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

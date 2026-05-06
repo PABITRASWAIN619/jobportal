@@ -222,16 +222,22 @@
 
 <!-- USERS -->
 <div class="section">
-  <h3>👤 Users</h3>
+  <h3>👤 Users Overview</h3>
+
   <table>
     <tr>
-      <th>Name</th>
+      <th>Username</th>
       <th>Email</th>
     </tr>
+
     {% for u in users %}
     <tr>
       <td>{{ u.username }}</td>
       <td>{{ u.email }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="2" style="color: gray">No users found</td>
     </tr>
     {% endfor %}
   </table>
@@ -239,18 +245,32 @@
 
 <!-- JOBS -->
 <div class="section">
-  <h3>💼 Jobs</h3>
+  <h3>💼 Jobs Overview</h3>
+
   <table>
     <tr>
       <th>Title</th>
       <th>Company</th>
       <th>Location</th>
+      <th>Status</th>
     </tr>
+
     {% for job in jobs %}
     <tr>
       <td>{{ job.title }}</td>
       <td>{{ job.company }}</td>
       <td>{{ job.location }}</td>
+      <td>
+        {% if job.status == "active" %}
+        <span style="color: #22c55e; font-weight: bold">Active</span>
+        {% else %}
+        <span style="color: #ef4444; font-weight: bold">Closed</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4" style="color: gray">No jobs found</td>
     </tr>
     {% endfor %}
   </table>

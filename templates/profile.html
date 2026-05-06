@@ -5,34 +5,7 @@
   body {
     margin: 0;
     font-family: "Segoe UI", sans-serif;
-    background: linear-gradient(135deg, #eef2ff, #f8fafc);
-  }
-
-  /* ================= NAVBAR ================= */
-  .navbar {
-    background: linear-gradient(135deg, #0f172a, #1e3a8a);
-    padding: 14px 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-
-  .navbar a {
-    color: white;
-    text-decoration: none;
-    margin-left: 12px;
-    padding: 8px 14px;
-    border-radius: 10px;
-    transition: 0.3s;
-    font-weight: 500;
-  }
-
-  .navbar a:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, #1e293b, #0f172a);
   }
 
   /* ================= LAYOUT ================= */
@@ -40,18 +13,19 @@
     display: flex;
     justify-content: center;
     gap: 30px;
-    margin-top: 40px;
+    padding: 20px;
     flex-wrap: wrap;
   }
 
   /* ================= PROFILE CARD ================= */
   .card {
-    width: 340px;
-    background: white;
+    width: 320px;
+    background: #111827;
     border-radius: 18px;
     padding: 25px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   }
 
   .card:hover {
@@ -59,17 +33,14 @@
     transition: 0.3s;
   }
 
-  /* PROFILE IMAGE */
   .profile-img {
-    width: 130px;
-    height: 130px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid #2563eb;
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+    border: 4px solid #3b82f6;
   }
 
-  /* TEXT */
   .name {
     font-size: 20px;
     font-weight: bold;
@@ -77,35 +48,18 @@
   }
 
   .email {
-    color: gray;
+    color: #9ca3af;
     font-size: 14px;
-  }
-
-  /* BUTTON */
-  .btn {
-    margin-top: 15px;
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-
-  .btn:hover {
-    transform: scale(1.03);
   }
 
   /* ================= FORM CARD ================= */
   .form-card {
     width: 420px;
-    background: white;
+    background: #111827;
     padding: 25px;
     border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   }
 
   input {
@@ -113,29 +67,32 @@
     padding: 12px;
     margin: 10px 0;
     border-radius: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #374151;
+    background: #1f2937;
+    color: white;
     outline: none;
   }
 
   input:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 8px rgba(37, 99, 235, 0.2);
+    border-color: #3b82f6;
   }
 
   /* DROP ZONE */
   .drop-zone {
-    border: 2px dashed #2563eb;
+    border: 2px dashed #3b82f6;
     padding: 15px;
     text-align: center;
     border-radius: 10px;
     cursor: pointer;
     margin-top: 10px;
-    background-color: blue;
-    color: red;
+    background: #1f2937;
+    color: #9ca3af;
+    transition: 0.3s;
   }
 
   .drop-zone:hover {
-    background: #b6c20c;
+    background: #374151;
+    color: white;
   }
 
   /* PREVIEW */
@@ -146,6 +103,63 @@
     margin-top: 10px;
     display: none;
     object-fit: cover;
+  }
+
+  /* BUTTONS */
+  .btn {
+    margin-top: 12px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #3b82f6, #2ad01e);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .btn:hover {
+    transform: scale(1.03);
+  }
+  /* ===== BACK BUTTON ===== */
+  .back-btn {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #d57e33, #aa14cb);
+    transition: all 0.3s ease;
+  }
+
+  /* Hover Effect */
+  .back-btn:hover {
+    background: linear-gradient(135deg, #695047, #c912d6);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Click effect */
+  .back-btn:active {
+    transform: scale(0.97);
+  }
+
+  /* ================= MOBILE ================= */
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .form-card,
+    .card {
+      width: 100%;
+      max-width: 400px;
+    }
   }
 </style>
 
@@ -169,8 +183,6 @@
 
     <div class="name">{{ request.user.first_name }}</div>
     <div class="email">{{ request.user.email }}</div>
-
-    <button class="btn">👤 My Profile</button>
   </div>
 
   <!-- FORM CARD -->
@@ -184,14 +196,18 @@
       <input type="email" name="email" value="{{ request.user.email }}" />
 
       <div class="drop-zone" onclick="document.getElementById('file').click()">
-        📂 Click or Drop Image Here
+        📂 Click to Upload Profile Image
       </div>
 
       <input type="file" name="profile_pic" id="file" hidden />
 
       <img id="preview" class="preview" />
 
+      <!-- SAVE BUTTON -->
       <button class="btn">Save Changes</button>
+
+      <!-- BACK BUTTON -->
+      <a href="{% url 'home' %}" class="back-btn">⬅ Back to Home</a>
     </form>
   </div>
 </div>
