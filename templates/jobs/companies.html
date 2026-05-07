@@ -1,70 +1,391 @@
 {% extends 'base.html' %} {% block content %}
 
 <style>
+  /* ================= BODY ================= */
   body {
-    background: #f4f6f9;
-    font-family: Arial;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b, #312e81);
+    min-height: 100vh;
   }
 
+  /* ================= NAVBAR ================= */
+  .navbar {
+    background: linear-gradient(90deg, #111827, #1e3a8a, #4f46e5) !important;
+    padding: 15px 30px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+    transition: 0.4s;
+  }
+
+  .navbar:hover {
+    background: linear-gradient(90deg, #0f172a, #2563eb, #7c3aed) !important;
+  }
+
+  .navbar a,
+  .navbar .logo {
+    color: white !important;
+  }
+
+  /* ================= TITLE ================= */
   .title {
     text-align: center;
-    margin-top: 30px;
-    font-size: 32px;
-    color: #0a66c2;
+    padding-top: 50px;
+    font-size: 52px;
+    color: white;
     font-weight: bold;
+    margin-bottom: 10px;
+    animation: fadeDown 1s ease;
   }
 
+  .subtitle {
+    text-align: center;
+    color: #cbd5e1;
+    font-size: 18px;
+    margin-bottom: 40px;
+  }
+
+  /* ================= GRID ================= */
   .company-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    padding: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 28px;
+    padding: 20px 6% 80px;
   }
 
+  /* ================= CARD ================= */
   .company-card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    padding: 30px 20px;
+    border-radius: 24px;
+    color: white;
     text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    transition: 0.3s;
+    text-decoration: none;
+    transition: 0.4s;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  }
+
+  .company-card::before {
+    content: "";
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    top: -40px;
+    right: -40px;
   }
 
   .company-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-12px) scale(1.03);
   }
 
   .company-card h3 {
-    color: #111827;
+    font-size: 28px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 2;
   }
 
   .company-card p {
-    color: #6b7280;
-    font-size: 14px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #f1f5f9;
+    position: relative;
+    z-index: 2;
   }
 
   .tag {
     display: inline-block;
-    margin-top: 10px;
-    padding: 5px 10px;
-    background: #0a66c2;
+    margin-top: 16px;
+    padding: 8px 18px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.2);
     color: white;
-    border-radius: 20px;
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ================= DIFFERENT COLORS ================= */
+
+  .c1 {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  }
+
+  .c2 {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  }
+
+  .c3 {
+    background: linear-gradient(135deg, #059669, #047857);
+  }
+
+  .c4 {
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+  }
+
+  .c5 {
+    background: linear-gradient(135deg, #ea580c, #c2410c);
+  }
+
+  .c6 {
+    background: linear-gradient(135deg, #0891b2, #155e75);
+  }
+
+  .c7 {
+    background: linear-gradient(135deg, #db2777, #be185d);
+  }
+
+  .c8 {
+    background: linear-gradient(135deg, #4f46e5, #312e81);
+  }
+
+  /* ================= ANIMATION ================= */
+  @keyframes fadeDown {
+    from {
+      opacity: 0;
+      transform: translateY(-40px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ================= MOBILE ================= */
+  @media (max-width: 768px) {
+    .title {
+      font-size: 38px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      padding: 0 20px;
+    }
   }
 </style>
 
-<h2 class="title">Top Companies</h2>
+<!-- ================= TITLE ================= -->
+
+<h2 class="title">Top Hiring Companies 🚀</h2>
+
+<p class="subtitle">
+  Explore top global companies actively hiring developers, designers, managers,
+  and remote professionals worldwide.
+</p>
+
+<!-- ================= COMPANY GRID ================= -->
 
 <div class="company-grid">
-  {% for c in companies %}
-  <div class="company-card">
-    <h3>{{ c.name }}</h3>
-    <p>{{ c.desc }}</p>
-    <span class="tag">Hiring</span>
-  </div>
-  {% endfor %}
+  <a href="#" class="company-card c1">
+    <h3>Google</h3>
+    <p>
+      Leading global technology company focused on AI, search, and cloud
+      innovation.
+    </p>
+    <span class="tag">Now Hiring</span>
+  </a>
+
+  <a href="#" class="company-card c2">
+    <h3>Microsoft</h3>
+    <p>
+      Build next-generation software, cloud systems, and enterprise solutions.
+    </p>
+    <span class="tag">Remote Jobs</span>
+  </a>
+
+  <a href="#" class="company-card c3">
+    <h3>Amazon</h3>
+    <p>
+      Work on scalable systems, ecommerce platforms, and cloud technologies.
+    </p>
+    <span class="tag">Top Recruiter</span>
+  </a>
+
+  <a href="#" class="company-card c4">
+    <h3>Apple</h3>
+    <p>Create world-class products and innovative digital experiences.</p>
+    <span class="tag">Hiring Fast</span>
+  </a>
+
+  <a href="#" class="company-card c5">
+    <h3>Netflix</h3>
+    <p>Join entertainment and streaming technology teams worldwide.</p>
+    <span class="tag">Hot Jobs</span>
+  </a>
+
+  <a href="#" class="company-card c6">
+    <h3>Meta</h3>
+    <p>Build social, VR, and AI-powered applications for billions of users.</p>
+    <span class="tag">Global Hiring</span>
+  </a>
+
+  <a href="#" class="company-card c7">
+    <h3>Tesla</h3>
+    <p>Innovate in electric vehicles, robotics, and clean energy systems.</p>
+    <span class="tag">Engineering</span>
+  </a>
+
+  <a href="#" class="company-card c8">
+    <h3>Adobe</h3>
+    <p>Work on creative software tools and digital experience platforms.</p>
+    <span class="tag">Creative Tech</span>
+  </a>
+
+  <a href="#" class="company-card c1">
+    <h3>IBM</h3>
+    <p>
+      Explore AI, hybrid cloud, consulting, and enterprise innovation careers.
+    </p>
+    <span class="tag">AI Careers</span>
+  </a>
+
+  <a href="#" class="company-card c2">
+    <h3>Intel</h3>
+    <p>Design advanced processors, chips, and hardware technologies.</p>
+    <span class="tag">Chip Design</span>
+  </a>
+
+  <a href="#" class="company-card c3">
+    <h3>Oracle</h3>
+    <p>
+      Develop enterprise databases, cloud infrastructure, and business tools.
+    </p>
+    <span class="tag">Cloud Jobs</span>
+  </a>
+
+  <a href="#" class="company-card c4">
+    <h3>Spotify</h3>
+    <p>Create music streaming and personalized listening experiences.</p>
+    <span class="tag">Music Tech</span>
+  </a>
+
+  <a href="#" class="company-card c5">
+    <h3>Uber</h3>
+    <p>Build transportation and delivery technologies for global users.</p>
+    <span class="tag">Tech Hiring</span>
+  </a>
+
+  <a href="#" class="company-card c6">
+    <h3>LinkedIn</h3>
+    <p>Empower professionals with career networking and job platforms.</p>
+    <span class="tag">Career Growth</span>
+  </a>
+
+  <a href="#" class="company-card c7">
+    <h3>Salesforce</h3>
+    <p>Work on CRM systems, cloud software, and enterprise automation.</p>
+    <span class="tag">Enterprise</span>
+  </a>
+
+  <a href="#" class="company-card c8">
+    <h3>Twitter</h3>
+    <p>Join social media engineering and communication technology teams.</p>
+    <span class="tag">Social Tech</span>
+  </a>
+
+  <!-- ADDING MORE COMPANIES -->
+
+  <a href="#" class="company-card c1"
+    ><h3>Samsung</h3>
+    <p>Electronics and mobile innovation careers.</p>
+    <span class="tag">Hiring</span></a
+  >
+
+  <a href="#" class="company-card c2"
+    ><h3>Sony</h3>
+    <p>Entertainment and gaming technology company.</p>
+    <span class="tag">Gaming</span></a
+  >
+
+  <a href="#" class="company-card c3"
+    ><h3>Infosys</h3>
+    <p>IT services and consulting opportunities.</p>
+    <span class="tag">IT Jobs</span></a
+  >
+
+  <a href="#" class="company-card c4"
+    ><h3>TCS</h3>
+    <p>India’s top IT company hiring globally.</p>
+    <span class="tag">Top MNC</span></a
+  >
+
+  <a href="#" class="company-card c5"
+    ><h3>Wipro</h3>
+    <p>Technology services and consulting careers.</p>
+    <span class="tag">Apply Now</span></a
+  >
+
+  <a href="#" class="company-card c6"
+    ><h3>Accenture</h3>
+    <p>Digital transformation and AI careers.</p>
+    <span class="tag">AI Hiring</span></a
+  >
+
+  <a href="#" class="company-card c7"
+    ><h3>Capgemini</h3>
+    <p>Consulting and cloud engineering jobs.</p>
+    <span class="tag">Cloud Tech</span></a
+  >
+
+  <a href="#" class="company-card c8"
+    ><h3>PayPal</h3>
+    <p>Online payment and fintech innovations.</p>
+    <span class="tag">Fintech</span></a
+  >
+
+  <a href="#" class="company-card c1"
+    ><h3>Flipkart</h3>
+    <p>India ecommerce and logistics careers.</p>
+    <span class="tag">Ecommerce</span></a
+  >
+
+  <a href="#" class="company-card c2"
+    ><h3>Swiggy</h3>
+    <p>Food delivery and operations technology.</p>
+    <span class="tag">Startup</span></a
+  >
+
+  <a href="#" class="company-card c3"
+    ><h3>Zomato</h3>
+    <p>Restaurant and delivery technology platform.</p>
+    <span class="tag">Food Tech</span></a
+  >
+
+  <a href="#" class="company-card c4"
+    ><h3>OpenAI</h3>
+    <p>Artificial intelligence research and development.</p>
+    <span class="tag">AI Research</span></a
+  >
+
+  <a href="#" class="company-card c5"
+    ><h3>NVIDIA</h3>
+    <p>GPU, AI hardware, and machine learning jobs.</p>
+    <span class="tag">AI Hardware</span></a
+  >
+
+  <a href="#" class="company-card c6"
+    ><h3>Dropbox</h3>
+    <p>Cloud storage and collaboration software.</p>
+    <span class="tag">Remote</span></a
+  >
+
+  <a href="#" class="company-card c7"
+    ><h3>Airbnb</h3>
+    <p>Travel and hospitality technology company.</p>
+    <span class="tag">Travel Tech</span></a
+  >
+
+  <a href="#" class="company-card c8"
+    ><h3>Zoom</h3>
+    <p>Video conferencing and communication software.</p>
+    <span class="tag">Communication</span></a
+  >
+
+  <!-- YOU CAN CONTINUE SAME STYLE UP TO 100 -->
 </div>
 
 {% endblock %}

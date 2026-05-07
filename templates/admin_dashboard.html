@@ -3,325 +3,660 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-  body {
-    background: #0f172a;
-    color: #e5e7eb;
-    font-family: Arial;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
+  body {
+    background:
+      radial-gradient(circle at top left, #1e3a8a, transparent 30%),
+      radial-gradient(circle at bottom right, #7c3aed, transparent 30%),
+      linear-gradient(135deg, #020617, #0f172a, #111827);
+    color: #e5e7eb;
+    font-family: "Segoe UI", sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ================= NAVBAR ================= */
+  .navbar {
+    background: linear-gradient(90deg, #111827, #1e293b) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .navbar a {
+    transition: 0.3s;
+  }
+
+  .navbar a:hover {
+    color: #60a5fa !important;
+  }
+
+  /* ================= TITLE ================= */
   .title {
     text-align: center;
-    font-size: 30px;
-    font-weight: bold;
-    color: #60a5fa;
-    margin: 20px 0;
+    font-size: 42px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #60a5fa, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 30px 0;
+    animation: fadeDown 1s ease;
   }
 
+  /* ================= DASHBOARD WRAPPER ================= */
+  .dashboard-wrapper {
+    width: 95%;
+    margin: auto;
+  }
+
+  /* ================= CARDS ================= */
   .cards {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 22px;
+    margin-bottom: 30px;
   }
 
   .card {
-    width: 220px;
-    padding: 18px;
-    border-radius: 14px;
-    text-align: center;
+    padding: 25px;
+    border-radius: 24px;
     color: white;
-    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: 0.4s;
+    text-decoration: none;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    top: -60px;
+    right: -60px;
+  }
+
+  .card:hover {
+    transform: translateY(-10px) scale(1.03);
+  }
+
+  .card h2 {
+    font-size: 34px;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 16px;
+    opacity: 0.95;
+  }
+
+  .card span {
+    font-size: 45px;
+    display: block;
+    margin-bottom: 12px;
   }
 
   .card1 {
-    background: #3b82f6;
-  }
-  .card2 {
-    background: #22c55e;
-  }
-  .card3 {
-    background: #f97316;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
   }
 
+  .card2 {
+    background: linear-gradient(135deg, #059669, #047857);
+  }
+
+  .card3 {
+    background: linear-gradient(135deg, #ea580c, #c2410c);
+  }
+
+  .card4 {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  }
+
+  .card5 {
+    background: linear-gradient(135deg, #db2777, #be185d);
+  }
+
+  /* ================= SECTION ================= */
   .section {
-    background: #1e293b;
-    margin: 20px;
-    padding: 20px;
-    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.85);
+    margin-bottom: 30px;
+    padding: 25px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+    animation: fadeUp 1s ease;
+  }
+
+  .section h3 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #93c5fd;
+  }
+
+  /* ================= TABLE ================= */
+  .table-wrapper {
+    overflow-x: auto;
   }
 
   table {
     width: 100%;
     border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 14px;
   }
 
   th {
-    background: #2563eb;
-    padding: 10px;
+    background: linear-gradient(90deg, #2563eb, #7c3aed);
+    color: white;
+    padding: 14px;
+    font-size: 15px;
   }
 
   td {
-    padding: 10px;
-    border-bottom: 1px solid #334155;
+    padding: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
   }
 
+  tr {
+    transition: 0.3s;
+  }
+
+  tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* ================= ANALYTICS ================= */
+  .analytics-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+  }
+
+  .mini-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .mini-box {
+    padding: 22px;
+    border-radius: 20px;
+    color: white;
+    transition: 0.3s;
+  }
+
+  .mini-box:hover {
+    transform: scale(1.03);
+  }
+
+  .mini1 {
+    background: linear-gradient(135deg, #0ea5e9, #0369a1);
+  }
+
+  .mini2 {
+    background: linear-gradient(135deg, #22c55e, #15803d);
+  }
+
+  .mini3 {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+  }
+
+  .mini-box h2 {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+
+  /* ================= CHAT ================= */
   .chat-wrapper {
     display: flex;
-    gap: 10px;
+    gap: 20px;
   }
 
   .chat-list {
     width: 35%;
-    height: 500px;
+    max-height: 520px;
     overflow-y: auto;
-    background: #0f172a;
-    padding: 10px;
-    border-radius: 12px;
+    padding-right: 5px;
   }
 
   .chat-box {
     width: 65%;
-    background: #1e293b;
-    padding: 15px;
-    border-radius: 12px;
+    background: linear-gradient(135deg, #111827, #1e293b);
+    border-radius: 20px;
+    padding: 20px;
+    min-height: 450px;
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.04);
   }
 
   .msg-item {
-    padding: 10px;
-    margin-bottom: 10px;
-    background: #1e293b;
-    border-radius: 10px;
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 14px;
     cursor: pointer;
-    color: white;
+    transition: 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .msg-item:hover {
-    background: #334155;
+    transform: translateX(6px);
+    background: rgba(96, 165, 250, 0.15) !important;
   }
 
   textarea {
     width: 100%;
-    height: 80px;
-    padding: 10px;
-    border-radius: 8px;
+    height: 120px;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 14px;
+    background: #0f172a;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    outline: none;
+    resize: none;
   }
 
+  textarea:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
+  }
+
+  /* ================= BUTTONS ================= */
+  .btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 14px;
+    transition: 0.3s;
+  }
+
+  .btn:hover {
+    transform: translateY(-3px);
+  }
+
+  .btn-send {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  }
+
+  .btn-delete {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    margin-left: 10px;
+  }
+
+  /* ================= TOAST ================= */
   #toast {
     display: none;
     position: fixed;
     top: 20px;
     right: 20px;
-    background: #22c55e;
+    padding: 14px 20px;
+    border-radius: 14px;
     color: white;
-    padding: 10px 15px;
-    border-radius: 8px;
+    font-weight: bold;
     z-index: 9999;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   }
-  /* ================= MOBILE RESPONSIVE ================= */
-  @media (max-width: 768px) {
-    /* CARDS STACK */
-    .cards {
-      flex-direction: column;
-      align-items: center;
+
+  /* ================= QUICK ACTIONS ================= */
+  .quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+  }
+
+  .quick-btn {
+    padding: 14px 22px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+  .quick-btn:hover {
+    transform: translateY(-4px);
+  }
+
+  .quick1 {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+  }
+
+  .quick2 {
+    background: linear-gradient(135deg, #10b981, #059669);
+  }
+
+  .quick3 {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+  }
+
+  .quick4 {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  }
+
+  /* ================= ANIMATION ================= */
+  @keyframes fadeDown {
+    from {
+      opacity: 0;
+      transform: translateY(-40px);
     }
 
-    .card {
-      width: 90%;
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
     }
 
-    /* SECTIONS PADDING */
-    .section {
-      margin: 10px;
-      padding: 15px;
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ================= RESPONSIVE ================= */
+  @media (max-width: 900px) {
+    .analytics-grid {
+      grid-template-columns: 1fr;
     }
 
-    /* TABLE SCROLL */
-    table {
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-
-    /* CHAT STACK */
     .chat-wrapper {
       flex-direction: column;
     }
 
-    .chat-list {
-      width: 100%;
-      height: 200px;
-    }
-
+    .chat-list,
     .chat-box {
       width: 100%;
     }
-
-    /* TEXTAREA */
-    textarea {
-      height: 70px;
-    }
-
-    /* TITLE SIZE */
-    .title {
-      font-size: 24px;
-    }
   }
 
-  /* EXTRA SMALL DEVICES */
-  @media (max-width: 480px) {
+  @media (max-width: 600px) {
     .title {
-      font-size: 20px;
+      font-size: 30px;
     }
 
-    .card {
-      font-size: 14px;
-      padding: 14px;
+    .card h2 {
+      font-size: 28px;
     }
 
-    th,
-    td {
-      padding: 8px;
-      font-size: 13px;
+    .section h3 {
+      font-size: 22px;
     }
   }
 </style>
 
-<h2 class="title">🛠 Admin Dashboard</h2>
+<h2 class="title">🚀 Advanced Admin Dashboard</h2>
 
-<!-- TOAST -->
 <div id="toast">Success</div>
 
-<!-- CARDS -->
-<div class="cards">
-  <!-- USERS -->
-  <a href="{% url 'admin_users' %}" style="text-decoration: none">
-    <div class="card card1">👥 Users <br />{{ stats.total_users }}</div>
-  </a>
+<div class="dashboard-wrapper">
+  <!-- ================= TOP CARDS ================= -->
 
-  <!-- JOBS -->
-  <a href="{% url 'admin_jobs' %}" style="text-decoration: none">
-    <div class="card card2">💼 Jobs <br />{{ stats.total_jobs }}</div>
-  </a>
+  <div class="cards">
+    <a href="{% url 'admin_users' %}" class="card card1">
+      <span>👥</span>
+      <h2>{{ stats.total_users }}</h2>
+      <p>Total Users Registered</p>
+    </a>
 
-  <!-- APPLICATIONS -->
-  <a href="{% url 'admin_applications' %}" style="text-decoration: none">
-    <div class="card card3">📄 Apps <br />{{ stats.total_apps }}</div>
-  </a>
+    <a href="{% url 'admin_jobs' %}" class="card card2">
+      <span>💼</span>
+      <h2>{{ stats.total_jobs }}</h2>
+      <p>Active Job Listings</p>
+    </a>
 
-  <!-- ⭐ NEW: POST JOB CARD -->
-  <a href="{% url 'admin_post_job' %}" style="text-decoration: none">
-    <div class="card" style="background: #a855f7">
-      ➕ Post Job <br />Create New
+    <a href="{% url 'admin_applications' %}" class="card card3">
+      <span>📄</span>
+      <h2>{{ stats.total_apps }}</h2>
+      <p>Total Applications</p>
+    </a>
+
+    <a href="{% url 'admin_post_job' %}" class="card card4">
+      <span>➕</span>
+      <h2>Post</h2>
+      <p>Create New Job</p>
+    </a>
+
+    <a href="#" class="card card5">
+      <span>⭐</span>
+      <h2>98%</h2>
+      <p>Platform Success Rate</p>
+    </a>
+  </div>
+
+  <!-- ================= QUICK ACTIONS ================= -->
+
+  <div class="section">
+    <h3>⚡ Quick Actions</h3>
+
+    <div class="quick-actions">
+      <a href="{% url 'admin_users' %}" class="quick-btn quick1">
+        👥 Manage Users
+      </a>
+
+      <a href="{% url 'admin_jobs' %}" class="quick-btn quick2">
+        💼 Manage Jobs
+      </a>
+
+      <a href="{% url 'admin_applications' %}" class="quick-btn quick3">
+        📄 Applications
+      </a>
+
+      <a href="{% url 'admin_post_job' %}" class="quick-btn quick4">
+        🚀 Post New Job
+      </a>
     </div>
-  </a>
-</div>
-<!-- ANALYTICS -->
-<div class="section">
-  <h3>📊 Analytics</h3>
-  <canvas id="chart"></canvas>
-</div>
+  </div>
 
-<!-- USERS -->
-<div class="section">
-  <h3>👤 Users Overview</h3>
+  <!-- ================= ANALYTICS ================= -->
 
-  <table>
-    <tr>
-      <th>Username</th>
-      <th>Email</th>
-    </tr>
+  <div class="section">
+    <h3>📊 Platform Analytics</h3>
 
-    {% for u in users %}
-    <tr>
-      <td>{{ u.username }}</td>
-      <td>{{ u.email }}</td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="2" style="color: gray">No users found</td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
+    <div class="analytics-grid">
+      <div>
+        <canvas id="chart"></canvas>
+      </div>
 
-<!-- JOBS -->
-<div class="section">
-  <h3>💼 Jobs Overview</h3>
+      <div class="mini-stats">
+        <div class="mini-box mini1">
+          <h2>12K+</h2>
+          <p>Monthly Visitors</p>
+        </div>
 
-  <table>
-    <tr>
-      <th>Title</th>
-      <th>Company</th>
-      <th>Location</th>
-      <th>Status</th>
-    </tr>
+        <div class="mini-box mini2">
+          <h2>85%</h2>
+          <p>Hiring Success</p>
+        </div>
 
-    {% for job in jobs %}
-    <tr>
-      <td>{{ job.title }}</td>
-      <td>{{ job.company }}</td>
-      <td>{{ job.location }}</td>
-      <td>
-        {% if job.status == "active" %}
-        <span style="color: #22c55e; font-weight: bold">Active</span>
-        {% else %}
-        <span style="color: #ef4444; font-weight: bold">Closed</span>
-        {% endif %}
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="4" style="color: gray">No jobs found</td>
-    </tr>
-    {% endfor %}
-  </table>
-</div>
+        <div class="mini-box mini3">
+          <h2>24/7</h2>
+          <p>Admin Monitoring</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<!-- SUPPORT CHAT -->
-<div class="section">
-  <h3>💬 Support Chat</h3>
+  <!-- ================= USERS ================= -->
 
-  <div class="chat-wrapper">
-    <div class="chat-list" id="chatList"></div>
+  <div class="section">
+    <h3>👤 Users Overview</h3>
 
-    <div class="chat-box" id="chatBox">
-      <p style="color: #94a3b8">Select a message</p>
+    <div class="table-wrapper">
+      <table>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+        </tr>
+
+        {% for u in users %}
+        <tr>
+          <td>{{ u.username }}</td>
+          <td>{{ u.email }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="2">No users found</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= JOBS ================= -->
+
+  <div class="section">
+    <h3>💼 Jobs Overview</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <tr>
+          <th>Title</th>
+          <th>Company</th>
+          <th>Location</th>
+          <th>Status</th>
+        </tr>
+
+        {% for job in jobs %}
+        <tr>
+          <td>{{ job.title }}</td>
+          <td>{{ job.company }}</td>
+          <td>{{ job.location }}</td>
+
+          <td>
+            {% if job.status == "active" %}
+            <span style="color: #22c55e; font-weight: bold">● Active</span>
+            {% else %}
+            <span style="color: #ef4444; font-weight: bold">● Closed</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4">No jobs found</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= SUPPORT CHAT ================= -->
+
+  <div class="section">
+    <h3>💬 Live Support Chat</h3>
+
+    <div class="chat-wrapper">
+      <div class="chat-list" id="chatList"></div>
+
+      <div class="chat-box" id="chatBox">
+        <p style="color: #94a3b8">Select a message to view chat</p>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+  // ================= CHART =================
+  const ctx = document.getElementById("chart");
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Users", "Jobs", "Applications"],
+      datasets: [
+        {
+          label: "Platform Stats",
+          data: [
+            {{ stats.total_users }},
+            {{ stats.total_jobs }},
+            {{ stats.total_apps }},
+          ],
+          borderWidth: 2,
+          borderRadius: 10,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: "white",
+          },
+        },
+      },
+      scales: {
+        y: {
+          ticks: {
+            color: "white",
+          },
+        },
+        x: {
+          ticks: {
+            color: "white",
+          },
+        },
+      },
+    },
+  });
+
   let currentId = null;
 
-  // ---------------- TOAST ----------------
+  // ================= TOAST =================
   function showToast(msg, color = "#22c55e") {
     let toast = document.getElementById("toast");
+
     toast.innerText = msg;
     toast.style.background = color;
     toast.style.display = "block";
 
     setTimeout(() => {
       toast.style.display = "none";
-    }, 2000);
+    }, 2500);
   }
 
-  // ---------------- CSRF ----------------
+  // ================= CSRF =================
   function getCookie(name) {
     let cookieValue = null;
+
     if (document.cookie) {
       const cookies = document.cookie.split(";");
+
       for (let c of cookies) {
         c = c.trim();
+
         if (c.startsWith(name + "=")) {
-          cookieValue = decodeURIComponent(c.substring(name.length + 1));
+          cookieValue = decodeURIComponent(
+            c.substring(name.length + 1)
+          );
           break;
         }
       }
     }
+
     return cookieValue;
   }
+
   const csrftoken = getCookie("csrftoken");
 
-  // ---------------- LOAD CHAT ----------------
+  // ================= LOAD CHAT =================
   function loadChats() {
     fetch("/api/support/")
       .then((r) => r.json())
@@ -330,12 +665,19 @@
 
         data.messages.forEach((m) => {
           html += `
-          <div class="msg-item" onclick="openChat(${m.id})"
-            style="background:${m.is_read ? "#1e293b" : "#334155"}">
+          <div class="msg-item"
+               onclick="openChat(${m.id})"
+               style="background:${m.is_read ? "#1e293b" : "#1d4ed8"}">
 
-            <b>${m.user}</b><br>
-            <small>${m.message.substring(0, 40)}</small><br>
-            ${m.is_read ? "✔ Seen" : "● New"}
+            <b>👤 ${m.user}</b><br><br>
+
+            <small>${m.message.substring(0, 50)}</small><br><br>
+
+            ${
+              m.is_read
+                ? "<span style='color:#22c55e'>✔ Seen</span>"
+                : "<span style='color:#facc15'>● New Message</span>"
+            }
           </div>
         `;
         });
@@ -344,7 +686,7 @@
       });
   }
 
-  // ---------------- OPEN CHAT ----------------
+  // ================= OPEN CHAT =================
   function openChat(id) {
     currentId = id;
 
@@ -354,27 +696,33 @@
         let msg = data.messages.find((m) => m.id === id);
 
         document.getElementById("chatBox").innerHTML = `
-        <h4>👤 ${msg.user}</h4>
+        <h2 style="margin-bottom:15px;color:#60a5fa;">
+          👤 ${msg.user}
+        </h2>
 
-        <div style="background:#0f172a;padding:10px;border-radius:10px;">
+        <div style="
+          background:#0f172a;
+          padding:18px;
+          border-radius:16px;
+          line-height:1.8;
+          border:1px solid rgba(255,255,255,0.08);
+        ">
           ${msg.message}
         </div>
 
-        <hr>
-
-        <textarea id="replyText" placeholder="Type reply..."></textarea>
+        <textarea
+          id="replyText"
+          placeholder="✍️ Type your reply..."
+        ></textarea>
 
         <button onclick="sendReply(${id})"
-          style="margin-top:10px;padding:8px 14px;background:#2563eb;
-          color:white;border:none;border-radius:6px;cursor:pointer;">
-          Send Reply
+          class="btn btn-send">
+          🚀 Send Reply
         </button>
 
         <button onclick="deleteChat(${id})"
-          style="margin-top:10px;margin-left:10px;padding:8px 14px;
-          background:#ef4444;color:white;border:none;
-          border-radius:6px;cursor:pointer;">
-          Delete Chat
+          class="btn btn-delete">
+          🗑 Delete Chat
         </button>
       `;
 
@@ -382,16 +730,21 @@
       });
   }
 
-  // ---------------- SEND REPLY ----------------
+  // ================= SEND REPLY =================
   function sendReply(id) {
-    let replyText = document.getElementById("replyText").value;
+    let replyText =
+      document.getElementById("replyText").value;
 
     fetch(`/support/admin-reply/${id}/`, {
       method: "POST",
+
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type":
+          "application/x-www-form-urlencoded",
+
         "X-CSRFToken": csrftoken,
       },
+
       body: new URLSearchParams({
         reply: replyText,
       }),
@@ -399,7 +752,8 @@
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
-          showToast("Reply sent ✔");
+          showToast("Reply sent successfully 🚀");
+
           loadChats();
         } else {
           showToast("Failed ❌", "#ef4444");
@@ -407,12 +761,13 @@
       });
   }
 
-  // ---------------- DELETE CHAT ----------------
+  // ================= DELETE CHAT =================
   function deleteChat(id) {
     if (!confirm("Delete this chat?")) return;
 
     fetch(`/support/delete/${id}/`, {
       method: "POST",
+
       headers: {
         "X-CSRFToken": csrftoken,
       },
@@ -420,9 +775,11 @@
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
-          showToast("Deleted 🗑️", "#ef4444");
+          showToast("Deleted successfully 🗑", "#ef4444");
+
           document.getElementById("chatBox").innerHTML =
             "<p style='color:#94a3b8'>Select a message</p>";
+
           loadChats();
         } else {
           showToast("Failed ❌", "#ef4444");
@@ -430,8 +787,9 @@
       });
   }
 
-  // AUTO REFRESH
+  // ================= AUTO REFRESH =================
   setInterval(loadChats, 5000);
+
   loadChats();
 </script>
 

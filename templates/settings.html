@@ -1,197 +1,496 @@
 {% extends 'base.html' %} {% block content %}
+
 <style>
-  /* ===================== GLOBAL CARD ===================== */
-  .settings-container {
-    max-width: 750px;
-    margin: 40px auto;
-    font-family: Arial, sans-serif;
-  }
-
-  /* Title */
-  .settings-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #222;
-  }
-
-  /* ===================== CARD STYLE ===================== */
-  .card {
-    background: #fff;
-    padding: 18px;
-    margin-top: 15px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    transition: 0.3s ease;
-  }
-
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  }
-
-  /* ===================== INPUTS ===================== */
-  input[type="text"],
-  input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    transition: 0.3s;
-  }
-
-  input:focus {
-    border-color: #0d6efd;
-    outline: none;
-    box-shadow: 0 0 8px rgba(13, 110, 253, 0.3);
-  }
-
-  /* ===================== FILE UPLOAD ===================== */
-  input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    border: 2px dashed #0d6efd;
-    border-radius: 10px;
-    background: #f8fbff;
-    cursor: pointer;
-  }
-
-  input[type="file"]:hover {
-    background: #eaf3ff;
-  }
-
-  /* ===================== BUTTON ===================== */
-  button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    background: linear-gradient(135deg, #0d6efd, #3a8dff);
+  /* ================= BODY ================= */
+  body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #0f172a, #111827, #1e293b, #312e81);
+    background-size: 400% 400%;
+    animation: bgMove 14s ease infinite;
     color: white;
-    font-size: 16px;
-    border-radius: 10px;
-    cursor: pointer;
+    min-height: 100vh;
+  }
+
+  @keyframes bgMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* ================= NAVBAR ================= */
+  .navbar {
+    background: linear-gradient(90deg, #020617, #1e293b) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    transition: 0.4s;
+  }
+
+  .navbar:hover {
+    background: linear-gradient(90deg, #111827, #312e81) !important;
+  }
+
+  .navbar a {
+    color: #fff !important;
     transition: 0.3s;
   }
 
-  button:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
+  .navbar a:hover {
+    color: #60a5fa !important;
   }
 
-  /* ===================== PROGRESS BAR ===================== */
-  .progress {
-    height: 10px;
-    background: #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  .progress-bar {
-    height: 10px;
-    background: linear-gradient(90deg, #28a745, #00c853);
-    transition: width 0.5s ease;
-  }
-
-  /* ===================== CHECKBOX STYLE ===================== */
-  .toggle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .toggle input {
-    transform: scale(1.2);
-    cursor: pointer;
-  }
-
-  /* Smooth page animation */
+  /* ================= MAIN CONTAINER ================= */
   .settings-container {
-    animation: fadeIn 0.6s ease;
+    max-width: 950px;
+    margin: 40px auto;
+    padding: 20px;
+    animation: fadeIn 0.8s ease;
   }
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(30px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
+
+  /* ================= HERO ================= */
+  .settings-hero {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .settings-hero h1 {
+    font-size: 52px;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #60a5fa, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .settings-hero p {
+    color: #cbd5e1;
+    font-size: 18px;
+  }
+
+  /* ================= CARD ================= */
+  .card {
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(15px);
+    padding: 25px;
+    border-radius: 22px;
+    margin-top: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    transition: 0.4s;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 40px rgba(96, 165, 250, 0.2);
+  }
+
+  .card h3 {
+    margin-top: 0;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #93c5fd;
+  }
+
+  /* ================= PROFILE HEADER ================= */
+  .profile-top {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid #60a5fa;
+    object-fit: cover;
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+  }
+
+  .profile-info h2 {
+    margin: 0;
+    font-size: 28px;
+  }
+
+  .profile-info p {
+    color: #cbd5e1;
+    margin-top: 6px;
+  }
+
+  /* ================= PROGRESS ================= */
+  .progress-wrapper {
+    margin-top: 18px;
+  }
+
+  .progress {
+    width: 100%;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 14px;
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    border-radius: 50px;
+    transition: width 0.5s ease;
+  }
+
+  /* ================= GRID ================= */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+  }
+
+  /* ================= INPUTS ================= */
+  label {
+    display: block;
+    margin-bottom: 6px;
+    color: #cbd5e1;
+    font-size: 14px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);
+    color: white;
+    outline: none;
+    transition: 0.3s;
+    font-size: 15px;
+  }
+
+  input::placeholder {
+    color: #94a3b8;
+  }
+
+  input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+    transform: scale(1.02);
+  }
+
+  /* ================= FILE INPUT ================= */
+  input[type="file"] {
+    width: 100%;
+    padding: 14px;
+    border: 2px dashed #60a5fa;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  input[type="file"]:hover {
+    background: rgba(96, 165, 250, 0.08);
+  }
+
+  /* ================= TOGGLES ================= */
+  .toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    margin-top: 12px;
+    transition: 0.3s;
+  }
+
+  .toggle:hover {
+    background: rgba(96, 165, 250, 0.1);
+    transform: translateX(4px);
+  }
+
+  .toggle input {
+    transform: scale(1.3);
+    cursor: pointer;
+  }
+
+  /* ================= INFO BOXES ================= */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-top: 25px;
+  }
+
+  .info-box {
+    padding: 20px;
+    border-radius: 18px;
+    color: white;
+    transition: 0.4s;
+  }
+
+  .info-box:hover {
+    transform: translateY(-8px) scale(1.03);
+  }
+
+  .box1 {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  }
+
+  .box2 {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  }
+
+  .box3 {
+    background: linear-gradient(135deg, #059669, #047857);
+  }
+
+  .box4 {
+    background: linear-gradient(135deg, #ea580c, #c2410c);
+  }
+
+  .info-box h4 {
+    margin-top: 0;
+    font-size: 20px;
+  }
+
+  .info-box p {
+    color: #e2e8f0;
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  /* ================= BUTTON ================= */
+  .save-btn {
+    width: 100%;
+    margin-top: 25px;
+    padding: 16px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.4s;
+  }
+
+  .save-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(124, 58, 237, 0.45);
+  }
+
+  /* ================= SECURITY NOTE ================= */
+  .security-note {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 14px;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    color: #bbf7d0;
+    line-height: 1.7;
+  }
+
+  /* ================= MOBILE ================= */
+  @media (max-width: 768px) {
+    .settings-hero h1 {
+      font-size: 38px;
+    }
+
+    .profile-top {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .card {
+      padding: 20px;
+    }
+  }
 </style>
+
 <div class="settings-container">
-  <h2>⚙️ Account Settings</h2>
+  <!-- HERO -->
+  <div class="settings-hero">
+    <h1>⚙️ Account Settings</h1>
 
-  <!-- PROFILE COMPLETION -->
+    <p>
+      Manage your profile, security, privacy settings, resume, notifications,
+      and account preferences.
+    </p>
+  </div>
+
+  <!-- PROFILE SUMMARY -->
   <div class="card">
-    🧑‍💼 Profile Completion: <b>{{ profile.profile_completion }}%</b>
+    <div class="profile-top">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+        class="profile-avatar"
+      />
 
-    <div class="progress" style="margin-top: 10px">
-      <div
-        class="progress-bar"
-        style="width: {{ profile.profile_completion }}%"
-      ></div>
+      <div class="profile-info">
+        <h2>{{ request.user.username }}</h2>
+
+        <p>{{ request.user.email }}</p>
+
+        <div class="progress-wrapper">
+          <p>
+            🧑‍💼 Profile Completion:
+            <b>{{ profile.profile_completion }}%</b>
+          </p>
+
+          <div class="progress">
+            <div
+              class="progress-bar"
+              style="width: {{ profile.profile_completion }}%;"
+            ></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- FORM -->
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <!-- PROFILE INFO -->
+    <!-- PROFILE -->
     <div class="card">
-      <h4>👤 Profile Info</h4>
+      <h3>👤 Profile Information</h3>
 
-      <input
-        type="text"
-        name="username"
-        value="{{ request.user.username }}"
-        placeholder="Username"
-      />
-      <input
-        type="email"
-        name="email"
-        value="{{ request.user.email }}"
-        placeholder="Email"
-      />
-      <input
-        type="text"
-        name="phone"
-        value="{{ profile.phone }}"
-        placeholder="Phone"
-      />
-      <input
-        type="text"
-        name="skills"
-        value="{{ profile.skills }}"
-        placeholder="Skills (Python, Django...)"
-      />
-      <input
-        type="text"
-        name="location"
-        value="{{ profile.location }}"
-        placeholder="Location"
-      />
+      <div class="grid">
+        <div>
+          <label>Username</label>
+          <input
+            type="text"
+            name="username"
+            value="{{ request.user.username }}"
+            placeholder="Username"
+          />
+        </div>
+
+        <div>
+          <label>Email Address</label>
+          <input
+            type="email"
+            name="email"
+            value="{{ request.user.email }}"
+            placeholder="Email"
+          />
+        </div>
+
+        <div>
+          <label>Phone Number</label>
+          <input
+            type="text"
+            name="phone"
+            value="{{ profile.phone }}"
+            placeholder="Phone Number"
+          />
+        </div>
+
+        <div>
+          <label>Skills</label>
+          <input
+            type="text"
+            name="skills"
+            value="{{ profile.skills }}"
+            placeholder="Python, Django, React..."
+          />
+        </div>
+
+        <div>
+          <label>Location</label>
+          <input
+            type="text"
+            name="location"
+            value="{{ profile.location }}"
+            placeholder="Your Location"
+          />
+        </div>
+      </div>
     </div>
 
     <!-- UPLOADS -->
     <div class="card">
-      <h4>📂 Uploads</h4>
+      <h3>📂 Resume & Profile Uploads</h3>
 
-      <label>Profile Photo</label>
-      <input type="file" name="profile_pic" />
+      <div class="grid">
+        <div>
+          <label>Upload Profile Picture</label>
+          <input type="file" name="profile_pic" />
+        </div>
 
-      <label>Resume (PDF)</label>
-      <input type="file" name="resume" accept=".pdf" />
+        <div>
+          <label>Upload Resume (PDF)</label>
+          <input type="file" name="resume" accept=".pdf" />
+        </div>
+      </div>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="card">
+      <h3>🔐 Change Password</h3>
+
+      <div class="grid">
+        <div>
+          <label>Current Password</label>
+          <input
+            type="password"
+            name="current_password"
+            placeholder="Enter current password"
+          />
+        </div>
+
+        <div>
+          <label>New Password</label>
+          <input
+            type="password"
+            name="new_password"
+            placeholder="Enter new password"
+          />
+        </div>
+
+        <div>
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            name="confirm_password"
+            placeholder="Confirm password"
+          />
+        </div>
+      </div>
+
+      <div class="security-note">
+        🔒 Use a strong password with uppercase letters, numbers, and symbols to
+        keep your account secure.
+      </div>
     </div>
 
     <!-- SETTINGS -->
     <div class="card">
-      <h4>🔧 Preferences</h4>
+      <h3>🔧 Preferences & Security</h3>
 
       <label class="toggle">
+        <span>🔔 Enable Notifications</span>
+
         <input
           type="checkbox"
           name="notifications"
@@ -202,10 +501,11 @@
           endif
           %}
         />
-        🔔 Notifications
       </label>
 
       <label class="toggle">
+        <span>🌙 Dark Mode</span>
+
         <input
           type="checkbox"
           name="dark_mode"
@@ -216,10 +516,11 @@
           endif
           %}
         />
-        🌙 Dark Mode
       </label>
 
       <label class="toggle">
+        <span>🔐 Two-Factor Authentication</span>
+
         <input
           type="checkbox"
           name="two_factor"
@@ -230,12 +531,51 @@
           endif
           %}
         />
-        🔐 Two-Factor Login
       </label>
     </div>
 
-    <button type="submit">Save Changes</button>
+    <!-- SAVE BUTTON -->
+    <button type="submit" class="save-btn">💾 Save All Changes</button>
   </form>
+
+  <!-- EXTRA INFO -->
+  <div class="info-grid">
+    <div class="info-box box1">
+      <h4>📈 Career Growth</h4>
+
+      <p>
+        Keep your profile updated to improve job visibility and attract top
+        recruiters worldwide.
+      </p>
+    </div>
+
+    <div class="info-box box2">
+      <h4>🌍 Smart Networking</h4>
+
+      <p>
+        Connect with recruiters, companies, and professionals through your
+        updated profile.
+      </p>
+    </div>
+
+    <div class="info-box box3">
+      <h4>🛡 Privacy Control</h4>
+
+      <p>
+        Your documents, resumes, and personal information are protected with
+        secure encryption.
+      </p>
+    </div>
+
+    <div class="info-box box4">
+      <h4>🚀 Faster Hiring</h4>
+
+      <p>
+        Complete profiles receive better recommendations and faster interview
+        opportunities.
+      </p>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

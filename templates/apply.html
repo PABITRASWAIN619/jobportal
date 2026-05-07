@@ -1,109 +1,263 @@
 {% extends 'base.html' %} {% block content %}
-
 <style>
-  body {
+  * {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0f172a;
-    color: #111;
+    padding: 0;
+    box-sizing: border-box;
   }
+
+  body {
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed, #db2777);
+    min-height: 100vh;
+  }
+
+  /* ================= NAVBAR ================= */
+
+  .navbar {
+    background: rgba(15, 23, 42, 0.9) !important;
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .navbar a,
+  .navbar .logo,
+  .navbar i {
+    color: white !important;
+  }
+
+  /* ================= PAGE BACKGROUND ================= */
 
   .apply-wrapper {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 40px 20px;
+    position: relative;
   }
+
+  /* glowing circles */
+
+  .apply-wrapper::before {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: #06b6d4;
+    border-radius: 50%;
+    top: 50px;
+    left: -100px;
+    filter: blur(140px);
+    opacity: 0.5;
+  }
+
+  .apply-wrapper::after {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: #ec4899;
+    border-radius: 50%;
+    bottom: 0;
+    right: -100px;
+    filter: blur(140px);
+    opacity: 0.5;
+  }
+
+  /* ================= APPLY CONTAINER ================= */
 
   .apply-container {
     width: 100%;
-    max-width: 520px;
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 14px;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    max-width: 560px;
+    padding: 35px;
+    border-radius: 28px;
+
+    background: rgba(17, 24, 39, 0.78);
+
+    backdrop-filter: blur(20px);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+
+    position: relative;
+    z-index: 2;
+
+    animation: fadeUp 1s ease;
   }
 
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ================= JOB BOX ================= */
+
   .job-box {
-    background: #f3f4f6;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+
+    padding: 25px;
+    border-radius: 22px;
+    margin-bottom: 25px;
+
+    color: white;
+
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+
+    transition: 0.4s;
+  }
+
+  .job-box:hover {
+    transform: translateY(-5px) scale(1.01);
   }
 
   .job-box h3 {
-    margin: 0;
-    color: #0a66c2;
+    font-size: 38px;
+    margin-bottom: 15px;
+    color: white;
   }
 
   .job-box p {
-    margin: 5px 0;
-    color: #444;
-    font-size: 14px;
+    margin: 10px 0;
+    color: #f1f5f9;
+    line-height: 1.7;
+    font-size: 15px;
   }
 
+  /* ================= LABELS ================= */
+
   label {
-    font-weight: bold;
     display: block;
-    margin-top: 10px;
-    font-size: 14px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    color: #f8fafc;
+    font-size: 15px;
+    font-weight: bold;
   }
+
+  /* ================= INPUTS ================= */
 
   input,
   textarea {
     width: 100%;
-    padding: 12px;
-    margin-top: 6px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    padding: 15px;
+    border-radius: 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    background: rgba(255, 255, 255, 0.08);
+
+    color: white;
+
     outline: none;
-    font-size: 14px;
+
     transition: 0.3s;
+
+    font-size: 15px;
   }
 
-  input:focus {
-    border-color: #0a66c2;
-    box-shadow: 0 0 6px rgba(10, 102, 194, 0.3);
+  input::placeholder,
+  textarea::placeholder {
+    color: #d1d5db;
   }
+
+  input:focus,
+  textarea:focus {
+    border-color: #60a5fa;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    box-shadow: 0 0 15px rgba(96, 165, 250, 0.5);
+
+    transform: scale(1.01);
+  }
+
+  /* FILE INPUT */
 
   input[type="file"] {
-    background: #fff;
+    padding: 14px;
     cursor: pointer;
   }
+
+  /* ================= BUTTON ================= */
 
   button {
     width: 100%;
-    margin-top: 15px;
-    padding: 12px;
-    background: #0a66c2;
-    color: white;
+    margin-top: 28px;
+    padding: 16px;
+
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 16px;
+
+    background: linear-gradient(135deg, #06b6d4, #3b82f6, #7c3aed);
+
+    background-size: 300% 300%;
+
+    animation: gradientMove 5s ease infinite;
+
+    color: white;
+
+    font-size: 18px;
+    font-weight: bold;
+
     cursor: pointer;
-    transition: 0.3s;
+
+    transition: 0.4s;
+
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+  }
+
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 
   button:hover {
-    background: #084a91;
+    transform: translateY(-4px) scale(1.02);
+
+    box-shadow: 0 15px 35px rgba(124, 58, 237, 0.6);
   }
+
+  /* ================= MESSAGE ================= */
 
   .msg {
-    background: #d1fae5;
-    padding: 10px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    font-size: 14px;
+    background: rgba(34, 197, 94, 0.15);
+    color: #dcfce7;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(34, 197, 94, 0.3);
   }
 
-  @media (max-width: 600px) {
+  /* ================= MOBILE ================= */
+
+  @media (max-width: 768px) {
     .apply-container {
-      padding: 18px;
+      padding: 25px;
     }
 
-    .job-box p {
-      font-size: 13px;
+    .job-box h3 {
+      font-size: 28px;
+    }
+
+    button {
+      font-size: 16px;
     }
   }
 </style>
@@ -113,8 +267,11 @@
     <!-- JOB DETAILS -->
     <div class="job-box">
       <h3>{{ job.title }}</h3>
-      <p><b>Company:</b> {{ job.company }}</p>
-      <p><b>Location:</b> {{ job.location }}</p>
+
+      <p><b>🏢 Company:</b> {{ job.company }}</p>
+
+      <p><b>📍 Location:</b> {{ job.location }}</p>
+
       <p>{{ job.description }}</p>
     </div>
 
@@ -127,7 +284,8 @@
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
 
-      <label>Email Address</label>
+      <label>📧 Email Address</label>
+
       <input
         type="email"
         name="email"
@@ -135,7 +293,8 @@
         required
       />
 
-      <label>Mobile Number</label>
+      <label>📱 Mobile Number</label>
+
       <input
         type="tel"
         name="phone"
@@ -144,14 +303,16 @@
         required
       />
 
-      <label>LinkedIn Profile</label>
+      <label>💼 LinkedIn Profile</label>
+
       <input
         type="url"
         name="linkedin"
         placeholder="https://linkedin.com/in/yourprofile"
       />
 
-      <label>Upload Resume</label>
+      <label>📄 Upload Resume</label>
+
       <input type="file" name="resume" required />
 
       <button type="submit">Apply Now 🚀</button>

@@ -1,99 +1,299 @@
 {% extends 'base.html' %} {% block content %}
 
 <style>
-  /* BACKGROUND */
+  /* ================= BODY ================= */
   body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(120deg, #f3f4f6, #ffffff);
+    background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81);
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  /* HERO */
+  /* ================= NAVBAR ================= */
+  .navbar {
+    background: linear-gradient(90deg, #111827, #1e293b, #312e81) !important;
+    padding: 16px 30px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    transition: 0.4s;
+  }
+
+  .navbar:hover {
+    background: linear-gradient(90deg, #0f172a, #312e81, #4f46e5) !important;
+  }
+
+  .navbar a,
+  .navbar .logo {
+    color: white !important;
+    transition: 0.3s;
+  }
+
+  .navbar a:hover {
+    color: #60a5fa !important;
+  }
+
+  /* ================= HERO ================= */
   .contact-hero {
     text-align: center;
-    padding: 50px 20px;
-    animation: fadeDown 1s ease-in-out;
+    padding: 80px 20px 50px;
+    color: white;
+    animation: fadeDown 1s ease;
   }
 
   .contact-hero h1 {
-    font-size: 42px;
-    color: #0a66c2;
+    font-size: 72px;
+    margin-bottom: 15px;
+    text-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   }
 
   .contact-hero p {
-    color: #555;
-    font-size: 16px;
+    font-size: 22px;
+    color: #dbeafe;
   }
 
-  /* CONTAINER */
+  /* ================= CONTAINER ================= */
   .contact-container {
     display: flex;
     justify-content: center;
-    gap: 30px;
     flex-wrap: wrap;
-    padding: 40px;
+    gap: 30px;
+    padding: 20px 6%;
   }
 
-  /* CARD */
+  /* ================= CARD COMMON ================= */
   .contact-card {
-    background: white;
-    width: 300px;
-    padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    transition: 0.3s;
+    width: 320px;
+    padding: 35px 25px;
+    border-radius: 24px;
     text-align: center;
+    transition: 0.4s;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .contact-card::before {
+    content: "";
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    top: -50px;
+    right: -50px;
   }
 
   .contact-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(10, 102, 194, 0.2);
+    transform: translateY(-12px) scale(1.04);
   }
 
   .contact-card img {
-    width: 60px;
-    margin-bottom: 10px;
+    width: 75px;
+    margin-bottom: 18px;
+    transition: 0.4s;
   }
 
-  /* FORM */
+  .contact-card:hover img {
+    transform: scale(1.15) rotate(5deg);
+  }
+
+  .contact-card h3 {
+    font-size: 34px;
+    margin-bottom: 14px;
+  }
+
+  .contact-card p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: white;
+  }
+
+  /* ================= DIFFERENT CARD COLORS ================= */
+
+  /* EMAIL */
+  .email-card {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 20px 45px rgba(37, 99, 235, 0.45);
+  }
+
+  .email-card:hover {
+    box-shadow: 0 30px 60px rgba(37, 99, 235, 0.7);
+  }
+
+  /* PHONE */
+  .phone-card {
+    background: linear-gradient(135deg, #059669, #047857);
+    box-shadow: 0 20px 45px rgba(5, 150, 105, 0.45);
+  }
+
+  .phone-card:hover {
+    box-shadow: 0 30px 60px rgba(5, 150, 105, 0.7);
+  }
+
+  /* LOCATION */
+  .location-card {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    box-shadow: 0 20px 45px rgba(220, 38, 38, 0.45);
+  }
+
+  .location-card:hover {
+    box-shadow: 0 30px 60px rgba(220, 38, 38, 0.7);
+  }
+
+  /* ================= FORM ================= */
   .contact-form {
-    width: 320px;
-    background: white;
-    padding: 25px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 720px;
+    margin-top: 40px;
+    background: linear-gradient(135deg, #111827, #1e293b);
+    padding: 45px;
+    border-radius: 28px;
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.45);
+    color: white;
+    animation: fadeUp 1s ease;
+  }
+
+  .contact-form h3 {
+    text-align: center;
+    font-size: 44px;
+    margin-bottom: 25px;
   }
 
   .contact-form input,
   .contact-form textarea {
     width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    font-size: 16px;
+    outline: none;
+    transition: 0.4s;
+  }
+
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder {
+    color: #cbd5e1;
+  }
+
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    border-color: #60a5fa;
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
   }
 
   .contact-form button {
-    margin-top: 15px;
     width: 100%;
-    padding: 10px;
-    background: #0a66c2;
-    color: white;
+    margin-top: 22px;
+    padding: 16px;
     border: none;
-    border-radius: 8px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.4s;
   }
 
   .contact-form button:hover {
-    background: #084a9a;
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(124, 58, 237, 0.5);
   }
 
-  /* ANIMATION */
+  /* ================= EXTRA INFO ================= */
+  .extra-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    padding: 70px 6%;
+  }
+
+  .extra-box {
+    padding: 30px;
+    border-radius: 24px;
+    color: white;
+    transition: 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .extra-box::before {
+    content: "";
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    top: -40px;
+    right: -40px;
+  }
+
+  .extra-box:hover {
+    transform: translateY(-10px) scale(1.03);
+  }
+
+  .extra-box h3 {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+
+  .extra-box p {
+    line-height: 1.8;
+    font-size: 16px;
+  }
+
+  /* GLOBAL */
+  .global-box {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+    box-shadow: 0 15px 40px rgba(124, 58, 237, 0.45);
+  }
+
+  .global-box:hover {
+    box-shadow: 0 25px 55px rgba(124, 58, 237, 0.7);
+  }
+
+  /* FAST RESPONSE */
+  .response-box {
+    background: linear-gradient(135deg, #0891b2, #155e75);
+    box-shadow: 0 15px 40px rgba(8, 145, 178, 0.45);
+  }
+
+  .response-box:hover {
+    box-shadow: 0 25px 55px rgba(8, 145, 178, 0.7);
+  }
+
+  /* SECURE */
+  .secure-box {
+    background: linear-gradient(135deg, #ea580c, #c2410c);
+    box-shadow: 0 15px 40px rgba(234, 88, 12, 0.45);
+  }
+
+  .secure-box:hover {
+    box-shadow: 0 25px 55px rgba(234, 88, 12, 0.7);
+  }
+
+  /* CAREER */
+  .career-box {
+    background: linear-gradient(135deg, #db2777, #be185d);
+    box-shadow: 0 15px 40px rgba(219, 39, 119, 0.45);
+  }
+
+  .career-box:hover {
+    box-shadow: 0 25px 55px rgba(219, 39, 119, 0.7);
+  }
+
+  /* ================= ANIMATION ================= */
   @keyframes fadeDown {
     from {
       opacity: 0;
-      transform: translateY(-30px);
+      transform: translateY(-40px);
     }
     to {
       opacity: 1;
@@ -101,53 +301,154 @@
     }
   }
 
-  /* RESPONSIVE */
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ================= MOBILE ================= */
   @media (max-width: 768px) {
-    .contact-container {
-      flex-direction: column;
-      align-items: center;
+    .contact-hero h1 {
+      font-size: 48px;
+    }
+
+    .contact-hero p {
+      font-size: 18px;
+    }
+
+    .contact-card {
+      width: 100%;
+    }
+
+    .contact-form {
+      padding: 25px;
+    }
+
+    .contact-form h3 {
+      font-size: 32px;
     }
   }
 </style>
 
-<!-- HERO -->
+<!-- ================= HERO ================= -->
+
 <div class="contact-hero">
   <h1>Contact Us 📞</h1>
-  <p>We are here to help you with your career journey</p>
+
+  <p>
+    Our team is always ready to help you with jobs, careers, and opportunities.
+  </p>
 </div>
 
-<!-- CONTACT SECTION -->
+<!-- ================= CONTACT CARDS ================= -->
+
 <div class="contact-container">
-  <!-- INFO CARD -->
-  <div class="contact-card">
+  <!-- EMAIL -->
+  <a href="mailto:support@jobportal.com" class="contact-card email-card">
     <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" />
+
     <h3>Email Support</h3>
+
     <p>support@jobportal.com</p>
-  </div>
 
-  <div class="contact-card">
+    <p>24/7 support for all users and recruiters.</p>
+  </a>
+
+  <!-- PHONE -->
+  <a href="tel:+918658302086" class="contact-card phone-card">
     <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" />
-    <h3>Phone</h3>
-    <p>+91 98765 43210</p>
-  </div>
 
-  <div class="contact-card">
+    <h3>Phone Support</h3>
+
+    <p>+91 8658302086</p>
+
+    <p>Talk directly with our career support team.</p>
+  </a>
+
+  <!-- LOCATION -->
+  <a
+    href="https://maps.google.com"
+    target="_blank"
+    class="contact-card location-card"
+  >
     <img src="https://cdn-icons-png.flaticon.com/512/684/684809.png" />
-    <h3>Location</h3>
-    <p>Mumbai, India</p>
-  </div>
+
+    <h3>Office Location</h3>
+
+    <p>BHUBANESWAR, India</p>
+
+    <p>Visit our headquarters for business inquiries.</p>
+  </a>
 
   <!-- FORM -->
   <div class="contact-form">
-    <h3>Send Message</h3>
+    <h3>Send Message ✨</h3>
 
     <form method="POST">
       {% csrf_token %}
-      <input type="text" name="name" placeholder="Your Name" required />
-      <input type="email" name="email" placeholder="Your Email" required />
-      <textarea name="message" rows="4" placeholder="Your Message"></textarea>
-      <button type="submit">Send</button>
+
+      <input type="text" name="name" placeholder="👤 Your Name" required />
+
+      <input type="email" name="email" placeholder="📧 Your Email" required />
+
+      <textarea
+        name="message"
+        rows="5"
+        placeholder="✍️ Write your message..."
+      ></textarea>
+
+      <button type="submit">Send Message 🚀</button>
     </form>
+  </div>
+</div>
+
+<!-- ================= EXTRA INFO ================= -->
+
+<div class="extra-info">
+  <!-- GLOBAL -->
+  <div class="extra-box global-box">
+    <h3>🌍 Global Reach</h3>
+
+    <p>
+      We connect job seekers with top companies worldwide across technology,
+      business, and remote careers.
+    </p>
+  </div>
+
+  <!-- FAST RESPONSE -->
+  <div class="extra-box response-box">
+    <h3>⚡ Fast Response</h3>
+
+    <p>
+      Our support team responds quickly to all user queries and support requests
+      within a few hours.
+    </p>
+  </div>
+
+  <!-- SECURE -->
+  <div class="extra-box secure-box">
+    <h3>🔒 Secure Platform</h3>
+
+    <p>
+      Your applications and personal information are protected with advanced
+      security systems.
+    </p>
+  </div>
+
+  <!-- CAREER -->
+  <div class="extra-box career-box">
+    <h3>💼 Career Guidance</h3>
+
+    <p>
+      Get resume tips, interview preparation, smart job suggestions, and expert
+      career guidance.
+    </p>
   </div>
 </div>
 

@@ -1,211 +1,569 @@
 {% extends 'base.html' %} {% block content %}
 
 <style>
+  /* ================= BODY ================= */
   body {
     margin: 0;
     font-family: "Segoe UI", sans-serif;
-    background: #000; /* FULL BLACK BACKGROUND */
-    color: #fff;
+    background: linear-gradient(135deg, #020617, #0f172a, #1e293b);
+    color: white;
+    overflow-x: hidden;
   }
 
-  /* NAVBAR FIX (important) */
+  /* ================= NAVBAR ================= */
+  .navbar,
   nav {
-    background: #000;
-    padding: 15px 30px;
+    background: linear-gradient(90deg, #111827, #1e3a8a, #312e81) !important;
+    padding: 16px 35px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    transition: 0.4s;
   }
 
-  nav a {
-    color: #fff !important;
+  .navbar:hover,
+  nav:hover {
+    background: linear-gradient(90deg, #0f172a, #2563eb, #7c3aed) !important;
+  }
+
+  nav a,
+  .navbar a {
+    color: white !important;
     text-decoration: none;
     margin: 0 15px;
-    font-weight: 500;
+    font-weight: 600;
+    transition: 0.3s;
   }
 
-  nav a:hover {
-    color: #00bfff;
+  nav a:hover,
+  .navbar a:hover {
+    color: #93c5fd !important;
   }
 
   .logo,
   .brand {
-    color: #fff !important;
-    font-size: 22px;
+    color: white !important;
+    font-size: 24px;
     font-weight: bold;
   }
 
-  /* HERO */
+  /* ================= HERO ================= */
   .hero {
-    height: 60vh;
+    min-height: 85vh;
     background:
-      linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-      url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d")
-        no-repeat center/cover;
+      linear-gradient(rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.85)),
+      url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2070&auto=format&fit=crop");
+    background-size: cover;
+    background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    animation: fadeIn 1.5s ease-in-out;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: #2563eb;
+    border-radius: 50%;
+    filter: blur(160px);
+    opacity: 0.25;
+    top: -120px;
+    right: -120px;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    animation: fadeIn 1.2s ease;
   }
 
   .hero h1 {
-    font-size: 50px;
+    font-size: 72px;
+    margin-bottom: 20px;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+
+  .hero h1 span {
+    color: #60a5fa;
   }
 
   .hero p {
-    font-size: 20px;
-    color: #ccc;
-  }
-
-  /* SECTION */
-  .section {
-    padding: 60px 10%;
-    text-align: center;
-    background: #111;
-    animation: slideUp 1s ease;
-  }
-
-  .section h2 {
-    font-size: 32px;
-    margin-bottom: 20px;
-    color: #fff;
-  }
-
-  .section p {
-    font-size: 18px;
-    color: #ccc;
-    max-width: 800px;
+    font-size: 22px;
+    color: #d1d5db;
+    max-width: 850px;
     margin: auto;
+    line-height: 1.8;
   }
 
-  /* FEATURES */
+  .hero-btns {
+    margin-top: 35px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .hero-btns a {
+    padding: 15px 30px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.4s;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(124, 58, 237, 0.5);
+  }
+
+  .btn-secondary {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  /* ================= SECTION ================= */
+  .section {
+    padding: 90px 8%;
+    text-align: center;
+  }
+
+  .section-title {
+    font-size: 50px;
+    margin-bottom: 20px;
+    color: white;
+  }
+
+  .section-subtitle {
+    color: #cbd5e1;
+    max-width: 850px;
+    margin: auto;
+    line-height: 1.9;
+    font-size: 18px;
+  }
+
+  /* ================= FEATURES ================= */
   .features {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 35px;
+    margin-top: 60px;
   }
 
   .card {
-    background: #1a1a1a;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.05);
-    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+    padding: 35px 25px;
+    border-radius: 24px;
+    transition: 0.4s;
+    text-align: center;
+    color: white;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    top: -40px;
+    right: -40px;
   }
 
   .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 25px rgba(0, 123, 255, 0.3);
+    transform: translateY(-12px) scale(1.03);
   }
 
   .card img {
-    width: 60px;
-    margin-bottom: 15px;
+    width: 75px;
+    margin-bottom: 18px;
+    transition: 0.4s;
   }
 
-  /* CTA */
+  .card:hover img {
+    transform: scale(1.15) rotate(5deg);
+  }
+
+  .card h3 {
+    font-size: 30px;
+    margin-bottom: 12px;
+  }
+
+  .card p {
+    color: #f1f5f9;
+    line-height: 1.8;
+    font-size: 16px;
+  }
+
+  /* DIFFERENT COLORS */
+
+  .c1 {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 15px 40px rgba(37, 99, 235, 0.45);
+  }
+
+  .c2 {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6);
+    box-shadow: 0 15px 40px rgba(124, 58, 237, 0.45);
+  }
+
+  .c3 {
+    background: linear-gradient(135deg, #059669, #047857);
+    box-shadow: 0 15px 40px rgba(5, 150, 105, 0.45);
+  }
+
+  .c4 {
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    box-shadow: 0 15px 40px rgba(220, 38, 38, 0.45);
+  }
+
+  .c5 {
+    background: linear-gradient(135deg, #ea580c, #c2410c);
+    box-shadow: 0 15px 40px rgba(234, 88, 12, 0.45);
+  }
+
+  .c6 {
+    background: linear-gradient(135deg, #0891b2, #155e75);
+    box-shadow: 0 15px 40px rgba(8, 145, 178, 0.45);
+  }
+
+  /* ================= STATS ================= */
+  .stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-top: 60px;
+  }
+
+  .stat-box {
+    width: 220px;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    transition: 0.4s;
+  }
+
+  .stat-box:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .stat-box h2 {
+    font-size: 52px;
+    color: #60a5fa;
+    margin-bottom: 10px;
+  }
+
+  .stat-box p {
+    color: #e2e8f0;
+    font-size: 18px;
+  }
+
+  /* ================= TIMELINE ================= */
+  .timeline {
+    margin-top: 70px;
+    display: grid;
+    gap: 30px;
+  }
+
+  .timeline-box {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 20px;
+    transition: 0.4s;
+    text-align: left;
+  }
+
+  .timeline-box:hover {
+    transform: translateX(10px);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .timeline-box h3 {
+    color: #60a5fa;
+    margin-bottom: 10px;
+  }
+
+  .timeline-box p {
+    color: #d1d5db;
+    line-height: 1.8;
+  }
+
+  /* ================= CTA ================= */
   .cta {
-    background: #007bff;
-    color: white;
-    padding: 50px;
+    padding: 100px 8%;
     text-align: center;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+  }
+
+  .cta h2 {
+    font-size: 58px;
+    margin-bottom: 20px;
+  }
+
+  .cta p {
+    font-size: 20px;
+    color: #dbeafe;
+    margin-bottom: 35px;
   }
 
   .cta a {
+    display: inline-block;
+    padding: 16px 35px;
     background: white;
-    color: #007bff;
-    padding: 12px 25px;
-    border-radius: 25px;
+    color: #2563eb;
+    border-radius: 14px;
     text-decoration: none;
     font-weight: bold;
+    transition: 0.4s;
   }
 
   .cta a:hover {
-    background: #ddd;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
   }
 
-  /* ANIMATION */
+  /* ================= ANIMATION ================= */
   @keyframes fadeIn {
     from {
       opacity: 0;
+      transform: translateY(40px);
     }
+
     to {
       opacity: 1;
+      transform: translateY(0);
     }
   }
 
-  @keyframes slideUp {
-    from {
-      transform: translateY(50px);
-      opacity: 0;
+  /* ================= MOBILE ================= */
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 46px;
     }
-    to {
-      transform: translateY(0);
-      opacity: 1;
+
+    .hero p {
+      font-size: 18px;
+    }
+
+    .section-title {
+      font-size: 38px;
+    }
+
+    .cta h2 {
+      font-size: 40px;
+    }
+
+    .hero-btns {
+      flex-direction: column;
+      align-items: center;
     }
   }
 </style>
 
-<!-- HERO -->
+<!-- ================= HERO ================= -->
+
 <div class="hero">
-  <div>
-    <h1>About Job Portal</h1>
-    <p>Your smart gateway to career opportunities</p>
+  <div class="hero-content">
+    <h1>About <span>Job Portal</span> 🚀</h1>
+
+    <p>
+      A smart modern platform designed to connect talented professionals with
+      top companies worldwide using powerful search, secure applications, and
+      career-focused tools.
+    </p>
+
+    <div class="hero-btns">
+      <a href="{% url 'home' %}" class="btn-primary">Explore Jobs</a>
+
+      <a href="/contact/" class="btn-secondary">Contact Us</a>
+    </div>
   </div>
 </div>
 
-<!-- ABOUT -->
+<!-- ================= WHO WE ARE ================= -->
+
 <div class="section">
-  <h2>Who We Are</h2>
-  <p>
-    Our Job Portal is a powerful Django-based platform that connects job seekers
-    with employers efficiently. We simplify hiring using modern tools and a
-    smooth user experience.
+  <h2 class="section-title">Who We Are</h2>
+
+  <p class="section-subtitle">
+    Job Portal is a next-generation recruitment platform helping job seekers,
+    recruiters, startups, and global companies connect faster and smarter. Built
+    using Django and modern web technologies, our system delivers secure, fast,
+    and intelligent hiring experiences for everyone.
   </p>
+
+  <div class="stats">
+    <div class="stat-box">
+      <h2>10K+</h2>
+      <p>Active Jobs</p>
+    </div>
+
+    <div class="stat-box">
+      <h2>5K+</h2>
+      <p>Companies</p>
+    </div>
+
+    <div class="stat-box">
+      <h2>20K+</h2>
+      <p>Users</p>
+    </div>
+
+    <div class="stat-box">
+      <h2>98%</h2>
+      <p>Success Rate</p>
+    </div>
+  </div>
 </div>
 
-<!-- FEATURES -->
+<!-- ================= FEATURES ================= -->
+
 <div class="section">
-  <h2>What We Offer</h2>
+  <h2 class="section-title">What We Offer</h2>
+
+  <p class="section-subtitle">
+    Discover advanced career tools, employer dashboards, AI-powered job search,
+    and secure hiring systems built for the modern workforce.
+  </p>
+
   <div class="features">
-    <div class="card">
+    <div class="card c1">
       <img src="https://img.icons8.com/color/96/search.png" />
-      <h3>Smart Job Search</h3>
-      <p>Find jobs quickly using smart filters.</p>
+
+      <h3>Smart Search</h3>
+
+      <p>
+        Find relevant jobs instantly using intelligent filters, keyword search,
+        and personalized recommendations.
+      </p>
     </div>
 
-    <div class="card">
+    <div class="card c2">
       <img src="https://img.icons8.com/color/96/resume.png" />
+
       <h3>Easy Apply</h3>
-      <p>Apply in one click and track applications.</p>
+
+      <p>
+        Upload resumes, apply in one click, and track all applications from a
+        single dashboard.
+      </p>
     </div>
 
-    <div class="card">
+    <div class="card c3">
       <img src="https://img.icons8.com/color/96/manager.png" />
+
       <h3>Employer Dashboard</h3>
-      <p>Manage job postings and candidates easily.</p>
+
+      <p>
+        Recruiters can manage jobs, applicants, analytics, and hiring workflows
+        efficiently.
+      </p>
     </div>
 
-    <div class="card">
+    <div class="card c4">
       <img src="https://img.icons8.com/color/96/security-checked.png" />
+
       <h3>Secure Platform</h3>
-      <p>Your data is safe and protected.</p>
+
+      <p>
+        Advanced security systems protect user profiles, resumes, and employer
+        data.
+      </p>
+    </div>
+
+    <div class="card c5">
+      <img src="https://img.icons8.com/color/96/artificial-intelligence.png" />
+
+      <h3>AI Matching</h3>
+
+      <p>
+        Smart AI tools recommend jobs based on skills, experience, and career
+        interests.
+      </p>
+    </div>
+
+    <div class="card c6">
+      <img src="https://img.icons8.com/color/96/conference-call.png" />
+
+      <h3>Global Network</h3>
+
+      <p>
+        Connect with companies and recruiters from multiple countries and
+        industries worldwide.
+      </p>
     </div>
   </div>
 </div>
 
-<!-- MISSION -->
+<!-- ================= MISSION ================= -->
+
 <div class="section">
-  <h2>Our Mission</h2>
-  <p>
-    To connect talent with opportunity and make hiring simple, fast, and
-    reliable.
+  <h2 class="section-title">Our Mission & Vision</h2>
+
+  <p class="section-subtitle">
+    Our mission is to simplify hiring and empower professionals with better
+    opportunities. We aim to create a future where talent and opportunity meet
+    without barriers using innovation, technology, and trust.
   </p>
+
+  <div class="timeline">
+    <div class="timeline-box">
+      <h3>🚀 Innovation First</h3>
+
+      <p>
+        We continuously improve our platform with modern technology, AI tools,
+        and better user experiences.
+      </p>
+    </div>
+
+    <div class="timeline-box">
+      <h3>🌍 Global Opportunities</h3>
+
+      <p>
+        Our platform connects users with international companies, startups, and
+        remote work opportunities.
+      </p>
+    </div>
+
+    <div class="timeline-box">
+      <h3>🔒 Trust & Security</h3>
+
+      <p>
+        User privacy and secure recruitment processes are our highest priority
+        for every employer and applicant.
+      </p>
+    </div>
+  </div>
 </div>
 
-<!-- CTA -->
+<!-- ================= CTA ================= -->
+
 <div class="cta">
   <h2>Start Your Career Journey Today 🚀</h2>
-  <a href="{% url 'home' %}">Go to Home</a>
+
+  <p>
+    Join thousands of professionals finding their dream jobs using Job Portal.
+  </p>
+
+  <a href="{% url 'home' %}">Go To Home</a>
 </div>
 
 {% endblock %}
