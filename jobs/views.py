@@ -17,36 +17,7 @@ from .models import Job, Application, Profile, SupportMessage
 # ===========================
 # 🔐 AUTH - LOGIN
 # ===========================
-def login_view(request):
-    if request.method == "POST":
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-
-        user_obj = User.objects.filter(email=email).first()
-
-        if not user_obj:
-            messages.error(request, "Invalid credentials")
-            return render(request, "login.html", {"hide_navbar": True})
-
-        user = authenticate(request, username=user_obj.username, password=password)
-
-        if user is not None:
-            login(request, user)
-
-            if user.is_superuser:
-                return redirect("/admin-dashboard/")
-
-            return redirect("/home/")
-
-        messages.error(request, "Invalid credentials")
-        return render(request, "login.html", {"hide_navbar": True})
-
-    return render(request, "login.html", {"hide_navbar": True})
-
-
-# ===========================
-# 🆕 SIGNUP
-# ===========================
+from django.contrib.auth import authenticate, login
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -54,30 +25,169 @@ from .models import Profile
 
 User = get_user_model()
 
-def signup_view(request):
+
+# ===========================
+# 🔐 LOGIN
+# ===========================
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from .models import Profile
+
+User = get_user_model()
+
+
+# ===========================
+# LOGIN
+# ===========================
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.contrib.auth.models import User
+from .models import Profile
+
+
+# ===========================
+# LOGIN
+# ===========================
+def login_view(request):
+
     if request.method == "POST":
+
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        # ===========================
+        # CHECK EMAIL EXISTS
+        # ===========================
+        user_obj = User.objects.filter(email=email).first()
+
+        if not user_obj:
+            messages.error(request, "Email not found")
+
+            return render(request, "login.html", {
+                "hide_navbar": True
+            })
+
+        # ===========================
+        # AUTHENTICATE USER
+        # ===========================
+        user = authenticate(
+            request,
+            username=user_obj.username,
+            password=password
+        )
+
+        if user is None:
+
+            messages.error(request, "Invalid password")
+
+            return render(request, "login.html", {
+                "hide_navbar": True
+            })
+
+        # ===========================
+        # LOGIN USER
+        # ===========================
+        login(request, user)
+
+        # ===========================
+        # ADMIN LOGIN
+        # ===========================
+        if user.is_superuser:
+            return redirect("admin_dashboard")
+
+        # ===========================
+        # GET PROFILE
+        # ===========================
+        try:
+            profile = Profile.objects.get(user=user)
+
+            # ===========================
+            # RECRUITER LOGIN
+            # ===========================
+            if profile.role == "recruiter":
+                return redirect("recruiter_dashboard")
+
+            # ===========================
+            # JOB SEEKER LOGIN
+            # ===========================
+            elif profile.role == "jobseeker":
+                return redirect("home")
+
+            # ===========================
+            # DEFAULT
+            # ===========================
+            else:
+                return redirect("home")
+
+        except Profile.DoesNotExist:
+
+            messages.error(request, "Profile not found")
+            return redirect("login")
+
+    # ===========================
+    # GET REQUEST
+    # ===========================
+    return render(request, "login.html", {
+        "hide_navbar": True
+    })
+
+
+# ===========================
+# SIGNUP
+# ===========================
+# ===========================
+# SIGNUP
+# ===========================
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib import messages
+from .models import Profile
+
+
+def signup_view(request):
+
+    if request.method == "POST":
+
         name = request.POST.get("name")
         email = request.POST.get("email")
         password = request.POST.get("password")
         role = request.POST.get("role")
 
-        # ✅ Check if user already exists
-        user, created = User.objects.get_or_create(
+        # DEBUG
+        print("ROLE =", role)
+
+        # USERNAME CHECK
+        if User.objects.filter(username=name).exists():
+            messages.error(request, "Username already exists")
+            return redirect("/signup/")
+
+        # EMAIL CHECK
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists")
+            return redirect("/signup/")
+
+        # CREATE USER
+        user = User.objects.create_user(
+            username=name,
             email=email,
-            defaults={"username": name}
+            password=password
         )
 
-        if created:
-            user.set_password(password)
-            user.save()
+        # DELETE OLD PROFILE IF EXISTS
+        Profile.objects.filter(user=user).delete()
 
-        # ✅ FIX: avoid duplicate profile
-        profile, created = Profile.objects.get_or_create(
+        # CREATE NEW PROFILE
+        Profile.objects.create(
             user=user,
-            defaults={"role": role}
+            role=role
         )
 
-        messages.success(request, "Signup successful!")
+        messages.success(request, "Account created successfully")
+
         return redirect("/login/")
 
     return render(request, "signup.html")
@@ -211,40 +321,120 @@ def job_list(request):
     }
 
     return render(request, "jobs.html", context)
+
 # ===========================
-# 🏢 RECRUITER
+# 👨‍💼 RECRUITER DASHBOARD
 # ===========================
-@login_required
-def post_job(request):
-    profile, created = Profile.objects.get_or_create(user=request.user)
-
-    if profile.role != 'recruiter':
-        return redirect('/')
-
-    if request.method == "POST":
-        Job.objects.create(
-            title=request.POST.get('title'),
-            company=request.POST.get('company'),
-            location=request.POST.get('location'),
-            description=request.POST.get('description'),
-            posted_by=request.user
-        )
-
-        messages.success(request, "Job posted successfully")
-        return redirect('/dashboard/jobs/')
-
-    return render(request, "admin_post_job.html")
-
 
 @login_required
 def recruiter_dashboard(request):
-    jobs = Job.objects.filter(posted_by=request.user)
-    applications = Application.objects.filter(job__in=jobs)
 
-    return render(request, 'recruiter_dashboard.html', {
-        'jobs': jobs,
-        'applications': applications
-    })
+    # ✅ Recruiter jobs only
+    jobs = Job.objects.filter(posted_by=request.user).order_by('-created_at')
+
+    # ✅ Applications for recruiter jobs
+    applications = Application.objects.filter(
+        job__posted_by=request.user
+    ).select_related('user', 'job').order_by('-id')
+
+    # ✅ Stats
+    total_jobs = jobs.count()
+
+    total_applications = applications.count()
+
+    accepted = applications.filter(status="accepted").count()
+
+    rejected = applications.filter(status="rejected").count()
+
+    pending = applications.filter(status="applied").count()
+
+    viewed = applications.filter(status="viewed").count()
+
+    context = {
+        "jobs": jobs,
+        "applications": applications,
+
+        "total_jobs": total_jobs,
+        "total_applications": total_applications,
+        "accepted": accepted,
+        "rejected": rejected,
+        "pending": pending,
+        "viewed": viewed,
+    }
+
+    return render(request, "recruiter_dashboard.html", context)
+# ===========================
+# ===========================
+# 🏢 POST JOB
+# ===========================
+
+@login_required
+def post_job(request):
+
+    # ✅ GET OR CREATE PROFILE
+    profile, created = Profile.objects.get_or_create(
+        user=request.user
+    )
+
+    # ✅ DEBUG
+    print("USER:", request.user.username)
+    print("ROLE:", profile.role)
+
+    # ✅ ONLY RECRUITER CAN POST
+    if profile.role != "recruiter":
+
+        messages.error(
+            request,
+            "Only recruiters can post jobs"
+        )
+
+        return redirect("home")
+
+    # ✅ SAVE JOB
+    if request.method == "POST":
+
+        Job.objects.create(
+            title=request.POST.get("title"),
+            company=request.POST.get("company"),
+            location=request.POST.get("location"),
+            description=request.POST.get("description"),
+            posted_by=request.user,
+            status="active"
+        )
+
+        messages.success(
+            request,
+            "Job posted successfully ✅"
+        )
+
+        return redirect("recruiter_dashboard")
+
+    return render(
+        request,
+        "admin_post_job.html"
+    )
+
+
+from functools import wraps
+from django.shortcuts import redirect
+from .models import Profile
+
+
+def recruiter_required(view_func):
+
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+
+        # GET PROFILE
+        profile = Profile.objects.filter(user=request.user).first()
+
+        # CHECK ROLE
+        if not profile or profile.role != "recruiter":
+            return redirect("/home/")
+
+        return view_func(request, *args, **kwargs)
+
+    return wrapper
 
 
 # ===========================
@@ -662,24 +852,18 @@ def export_jobs(request):
     return response
 from django.core.exceptions import PermissionDenied
 
-def recruiter_required(view_func):
-    def wrapper(request, *args, **kwargs):
-        if request.user.role != "recruiter":
-            raise PermissionDenied
-        return view_func(request, *args, **kwargs)
-    return wrapper
 @login_required
-@recruiter_required
-def recruiter_dashboard(request):
-    jobs = Job.objects.filter(posted_by=request.user)
-    return render(request, "recruiter_dashboard.html", {"jobs": jobs})
 def login_redirect(request):
-    if request.user.role == "admin":
+
+    if request.user.is_superuser:
         return redirect('admin_dashboard')
-    elif request.user.role == "recruiter":
+
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    if profile.role == "recruiter":
         return redirect('recruiter_dashboard')
-    else:
-        return redirect('home')
+
+    return redirect('home')
 from django.shortcuts import render
 from .models import Job
 

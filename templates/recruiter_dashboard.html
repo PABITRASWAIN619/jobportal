@@ -1,17 +1,394 @@
-id="recruiterhtml1"
-<h2>👨‍💼 Applicants</h2>
+{% extends 'base.html' %} {% block content %}
 
-{% for app in applications %}
-<div style="border: 1px solid #ccc; padding: 15px; margin: 10px">
-  <h3>{{ app.job.title }}</h3>
-  <p>Applicant: {{ app.user.username }}</p>
-  <p>LinkedIn: {{ app.linkedin }}</p>
+<style>
+  body {
+    background: #020c2b;
+    font-family: Arial, sans-serif;
+    color: white;
+  }
 
-  <a href="{{ app.resume.url }}">Download Resume</a>
+  .dashboard-container {
+    width: 95%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 0;
+  }
 
-  <p>Status: {{ app.status }}</p>
+  .title {
+    text-align: center;
+    font-size: 52px;
+    font-weight: bold;
+    color: #5ea2ff;
+    margin-bottom: 40px;
+  }
 
-  <a href="/update-status/{{ app.id }}/accepted/">✅ Accept</a> |
-  <a href="/update-status/{{ app.id }}/rejected/">❌ Reject</a>
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+  }
+
+  .stat-card {
+    background: #1e2a44;
+    border-radius: 25px;
+    padding: 35px;
+    transition: 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-6px);
+    background: #263655;
+  }
+
+  .stat-card p {
+    font-size: 20px;
+    color: #cbd5e1;
+  }
+
+  .stat-card h2 {
+    font-size: 55px;
+    color: #38bdf8;
+    margin-top: 15px;
+  }
+
+  .section-title {
+    font-size: 38px;
+    margin: 40px 0 25px;
+    color: white;
+  }
+
+  .post-job-box {
+    background: #1e2a44;
+    padding: 30px;
+    border-radius: 25px;
+    margin-bottom: 50px;
+  }
+
+  .input-box {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    margin-top: 12px;
+    margin-bottom: 20px;
+    background: #0f172a;
+    color: white;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  textarea.input-box {
+    height: 130px;
+    resize: none;
+  }
+
+  .post-btn {
+    background: #2563eb;
+    color: white;
+    padding: 14px 25px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .post-btn:hover {
+    background: #1d4ed8;
+  }
+
+  .job-card,
+  .app-card {
+    background: #1e2a44;
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .job-title,
+  .app-title {
+    font-size: 28px;
+    color: #60a5fa;
+    margin-bottom: 10px;
+  }
+
+  .job-info,
+  .info {
+    color: #cbd5e1;
+    margin: 10px 0;
+  }
+
+  .status {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 14px;
+    margin-top: 12px;
+    font-weight: bold;
+  }
+
+  .accepted {
+    background: #22c55e;
+    color: white;
+  }
+
+  .rejected {
+    background: #ef4444;
+    color: white;
+  }
+
+  .pending {
+    background: orange;
+    color: black;
+  }
+
+  .btn-group {
+    margin-top: 20px;
+  }
+
+  .btn {
+    text-decoration: none;
+    padding: 11px 18px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  .accept-btn {
+    background: #22c55e;
+    color: white;
+  }
+
+  .reject-btn {
+    background: #ef4444;
+    color: white;
+  }
+
+  .resume-btn {
+    background: #3b82f6;
+    color: white;
+  }
+
+  .edit-btn {
+    background: #f59e0b;
+    color: white;
+  }
+
+  .delete-btn {
+    background: #dc2626;
+    color: white;
+  }
+
+  .empty-box {
+    background: #1e2a44;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 22px;
+  }
+
+  .linkedin-link {
+    color: #38bdf8;
+    text-decoration: none;
+  }
+
+  .linkedin-link:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="dashboard-container">
+  <!-- TITLE -->
+  <div class="title">👨‍💼 Recruiter Dashboard</div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <a href="#jobs" class="stat-card">
+      <p>Total Jobs</p>
+      <h2>{{ total_jobs }}</h2>
+    </a>
+
+    <a href="#applications" class="stat-card">
+      <p>Total Applications</p>
+      <h2>{{ total_applications }}</h2>
+    </a>
+
+    <a href="#applications" class="stat-card">
+      <p>Accepted</p>
+      <h2>{{ accepted }}</h2>
+    </a>
+
+    <a href="#applications" class="stat-card">
+      <p>Rejected</p>
+      <h2>{{ rejected }}</h2>
+    </a>
+  </div>
+
+  <!-- POST JOB -->
+  <div class="section-title">➕ Post New Job</div>
+
+  <div class="post-job-box">
+    <form method="POST" action="{% url 'post_job' %}">
+      {% csrf_token %}
+
+      <input
+        type="text"
+        name="title"
+        placeholder="Job Title"
+        class="input-box"
+        required
+      />
+
+      <input
+        type="text"
+        name="company"
+        placeholder="Company Name"
+        class="input-box"
+        required
+      />
+
+      <input
+        type="text"
+        name="location"
+        placeholder="Location"
+        class="input-box"
+        required
+      />
+
+      <textarea
+        name="description"
+        placeholder="Job Description"
+        class="input-box"
+        required
+      ></textarea>
+
+      <button type="submit" class="post-btn">🚀 Post Job</button>
+    </form>
+  </div>
+
+  <!-- JOBS -->
+  <div class="section-title" id="jobs">💼 My Posted Jobs</div>
+
+  {% for job in jobs %}
+
+  <div class="job-card">
+    <div class="job-title">{{ job.title }}</div>
+
+    <div class="job-info">🏢 {{ job.company }}</div>
+
+    <div class="job-info">📍 {{ job.location }}</div>
+
+    <div class="job-info">📅 {{ job.created_at }}</div>
+
+    <div class="btn-group">
+      <a href="/edit-job/{{ job.id }}/" class="btn edit-btn"> ✏ Edit </a>
+
+      <form
+        method="POST"
+        action="/delete-job/{{ job.id }}/"
+        style="display: inline"
+      >
+        {% csrf_token %}
+
+        <button type="submit" class="btn delete-btn">🗑 Delete</button>
+      </form>
+    </div>
+  </div>
+
+  {% empty %}
+
+  <div class="empty-box">No jobs posted yet 🚀</div>
+
+  {% endfor %}
+
+  <!-- APPLICATIONS -->
+  <div class="section-title" id="applications">📄 Applicants</div>
+
+  {% for app in applications %}
+
+  <div class="app-card">
+    <div class="app-title">{{ app.job.title }}</div>
+
+    <div class="info">
+      👤 Applicant:
+      <strong>{{ app.user.username }}</strong>
+    </div>
+
+    <div class="info">📧 {{ app.email }}</div>
+
+    <div class="info">📱 {{ app.phone }}</div>
+
+    <div class="info">
+      {% if app.linkedin %} 💼
+      <a href="{{ app.linkedin }}" target="_blank" class="linkedin-link">
+        LinkedIn Profile
+      </a>
+
+      {% else %} No LinkedIn Profile {% endif %}
+    </div>
+
+    <div class="info">
+      {% if app.resume %}
+
+      <a href="{{ app.resume.url }}" target="_blank" class="btn resume-btn">
+        📎 Download Resume
+      </a>
+
+      {% else %}
+
+      <span style="color: red"> No Resume Uploaded </span>
+
+      {% endif %}
+    </div>
+
+    <!-- STATUS -->
+
+    {% if app.status == "accepted" %}
+
+    <span class="status accepted"> Accepted </span>
+
+    {% elif app.status == "rejected" %}
+
+    <span class="status rejected"> Rejected </span>
+
+    {% else %}
+
+    <span class="status pending"> Pending </span>
+
+    {% endif %}
+
+    <!-- BUTTONS -->
+
+    <div class="btn-group">
+      <a href="/update-status/{{ app.id }}/accepted/" class="btn accept-btn">
+        ✅ Accept
+      </a>
+
+      <a href="/update-status/{{ app.id }}/rejected/" class="btn reject-btn">
+        ❌ Reject
+      </a>
+    </div>
+  </div>
+
+  {% empty %}
+
+  <div class="empty-box">No applications received yet 🚀</div>
+
+  {% endfor %}
 </div>
-{% endfor %}
+
+{% endblock %}

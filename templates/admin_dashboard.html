@@ -21,22 +21,32 @@
   }
 
   /* ================= NAVBAR ================= */
-  .navbar {
-    background: linear-gradient(90deg, #111827, #1e293b) !important;
+
+  .navbar,
+  nav {
+    background: linear-gradient(90deg, #0f172a, #1e293b) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(12px);
+    padding: 16px 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   }
 
+  nav a,
   .navbar a {
+    color: white !important;
     transition: 0.3s;
+    margin: 0 12px;
+    text-decoration: none;
+    font-weight: 600;
   }
 
+  nav a:hover,
   .navbar a:hover {
     color: #60a5fa !important;
   }
 
   /* ================= TITLE ================= */
+
   .title {
     text-align: center;
     font-size: 42px;
@@ -45,21 +55,27 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin: 30px 0;
-    animation: fadeDown 1s ease;
   }
 
-  /* ================= DASHBOARD WRAPPER ================= */
+  .subtitle {
+    text-align: center;
+    color: #94a3b8;
+    margin-bottom: 35px;
+    font-size: 16px;
+  }
+
   .dashboard-wrapper {
     width: 95%;
     margin: auto;
   }
 
   /* ================= CARDS ================= */
+
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 22px;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
   }
 
   .card {
@@ -73,35 +89,34 @@
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
   }
 
+  .card:hover {
+    transform: translateY(-10px) scale(1.03);
+  }
+
   .card::before {
     content: "";
     position: absolute;
     width: 180px;
     height: 180px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     border-radius: 50%;
     top: -60px;
     right: -60px;
   }
 
-  .card:hover {
-    transform: translateY(-10px) scale(1.03);
+  .card span {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 10px;
   }
 
   .card h2 {
-    font-size: 34px;
-    margin-bottom: 8px;
+    font-size: 36px;
   }
 
   .card p {
-    font-size: 16px;
-    opacity: 0.95;
-  }
-
-  .card span {
-    font-size: 45px;
-    display: block;
-    margin-bottom: 12px;
+    margin-top: 8px;
+    opacity: 0.9;
   }
 
   .card1 {
@@ -125,15 +140,15 @@
   }
 
   /* ================= SECTION ================= */
+
   .section {
-    background: rgba(15, 23, 42, 0.85);
-    margin-bottom: 30px;
+    background: rgba(15, 23, 42, 0.88);
     padding: 25px;
     border-radius: 24px;
+    margin-bottom: 30px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(14px);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
-    animation: fadeUp 1s ease;
   }
 
   .section h3 {
@@ -142,179 +157,12 @@
     color: #93c5fd;
   }
 
-  /* ================= TABLE ================= */
-  .table-wrapper {
-    overflow-x: auto;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    overflow: hidden;
-    border-radius: 14px;
-  }
-
-  th {
-    background: linear-gradient(90deg, #2563eb, #7c3aed);
-    color: white;
-    padding: 14px;
-    font-size: 15px;
-  }
-
-  td {
-    padding: 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    color: #e2e8f0;
-  }
-
-  tr {
-    transition: 0.3s;
-  }
-
-  tr:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-
-  /* ================= ANALYTICS ================= */
-  .analytics-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 25px;
-  }
-
-  .mini-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .mini-box {
-    padding: 22px;
-    border-radius: 20px;
-    color: white;
-    transition: 0.3s;
-  }
-
-  .mini-box:hover {
-    transform: scale(1.03);
-  }
-
-  .mini1 {
-    background: linear-gradient(135deg, #0ea5e9, #0369a1);
-  }
-
-  .mini2 {
-    background: linear-gradient(135deg, #22c55e, #15803d);
-  }
-
-  .mini3 {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-  }
-
-  .mini-box h2 {
-    font-size: 32px;
-    margin-bottom: 8px;
-  }
-
-  /* ================= CHAT ================= */
-  .chat-wrapper {
-    display: flex;
-    gap: 20px;
-  }
-
-  .chat-list {
-    width: 35%;
-    max-height: 520px;
-    overflow-y: auto;
-    padding-right: 5px;
-  }
-
-  .chat-box {
-    width: 65%;
-    background: linear-gradient(135deg, #111827, #1e293b);
-    border-radius: 20px;
-    padding: 20px;
-    min-height: 450px;
-    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.04);
-  }
-
-  .msg-item {
-    padding: 16px;
-    border-radius: 16px;
-    margin-bottom: 14px;
-    cursor: pointer;
-    transition: 0.3s;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .msg-item:hover {
-    transform: translateX(6px);
-    background: rgba(96, 165, 250, 0.15) !important;
-  }
-
-  textarea {
-    width: 100%;
-    height: 120px;
-    padding: 15px;
-    margin-top: 15px;
-    border-radius: 14px;
-    background: #0f172a;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    outline: none;
-    resize: none;
-  }
-
-  textarea:focus {
-    border-color: #60a5fa;
-    box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
-  }
-
-  /* ================= BUTTONS ================= */
-  .btn {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 12px;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 14px;
-    transition: 0.3s;
-  }
-
-  .btn:hover {
-    transform: translateY(-3px);
-  }
-
-  .btn-send {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  }
-
-  .btn-delete {
-    background: linear-gradient(135deg, #ef4444, #b91c1c);
-    margin-left: 10px;
-  }
-
-  /* ================= TOAST ================= */
-  #toast {
-    display: none;
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 14px 20px;
-    border-radius: 14px;
-    color: white;
-    font-weight: bold;
-    z-index: 9999;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  }
-
   /* ================= QUICK ACTIONS ================= */
+
   .quick-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    margin-top: 15px;
   }
 
   .quick-btn {
@@ -346,32 +194,220 @@
     background: linear-gradient(135deg, #8b5cf6, #7c3aed);
   }
 
-  /* ================= ANIMATION ================= */
-  @keyframes fadeDown {
-    from {
-      opacity: 0;
-      transform: translateY(-40px);
-    }
+  /* ================= TABLE ================= */
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .table-wrapper {
+    overflow-x: auto;
   }
 
-  @keyframes fadeUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 16px;
+  }
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  th {
+    background: linear-gradient(90deg, #2563eb, #7c3aed);
+    color: white;
+    padding: 14px;
+  }
+
+  td {
+    padding: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  tr:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  /* ================= ANALYTICS ================= */
+
+  .analytics-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+  }
+
+  .mini-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .mini-box {
+    padding: 22px;
+    border-radius: 20px;
+    color: white;
+  }
+
+  .mini1 {
+    background: linear-gradient(135deg, #0ea5e9, #0369a1);
+  }
+
+  .mini2 {
+    background: linear-gradient(135deg, #22c55e, #15803d);
+  }
+
+  .mini3 {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+  }
+
+  .mini-box h2 {
+    font-size: 32px;
+  }
+
+  /* ================= SUPPORT CHAT ================= */
+
+  .chat-wrapper {
+    display: flex;
+    gap: 20px;
+  }
+
+  .chat-list {
+    width: 32%;
+    max-height: 650px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+
+  .chat-list::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .chat-list::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 20px;
+  }
+
+  .msg-item {
+    background: linear-gradient(135deg, #111827, #1e293b);
+    padding: 16px;
+    border-radius: 18px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .msg-item:hover {
+    transform: translateX(6px);
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  }
+
+  .chat-box {
+    width: 68%;
+    background: linear-gradient(135deg, #0f172a, #111827);
+    border-radius: 24px;
+    padding: 22px;
+    min-height: 620px;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+      inset 0 0 30px rgba(255, 255, 255, 0.03),
+      0 15px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  .conversation {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+  }
+
+  .user-bubble {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: white;
+    padding: 16px;
+    border-radius: 18px 18px 18px 4px;
+    margin-bottom: 18px;
+    max-width: 80%;
+  }
+
+  .admin-bubble {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    padding: 16px;
+    border-radius: 18px 18px 4px 18px;
+    margin-left: auto;
+    margin-bottom: 18px;
+    max-width: 80%;
+  }
+
+  .meta {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 110px;
+    border-radius: 16px;
+    background: #020617;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px;
+    resize: none;
+    outline: none;
+  }
+
+  textarea:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 15px rgba(96, 165, 250, 0.35);
+  }
+
+  .chat-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+  }
+
+  .btn-chat {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .btn-chat:hover {
+    transform: translateY(-3px);
+  }
+
+  .reply-btn {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  }
+
+  .delete-btn {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+  }
+
+  .empty-chat {
+    margin: auto;
+    text-align: center;
+    color: #94a3b8;
+  }
+
+  /* ================= TOAST ================= */
+
+  #toast {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 14px 20px;
+    border-radius: 14px;
+    color: white;
+    font-weight: bold;
+    z-index: 9999;
   }
 
   /* ================= RESPONSIVE ================= */
+
   @media (max-width: 900px) {
     .analytics-grid {
       grid-template-columns: 1fr;
@@ -386,23 +422,13 @@
       width: 100%;
     }
   }
-
-  @media (max-width: 600px) {
-    .title {
-      font-size: 30px;
-    }
-
-    .card h2 {
-      font-size: 28px;
-    }
-
-    .section h3 {
-      font-size: 22px;
-    }
-  }
 </style>
 
 <h2 class="title">🚀 Advanced Admin Dashboard</h2>
+
+<p class="subtitle">
+  Manage users, jobs, analytics, applications, and support chats in one place.
+</p>
 
 <div id="toast">Success</div>
 
@@ -542,9 +568,9 @@
 
           <td>
             {% if job.status == "active" %}
-            <span style="color: #22c55e; font-weight: bold">● Active</span>
+            <span style="color: #22c55e; font-weight: bold"> ● Active </span>
             {% else %}
-            <span style="color: #ef4444; font-weight: bold">● Closed</span>
+            <span style="color: #ef4444; font-weight: bold"> ● Closed </span>
             {% endif %}
           </td>
         </tr>
@@ -560,13 +586,40 @@
   <!-- ================= SUPPORT CHAT ================= -->
 
   <div class="section">
-    <h3>💬 Live Support Chat</h3>
+    <h3>💬 Live Support Center</h3>
+
+    <div
+      style="
+        background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+        padding: 18px;
+        border-radius: 18px;
+        margin-bottom: 20px;
+        color: white;
+      "
+    >
+      <h2 style="margin-bottom: 8px">🚀 Real-Time Support System</h2>
+
+      <p style="opacity: 0.9; line-height: 1.7">
+        View complete user conversations, reply instantly and monitor support
+        requests.
+      </p>
+    </div>
 
     <div class="chat-wrapper">
+      <!-- LEFT CHAT LIST -->
+
       <div class="chat-list" id="chatList"></div>
 
+      <!-- RIGHT CHAT BOX -->
+
       <div class="chat-box" id="chatBox">
-        <p style="color: #94a3b8">Select a message to view chat</p>
+        <div class="empty-chat">
+          <h2>💬 Support Inbox</h2>
+
+          <p style="margin-top: 10px">
+            Select a user message to open conversation history.
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -574,27 +627,40 @@
 
 <script>
   // ================= CHART =================
+
   const ctx = document.getElementById("chart");
 
   new Chart(ctx, {
     type: "bar",
+
     data: {
       labels: ["Users", "Jobs", "Applications"],
+
       datasets: [
         {
           label: "Platform Stats",
+
           data: [
             {{ stats.total_users }},
             {{ stats.total_jobs }},
             {{ stats.total_apps }},
           ],
-          borderWidth: 2,
-          borderRadius: 10,
+
+          backgroundColor: [
+            "#3b82f6",
+            "#22c55e",
+            "#f97316",
+          ],
+
+          borderRadius: 12,
+          borderWidth: 0,
         },
       ],
     },
+
     options: {
       responsive: true,
+
       plugins: {
         legend: {
           labels: {
@@ -602,24 +668,31 @@
           },
         },
       },
+
       scales: {
         y: {
           ticks: {
             color: "white",
           },
+          grid: {
+            color: "rgba(255,255,255,0.08)",
+          },
         },
+
         x: {
           ticks: {
             color: "white",
+          },
+          grid: {
+            color: "rgba(255,255,255,0.08)",
           },
         },
       },
     },
   });
 
-  let currentId = null;
-
   // ================= TOAST =================
+
   function showToast(msg, color = "#22c55e") {
     let toast = document.getElementById("toast");
 
@@ -633,6 +706,7 @@
   }
 
   // ================= CSRF =================
+
   function getCookie(name) {
     let cookieValue = null;
 
@@ -646,6 +720,7 @@
           cookieValue = decodeURIComponent(
             c.substring(name.length + 1)
           );
+
           break;
         }
       }
@@ -656,30 +731,69 @@
 
   const csrftoken = getCookie("csrftoken");
 
-  // ================= LOAD CHAT =================
+  // ================= LOAD CHATS =================
+
   function loadChats() {
     fetch("/api/support/")
       .then((r) => r.json())
+
       .then((data) => {
         let html = "";
 
+        if (!data.messages.length) {
+          html = `
+            <div style="
+              text-align:center;
+              color:#94a3b8;
+              padding:30px;
+            ">
+              No support messages yet
+            </div>
+          `;
+        }
+
         data.messages.forEach((m) => {
           html += `
-          <div class="msg-item"
-               onclick="openChat(${m.id})"
-               style="background:${m.is_read ? "#1e293b" : "#1d4ed8"}">
+          <div
+            class="msg-item"
+            onclick="openChat(${m.id})"
+            style="
+              background:${
+                m.is_read
+                  ? 'rgba(30,41,59,0.9)'
+                  : 'rgba(37,99,235,0.25)'
+              };
+            "
+          >
 
-            <b>👤 ${m.user}</b><br><br>
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+              margin-bottom:10px;
+            ">
 
-            <small>${m.message.substring(0, 50)}</small><br><br>
+              <b style="color:white;">
+                👤 ${m.user}
+              </b>
 
-            ${
-              m.is_read
-                ? "<span style='color:#22c55e'>✔ Seen</span>"
-                : "<span style='color:#facc15'>● New Message</span>"
-            }
+              ${
+                m.is_read
+                  ? "<span style='color:#22c55e;font-size:12px;'>✔ Seen</span>"
+                  : "<span style='color:#facc15;font-size:12px;'>● New</span>"
+              }
+
+            </div>
+
+            <div style="
+              color:#cbd5e1;
+              line-height:1.6;
+            ">
+              ${m.message.substring(0, 70)}...
+            </div>
+
           </div>
-        `;
+          `;
         });
 
         document.getElementById("chatList").innerHTML = html;
@@ -687,53 +801,243 @@
   }
 
   // ================= OPEN CHAT =================
-  function openChat(id) {
-    currentId = id;
 
+  function openChat(id) {
     fetch("/api/support/")
       .then((r) => r.json())
+
       .then((data) => {
-        let msg = data.messages.find((m) => m.id === id);
+        let msg = data.messages.find(
+          (m) => m.id === id
+        );
+
+        if (!msg) return;
 
         document.getElementById("chatBox").innerHTML = `
-        <h2 style="margin-bottom:15px;color:#60a5fa;">
-          👤 ${msg.user}
-        </h2>
 
         <div style="
-          background:#0f172a;
-          padding:18px;
-          border-radius:16px;
-          line-height:1.8;
-          border:1px solid rgba(255,255,255,0.08);
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-bottom:25px;
         ">
-          ${msg.message}
+
+          <div>
+
+            <h2 style="
+              color:#60a5fa;
+              margin-bottom:6px;
+            ">
+              👤 ${msg.user}
+            </h2>
+
+            <small style="
+              color:#94a3b8;
+            ">
+              Live support conversation
+            </small>
+
+          </div>
+
+          <div style="
+            background:${
+              msg.is_read
+                ? '#16a34a'
+                : '#eab308'
+            };
+            padding:8px 15px;
+            border-radius:30px;
+            color:white;
+            font-size:13px;
+            font-weight:bold;
+          ">
+            ${
+              msg.is_read
+                ? '✔ Seen'
+                : '● New Message'
+            }
+          </div>
+
         </div>
+
+        <!-- USER MESSAGE -->
+
+        <div style="
+          background:linear-gradient(
+            135deg,
+            #1e293b,
+            #0f172a
+          );
+
+          padding:18px;
+          border-radius:18px;
+          margin-bottom:20px;
+
+          border-left:5px solid #3b82f6;
+
+          line-height:1.8;
+          color:#e2e8f0;
+        ">
+
+          <div style="
+            margin-bottom:10px;
+            color:#93c5fd;
+            font-weight:bold;
+          ">
+            👤 User Message
+          </div>
+
+          ${msg.message}
+
+        </div>
+
+        ${
+          msg.reply
+            ? `
+          <!-- ADMIN REPLY -->
+
+          <div style="
+            background:linear-gradient(
+              135deg,
+              #14532d,
+              #166534
+            );
+
+            padding:18px;
+            border-radius:18px;
+            margin-bottom:20px;
+
+            border-right:5px solid #22c55e;
+
+            line-height:1.8;
+            color:white;
+            text-align:right;
+          ">
+
+            <div style="
+              margin-bottom:10px;
+              color:#bbf7d0;
+              font-weight:bold;
+            ">
+              🛠 Admin Reply
+            </div>
+
+            ${msg.reply}
+
+          </div>
+          `
+            : `
+          <div style="
+            background:#422006;
+            color:#facc15;
+            padding:14px;
+            border-radius:14px;
+            margin-bottom:20px;
+          ">
+            ⏳ Waiting for admin reply...
+          </div>
+          `
+        }
+
+        <!-- TEXTAREA -->
 
         <textarea
           id="replyText"
-          placeholder="✍️ Type your reply..."
+          placeholder="✍️ Type admin reply..."
+          style="
+            width:100%;
+            height:130px;
+
+            background:#0f172a;
+            color:white;
+
+            border:1px solid rgba(255,255,255,0.08);
+
+            border-radius:16px;
+
+            padding:15px;
+
+            outline:none;
+
+            resize:none;
+          "
         ></textarea>
 
-        <button onclick="sendReply(${id})"
-          class="btn btn-send">
-          🚀 Send Reply
-        </button>
+        <!-- BUTTONS -->
 
-        <button onclick="deleteChat(${id})"
-          class="btn btn-delete">
-          🗑 Delete Chat
-        </button>
-      `;
+        <div style="
+          display:flex;
+          gap:12px;
+          margin-top:18px;
+          flex-wrap:wrap;
+        ">
+
+          <button
+            onclick="sendReply(${id})"
+            style="
+              flex:1;
+              padding:14px;
+
+              border:none;
+              border-radius:14px;
+
+              background:linear-gradient(
+                135deg,
+                #2563eb,
+                #1d4ed8
+              );
+
+              color:white;
+              font-weight:bold;
+              cursor:pointer;
+            "
+          >
+            🚀 Send Reply
+          </button>
+
+          <button
+            onclick="deleteChat(${id})"
+            style="
+              flex:1;
+              padding:14px;
+
+              border:none;
+              border-radius:14px;
+
+              background:linear-gradient(
+                135deg,
+                #ef4444,
+                #b91c1c
+              );
+
+              color:white;
+              font-weight:bold;
+              cursor:pointer;
+            "
+          >
+            🗑 Delete Chat
+          </button>
+
+        </div>
+        `;
 
         fetch(`/support/read/${id}/`);
       });
   }
 
   // ================= SEND REPLY =================
+
   function sendReply(id) {
     let replyText =
       document.getElementById("replyText").value;
+
+    if (!replyText.trim()) {
+      showToast(
+        "Reply cannot be empty",
+        "#ef4444"
+      );
+      return;
+    }
 
     fetch(`/support/admin-reply/${id}/`, {
       method: "POST",
@@ -749,45 +1053,84 @@
         reply: replyText,
       }),
     })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.success) {
-          showToast("Reply sent successfully 🚀");
 
-          loadChats();
-        } else {
-          showToast("Failed ❌", "#ef4444");
-        }
-      });
+    .then((r) => r.json())
+
+    .then((data) => {
+      if (data.success) {
+
+        showToast(
+          "Reply sent successfully 🚀"
+        );
+
+        openChat(id);
+
+        loadChats();
+
+      } else {
+
+        showToast(
+          "Failed ❌",
+          "#ef4444"
+        );
+      }
+    });
   }
 
   // ================= DELETE CHAT =================
+
   function deleteChat(id) {
-    if (!confirm("Delete this chat?")) return;
+
+    if (!confirm("Delete this chat?"))
+      return;
 
     fetch(`/support/delete/${id}/`, {
+
       method: "POST",
 
       headers: {
         "X-CSRFToken": csrftoken,
       },
     })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.success) {
-          showToast("Deleted successfully 🗑", "#ef4444");
 
-          document.getElementById("chatBox").innerHTML =
-            "<p style='color:#94a3b8'>Select a message</p>";
+    .then((r) => r.json())
 
-          loadChats();
-        } else {
-          showToast("Failed ❌", "#ef4444");
-        }
-      });
+    .then((data) => {
+
+      if (data.success) {
+
+        showToast(
+          "Deleted successfully 🗑",
+          "#ef4444"
+        );
+
+        document.getElementById(
+          "chatBox"
+        ).innerHTML = `
+          <div style="
+            text-align:center;
+            margin-top:80px;
+            color:#94a3b8;
+          ">
+            <h2>💬 Support Inbox</h2>
+            <p>Select a message to start</p>
+          </div>
+        `;
+
+        loadChats();
+
+      } else {
+
+        showToast(
+          "Failed ❌",
+          "#ef4444"
+        );
+      }
+    });
   }
 
   // ================= AUTO REFRESH =================
+
   setInterval(loadChats, 5000);
 
   loadChats();

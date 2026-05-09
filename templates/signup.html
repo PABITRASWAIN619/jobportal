@@ -1,11 +1,14 @@
 {% extends 'base.html' %} {% block content %}
 
 <style>
-  /* ===== MULTI IMAGE BACKGROUND SLIDESHOW ===== */
-  body {
+  * {
     margin: 0;
-    min-height: 100vh;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
+  body {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,50 +17,71 @@
 
     background-size: cover;
     background-position: center;
-    animation: bgSlide 16s infinite;
+    background-repeat: no-repeat;
+
+    animation: bgSlide 16s infinite ease-in-out;
+
+    position: relative;
+    overflow-x: hidden;
   }
 
-  /* BACKGROUND IMAGES ANIMATION */
+  /* ===== BACKGROUND SLIDES ===== */
   @keyframes bgSlide {
     0% {
-      background-image: url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d");
+      background-image: url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2070");
     }
+
     25% {
-      background-image: url("https://images.unsplash.com/photo-1522071820081-009f0129c71c");
+      background-image: url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070");
     }
+
     50% {
-      background-image: url("https://images.unsplash.com/photo-1504384308090-c894fdcc538d");
+      background-image: url("https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2070");
     }
+
     75% {
-      background-image: url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d");
+      background-image: url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2070");
     }
+
     100% {
-      background-image: url("https://images.unsplash.com/photo-1522071820081-009f0129c71c");
+      background-image: url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2070");
     }
   }
 
-  /* DARK OVERLAY */
+  /* ===== DARK OVERLAY ===== */
   body::before {
     content: "";
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 0;
   }
 
-  /* ===== GLASS CARD ===== */
+  /* ===== MAIN CONTAINER ===== */
   .container {
     position: relative;
     z-index: 2;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
   }
 
+  /* ===== GLASS CARD ===== */
   .glass {
     width: 380px;
-    padding: 30px;
+    padding: 35px;
 
-    border-radius: 20px;
-    backdrop-filter: blur(20px);
+    border-radius: 22px;
 
     background: rgba(255, 255, 255, 0.12);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 
     color: white;
@@ -67,7 +91,12 @@
     transition: 0.3s;
   }
 
-  /* FLOAT ANIMATION */
+  .glass:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  }
+
+  /* ===== ANIMATION ===== */
   @keyframes floatUp {
     from {
       opacity: 0;
@@ -79,45 +108,73 @@
     }
   }
 
-  /* HOVER EFFECT */
-  .glass:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-  }
-
-  /* TITLE */
+  /* ===== TITLE ===== */
   .glass h2 {
-    margin-bottom: 20px;
-    font-size: 26px;
+    margin-bottom: 22px;
+    font-size: 28px;
+    font-weight: bold;
+
     background: linear-gradient(90deg, #00c6ff, #ff6a00, #ee0979);
+
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  /* INPUT + SELECT */
+  /* ===== ALERTS ===== */
+  .alert {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .alert.error {
+    background: #ff4d4d;
+    color: white;
+  }
+
+  .alert.success {
+    background: #22c55e;
+    color: white;
+  }
+
+  /* ===== FORM INPUTS ===== */
   input,
   select {
     width: 100%;
-    padding: 12px;
+    padding: 13px;
     margin: 10px 0;
 
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
 
     outline: none;
+
     font-size: 14px;
+
+    background: rgba(255, 255, 255, 0.92);
   }
 
-  /* BUTTON */
+  input:focus,
+  select:focus {
+    border: 2px solid #00c6ff;
+  }
+
+  /* ===== BUTTON ===== */
   .btn {
     width: 100%;
-    padding: 12px;
+    padding: 13px;
+    margin-top: 10px;
 
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
 
     cursor: pointer;
+
+    font-size: 15px;
     font-weight: bold;
+
     color: white;
 
     background: linear-gradient(135deg, #ff512f, #dd2476, #24c6dc);
@@ -128,23 +185,34 @@
   }
 
   .btn:hover {
-    transform: scale(1.05);
+    transform: scale(1.04);
   }
 
-  /* LINKS */
+  /* ===== LINKS ===== */
+  .bottom-text {
+    margin-top: 18px;
+    font-size: 14px;
+  }
+
   a {
     color: #00c6ff;
     text-decoration: none;
+    font-weight: bold;
   }
 
   a:hover {
     text-decoration: underline;
   }
 
-  /* MOBILE */
+  /* ===== MOBILE ===== */
   @media (max-width: 500px) {
     .glass {
-      width: 90%;
+      width: 100%;
+      padding: 25px;
+    }
+
+    .glass h2 {
+      font-size: 24px;
     }
   }
 </style>
@@ -153,31 +221,56 @@
   <div class="glass">
     <h2>🧑‍💻 Create Account</h2>
 
+    <!-- DJANGO MESSAGES -->
+    {% if messages %} {% for message in messages %}
+
+    <div class="alert {{ message.tags }}">{{ message }}</div>
+
+    {% endfor %} {% endif %}
+
+    <!-- SIGNUP FORM -->
     <form method="POST">
       {% csrf_token %}
 
-      <input type="text" name="name" placeholder="Username" required />
+      <input
+        type="text"
+        name="name"
+        placeholder="Enter Username"
+        autocomplete="username"
+        required
+      />
 
-      <input type="email" name="email" placeholder="Enter Email" required />
+      <input
+        type="email"
+        name="email"
+        placeholder="Enter Email"
+        autocomplete="email"
+        required
+      />
 
       <input
         type="password"
         name="password"
-        placeholder="Password (min 6 chars)"
+        placeholder="Password (minimum 6 characters)"
+        minlength="6"
+        autocomplete="new-password"
         required
       />
 
       <select name="role" required>
         <option value="">Select Role</option>
+
         <option value="jobseeker">Job Seeker</option>
+
         <option value="recruiter">Recruiter</option>
       </select>
 
-      <button class="btn">Sign Up</button>
+      <button type="submit" class="btn">Sign Up</button>
     </form>
 
-    <p style="margin-top: 15px">
-      Already have account? <a href="/login/">Login</a>
+    <p class="bottom-text">
+      Already have an account?
+      <a href="/login/">Login</a>
     </p>
   </div>
 </div>
