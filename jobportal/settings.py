@@ -21,6 +21,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://barsapalei.onrender.com",
     "https://easypalei.onrender.com",
     "https://jobportal-swainpapu.onrender.com",
+    "https://jobportal-1-2wuu.onrender.com",
 ]
 
 
@@ -104,6 +105,8 @@ TEMPLATES = [
 # =========================
 import dj_database_url
 
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+
 DATABASES = {
     "default": dj_database_url.config(
         default=os.environ.get("DATABASE_URL")
@@ -168,8 +171,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = 'swainpabitra9861@gmail.com'
-EMAIL_HOST_PASSWORD = 'pfztnuztrjddfzxy'
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

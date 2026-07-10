@@ -235,18 +235,29 @@ def verify_otp(request):
 # ===========================
 # 📩 SEND OTP
 # ===========================
+# ===========================
+# 📩 SEND OTP
+# ===========================
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
+from django.contrib import messages
+from django.shortcuts import render, redirect
 import random
+import traceback
+
 
 def send_otp(request):
+
     if request.method == "POST":
+
         email = request.POST.get("email")
 
         if not email:
             messages.error(request, "Email is required")
-            return render(request, "send_otp.html", {"hide_navbar": True})
+            return render(request, "send_otp.html", {
+                "hide_navbar": True
+            })
 
         otp = random.randint(100000, 999999)
 
@@ -255,6 +266,7 @@ def send_otp(request):
         request.session["otp_time"] = str(timezone.now())
 
         try:
+
             send_mail(
                 subject="Your OTP for Login",
                 message=f"Your OTP is: {otp}",
@@ -262,15 +274,41 @@ def send_otp(request):
                 recipient_list=[email],
                 fail_silently=False,
             )
+
+            print("✅ OTP SENT SUCCESSFULLY TO:", email)
+
+            messages.success(request, "OTP sent successfully!")
+
+            return redirect("/verify-otp/")
+
         except Exception as e:
-             print("EMAIL ERROR:", e)
-             messages.error(request, "OTP sending failed. Check server logs.")
-             return render(request, "send_otp.html", {"hide_navbar": True})
 
-        messages.success(request, "OTP sent successfully!")
-        return redirect("/verify-otp/")
+            print("=" * 70)
+            print("❌ EMAIL ERROR")
+            print("Exception:", e)
+            traceback.print_exc()
+            print("=" * 70)
 
-    return render(request, "send_otp.html", {"hide_navbar": True})
+            messages.error(
+                request,
+                f"OTP sending failed: {e}"
+            )
+
+            return render(
+                request,
+                "send_otp.html",
+                {
+                    "hide_navbar": True
+                }
+            )
+
+    return render(
+        request,
+        "send_otp.html",
+        {
+            "hide_navbar": True
+        }
+    )
 
 
 # ===========================
@@ -647,6 +685,14 @@ def job_list(request):
 # ===========================
 # 🛠 ADMIN PAGES (FIXED)
 # ===========================
+from django.shortcuts import render
+from django.contrib.auth.models import User
+from .models import Job, Application, SupportMessage
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+from django.contrib.auth.models import User
 from django.contrib.admin.views.decorators import staff_member_required
 
 @staff_member_required(login_url="/login/")
