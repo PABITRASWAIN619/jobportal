@@ -16,12 +16,11 @@ ALLOWED_HOSTS = [
     "localhost",
     ".onrender.com",   # allows all your render domains
 ]
-
 CSRF_TRUSTED_ORIGINS = [
+    "https://jobportal-1-2wuu.onrender.com",
+    "https://jobportal-swainpapu.onrender.com",
     "https://barsapalei.onrender.com",
     "https://easypalei.onrender.com",
-    "https://jobportal-swainpapu.onrender.com",
-    "https://jobportal-1-2wuu.onrender.com",
 ]
 
 
