@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 SECURE_SSL_REDIRECT = False
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -102,12 +102,12 @@ TEMPLATES = [
 # =========================
 # DATABASE
 # =========================
+import dj_database_url
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
+    )
 }
 
 
@@ -169,7 +169,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'swainpabitra9861@gmail.com'
-EMAIL_HOST_PASSWORD = 'mtzisgketpvzkigz'
+EMAIL_HOST_PASSWORD = 'pfztnuztrjddfzxy'
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

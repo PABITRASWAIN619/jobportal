@@ -647,19 +647,12 @@ def job_list(request):
 # ===========================
 # 🛠 ADMIN PAGES (FIXED)
 # ===========================
-from django.shortcuts import render
-from django.contrib.auth.models import User
-from .models import Job, Application, SupportMessage
+from django.contrib.admin.views.decorators import staff_member_required
 
-from django.contrib.auth import get_user_model
-User = get_user_model()
-
-from django.contrib.auth.models import User
-from .models import Job, Application, SupportMessage
-
+@staff_member_required(login_url="/login/")
 def admin_dashboard(request):
-    users = User.objects.all().order_by('-id')
-    jobs = Job.objects.all().order_by('-id')
+    users = User.objects.all().order_by("-id")
+    jobs = Job.objects.all().order_by("-id")
     applications = Application.objects.all()
 
     support_msgs = SupportMessage.objects.select_related("user").order_by("-id")
@@ -675,9 +668,6 @@ def admin_dashboard(request):
         "accepted": applications.filter(status="accepted").count(),
         "rejected": applications.filter(status="rejected").count(),
     }
-
-    print("USERS:", users.count())
-    print("JOBS:", jobs.count())
 
     return render(request, "admin_dashboard.html", {
         "users": users,
