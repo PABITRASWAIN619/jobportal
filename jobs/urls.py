@@ -215,4 +215,5 @@ urlpatterns = [
         views.admin_reply,
         name='admin_reply'
     ),
+    path("test-network/", views.test_network),
 ]

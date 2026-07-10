@@ -309,7 +309,15 @@ def send_otp(request):
             "hide_navbar": True
         }
     )
+import socket
+from django.http import HttpResponse
 
+def test_network(request):
+    try:
+        socket.create_connection(("smtp.gmail.com", 587), timeout=10)
+        return HttpResponse("SMTP Connected")
+    except Exception as e:
+        return HttpResponse(str(e))
 
 # ===========================
 # 🏢 APPLY JOB
